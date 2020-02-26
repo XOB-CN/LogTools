@@ -1,2 +1,3 @@
 # LogTools
- log file analyzes tool
+want write a log file analyzes tool  
+now this project just started.
