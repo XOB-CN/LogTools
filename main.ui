@@ -6,118 +6,150 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>878</width>
-    <height>575</height>
+    <width>915</width>
+    <height>882</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>20</y>
-      <width>781</width>
-      <height>451</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Less than or equal to</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QDateTimeEdit" name="dateTimeEdit"/>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Greater or equal to</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QDateTimeEdit" name="dateTimeEdit_2"/>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QTreeView" name="treeView"/>
-       </item>
-       <item>
-        <widget class="QTabWidget" name="tabWidget">
-         <property name="currentIndex">
-          <number>0</number>
-         </property>
-         <property name="tabsClosable">
-          <bool>true</bool>
-         </property>
-         <property name="movable">
-          <bool>false</bool>
-         </property>
-         <widget class="QWidget" name="tab">
-          <attribute name="title">
-           <string>Tab 1</string>
-          </attribute>
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Less than or equal to</string>
+          </property>
          </widget>
-         <widget class="QWidget" name="tab_2">
-          <attribute name="title">
-           <string>Tab 2</string>
-          </attribute>
+        </item>
+        <item>
+         <widget class="QDateTimeEdit" name="dateTimeEdit"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Greater than or equal to</string>
+          </property>
          </widget>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QTabWidget" name="tabWidget_2">
-         <property name="currentIndex">
-          <number>0</number>
-         </property>
-         <property name="tabsClosable">
-          <bool>true</bool>
-         </property>
-         <widget class="QWidget" name="tab_3">
-          <attribute name="title">
-           <string>Tab 1</string>
-          </attribute>
+        </item>
+        <item>
+         <widget class="QDateTimeEdit" name="dateTimeEdit_2"/>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="1">
+         <widget class="QTabWidget" name="tabWidget">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>4</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <property name="tabsClosable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="tab">
+           <attribute name="title">
+            <string>Tab 1</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <item row="0" column="0">
+             <widget class="QTextEdit" name="textEdit"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_2">
+           <attribute name="title">
+            <string>Tab 2</string>
+           </attribute>
+          </widget>
          </widget>
-         <widget class="QWidget" name="tab_4">
-          <attribute name="title">
-           <string>Tab 2</string>
-          </attribute>
+        </item>
+        <item row="0" column="0">
+         <widget class="QTreeWidget" name="treeWidget">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>1</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>150</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>250</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <column>
+           <property name="text">
+            <string notr="true">1</string>
+           </property>
+          </column>
          </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QTabWidget" name="tabWidget_2">
+        <property name="tabsClosable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="tab_3">
+         <attribute name="title">
+          <string>Tab 1</string>
+         </attribute>
         </widget>
-       </item>
-       <item>
-        <widget class="QProgressBar" name="progressBar">
-         <property name="value">
-          <number>24</number>
-         </property>
+        <widget class="QWidget" name="tab_4">
+         <attribute name="title">
+          <string>Tab 2</string>
+         </attribute>
         </widget>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </widget>
+       </widget>
+      </item>
+      <item>
+       <widget class="QProgressBar" name="progressBar">
+        <property name="value">
+         <number>24</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>878</width>
+     <width>915</width>
      <height>23</height>
     </rect>
    </property>
@@ -125,11 +157,10 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="act_Read"/>
+    <addaction name="actionRead"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
     <string>toolBar</string>
@@ -140,9 +171,10 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="act_Read"/>
+   <addaction name="actionRead"/>
   </widget>
-  <action name="act_Read">
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionRead">
    <property name="text">
     <string>Read</string>
    </property>
