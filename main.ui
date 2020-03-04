@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>915</width>
+    <width>1171</width>
     <height>882</height>
    </rect>
   </property>
@@ -20,24 +20,24 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QLabel" name="label">
+         <widget class="QLabel" name="leText">
           <property name="text">
            <string>Less than or equal to</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QDateTimeEdit" name="dateTimeEdit"/>
+         <widget class="QDateTimeEdit" name="leTime"/>
         </item>
         <item>
-         <widget class="QLabel" name="label_2">
+         <widget class="QLabel" name="geText">
           <property name="text">
            <string>Greater than or equal to</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QDateTimeEdit" name="dateTimeEdit_2"/>
+         <widget class="QDateTimeEdit" name="geTime"/>
         </item>
         <item>
          <spacer name="horizontalSpacer">
@@ -57,7 +57,7 @@
       <item>
        <layout class="QGridLayout" name="gridLayout">
         <item row="0" column="1">
-         <widget class="QTabWidget" name="tabWidget">
+         <widget class="QTabWidget" name="tabQuery">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>4</horstretch>
@@ -70,13 +70,13 @@
           <property name="tabsClosable">
            <bool>true</bool>
           </property>
-          <widget class="QWidget" name="tab">
+          <widget class="QWidget" name="tab_1">
            <attribute name="title">
             <string>Tab 1</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_2">
             <item row="0" column="0">
-             <widget class="QTextEdit" name="textEdit"/>
+             <widget class="QTextEdit" name="sqlEdit1"/>
             </item>
            </layout>
           </widget>
@@ -84,11 +84,16 @@
            <attribute name="title">
             <string>Tab 2</string>
            </attribute>
+           <layout class="QGridLayout" name="gridLayout_3">
+            <item row="0" column="0">
+             <widget class="QTextEdit" name="sqlEdit2"/>
+            </item>
+           </layout>
           </widget>
          </widget>
         </item>
         <item row="0" column="0">
-         <widget class="QTreeWidget" name="treeWidget">
+         <widget class="QTreeWidget" name="treeList">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>1</horstretch>
@@ -117,7 +122,7 @@
        </layout>
       </item>
       <item>
-       <widget class="QTabWidget" name="tabWidget_2">
+       <widget class="QTabWidget" name="tabResult">
         <property name="tabsClosable">
          <bool>true</bool>
         </property>
@@ -149,7 +154,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>915</width>
+     <width>1171</width>
      <height>23</height>
     </rect>
    </property>
