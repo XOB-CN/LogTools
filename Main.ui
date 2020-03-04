@@ -40,6 +40,20 @@
          <widget class="QDateTimeEdit" name="geTime"/>
         </item>
         <item>
+         <widget class="QPushButton" name="btnNew">
+          <property name="text">
+           <string>New</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnQuery">
+          <property name="text">
+           <string>Query</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="horizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
