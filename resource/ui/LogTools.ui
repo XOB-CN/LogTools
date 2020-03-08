@@ -175,5 +175,42 @@
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>cbx_company</sender>
+   <signal>activated(QString)</signal>
+   <receiver>Form</receiver>
+   <slot>slot_update_cate()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>76</x>
+     <y>80</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>28</x>
+     <y>24</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbx_category</sender>
+   <signal>activated(QString)</signal>
+   <receiver>Form</receiver>
+   <slot>slot_update_prod()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>138</x>
+     <y>119</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>195</x>
+     <y>32</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>slot_update_cate()</slot>
+  <slot>slot_update_prod()</slot>
+ </slots>
 </ui>

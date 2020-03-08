@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'LogTools.ui'
 #
-# Created by: PyQt5 UI code generator 5.13.0
+# Created by: PyQt5 UI code generator 5.14.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -56,6 +56,8 @@ class Ui_Form(object):
         self.btn_start.setObjectName("btn_start")
 
         self.retranslateUi(Form)
+        self.cbx_company.activated['QString'].connect(Form.slot_update_cate)
+        self.cbx_category.activated['QString'].connect(Form.slot_update_prod)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
