@@ -58,6 +58,7 @@ class Ui_Form(object):
         self.retranslateUi(Form)
         self.cbx_company.activated['QString'].connect(Form.slot_update_cate)
         self.cbx_category.activated['QString'].connect(Form.slot_update_prod)
+        self.btn_start.clicked.connect(Form.slot_btn_start)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):

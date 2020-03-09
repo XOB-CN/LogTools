@@ -208,9 +208,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btn_start</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>slot_btn_start()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>179</x>
+     <y>213</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>218</x>
+     <y>238</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>slot_update_cate()</slot>
   <slot>slot_update_prod()</slot>
+  <slot>slot_btn_start()</slot>
  </slots>
 </ui>

@@ -43,3 +43,6 @@ class LogApp(QWidget, Ui_Form):
 
     def slot_update_prod(self):
         self.load_cbx_product()
+
+    def slot_btn_start(self):
+        print(self.cbx_company.currentText(), self.cbx_category.currentText(), self.cbx_product.currentText())
