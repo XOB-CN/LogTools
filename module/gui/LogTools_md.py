@@ -13,6 +13,9 @@ class LogApp(QWidget, Ui_Form):
         'MicroFocus':{'ITOM':['OA','OBM/OMi']},
     }
 
+    # 自定义信号
+    singal_btn_start = pyqtSignal(str, str, str)
+
     def __init__(self, parent=None, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.setupUi(self)
@@ -45,4 +48,4 @@ class LogApp(QWidget, Ui_Form):
         self.load_cbx_product()
 
     def slot_btn_start(self):
-        print(self.cbx_company.currentText(), self.cbx_category.currentText(), self.cbx_product.currentText())
+        self.singal_btn_start.emit(self.cbx_company.currentText(), self.cbx_category.currentText(), self.cbx_product.currentText())

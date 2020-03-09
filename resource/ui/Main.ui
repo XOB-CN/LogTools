@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1171</width>
-    <height>882</height>
+    <width>982</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,16 +20,6 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QLabel" name="leText">
-          <property name="text">
-           <string>Less than or equal to</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QDateTimeEdit" name="leTime"/>
-        </item>
-        <item>
          <widget class="QLabel" name="geText">
           <property name="text">
            <string>Greater than or equal to</string>
@@ -38,6 +28,16 @@
         </item>
         <item>
          <widget class="QDateTimeEdit" name="geTime"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="leText">
+          <property name="text">
+           <string>Less than or equal to</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDateTimeEdit" name="leTime"/>
         </item>
         <item>
          <widget class="QPushButton" name="btnNew">
@@ -168,7 +168,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1171</width>
+     <width>982</width>
      <height>23</height>
     </rect>
    </property>
