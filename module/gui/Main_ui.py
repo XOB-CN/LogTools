@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Main.ui'
 #
-# Created by: PyQt5 UI code generator 5.13.0
+# Created by: PyQt5 UI code generator 5.14.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -52,6 +52,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.tabQuery.sizePolicy().hasHeightForWidth())
         self.tabQuery.setSizePolicy(sizePolicy)
         self.tabQuery.setTabsClosable(True)
+        self.tabQuery.setTabBarAutoHide(False)
         self.tabQuery.setObjectName("tabQuery")
         self.tab_1 = QtWidgets.QWidget()
         self.tab_1.setObjectName("tab_1")
@@ -61,14 +62,6 @@ class Ui_MainWindow(object):
         self.sqlEdit1.setObjectName("sqlEdit1")
         self.gridLayout_2.addWidget(self.sqlEdit1, 0, 0, 1, 1)
         self.tabQuery.addTab(self.tab_1, "")
-        self.tab_2 = QtWidgets.QWidget()
-        self.tab_2.setObjectName("tab_2")
-        self.gridLayout_3 = QtWidgets.QGridLayout(self.tab_2)
-        self.gridLayout_3.setObjectName("gridLayout_3")
-        self.sqlEdit2 = QtWidgets.QTextEdit(self.tab_2)
-        self.sqlEdit2.setObjectName("sqlEdit2")
-        self.gridLayout_3.addWidget(self.sqlEdit2, 0, 0, 1, 1)
-        self.tabQuery.addTab(self.tab_2, "")
         self.gridLayout.addWidget(self.tabQuery, 0, 1, 1, 1)
         self.treeList = QtWidgets.QTreeWidget(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
@@ -84,6 +77,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addLayout(self.gridLayout)
         self.tabResult = QtWidgets.QTabWidget(self.centralwidget)
         self.tabResult.setTabsClosable(True)
+        self.tabResult.setTabBarAutoHide(True)
         self.tabResult.setObjectName("tabResult")
         self.tab_3 = QtWidgets.QWidget()
         self.tab_3.setObjectName("tab_3")
@@ -118,6 +112,9 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.tabQuery.setCurrentIndex(0)
+        self.btnNew.clicked.connect(MainWindow.slot_new_query)
+        self.btnQuery.clicked.connect(MainWindow.slot_run_sql_query)
+        self.tabQuery.tabCloseRequested['int'].connect(MainWindow.slot_tab_sql_close)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -130,7 +127,6 @@ class Ui_MainWindow(object):
         self.btnNew.setText(_translate("MainWindow", "New"))
         self.btnQuery.setText(_translate("MainWindow", "Query"))
         self.tabQuery.setTabText(self.tabQuery.indexOf(self.tab_1), _translate("MainWindow", "Tab 1"))
-        self.tabQuery.setTabText(self.tabQuery.indexOf(self.tab_2), _translate("MainWindow", "Tab 2"))
         self.tabResult.setTabText(self.tabResult.indexOf(self.tab_3), _translate("MainWindow", "Tab 1"))
         self.tabResult.setTabText(self.tabResult.indexOf(self.tab_4), _translate("MainWindow", "Tab 2"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))

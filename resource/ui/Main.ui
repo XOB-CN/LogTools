@@ -92,6 +92,9 @@
           <property name="tabsClosable">
            <bool>true</bool>
           </property>
+          <property name="tabBarAutoHide">
+           <bool>false</bool>
+          </property>
           <widget class="QWidget" name="tab_1">
            <attribute name="title">
             <string>Tab 1</string>
@@ -99,16 +102,6 @@
            <layout class="QGridLayout" name="gridLayout_2">
             <item row="0" column="0">
              <widget class="QTextEdit" name="sqlEdit1"/>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="tab_2">
-           <attribute name="title">
-            <string>Tab 2</string>
-           </attribute>
-           <layout class="QGridLayout" name="gridLayout_3">
-            <item row="0" column="0">
-             <widget class="QTextEdit" name="sqlEdit2"/>
             </item>
            </layout>
           </widget>
@@ -146,6 +139,9 @@
       <item>
        <widget class="QTabWidget" name="tabResult">
         <property name="tabsClosable">
+         <bool>true</bool>
+        </property>
+        <property name="tabBarAutoHide">
          <bool>true</bool>
         </property>
         <widget class="QWidget" name="tab_3">
@@ -208,5 +204,59 @@
   </action>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>btnNew</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slot_new_query()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>641</x>
+     <y>73</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>999</x>
+     <y>38</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnQuery</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slot_run_sql_query()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>717</x>
+     <y>66</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>996</x>
+     <y>72</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>tabQuery</sender>
+   <signal>tabCloseRequested(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slot_tab_sql_close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>314</x>
+     <y>100</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>996</x>
+     <y>113</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>slot_new_query()</slot>
+  <slot>slot_run_sql_query()</slot>
+  <slot>slot_tab_sql_close()</slot>
+ </slots>
 </ui>
