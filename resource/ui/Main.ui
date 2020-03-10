@@ -27,7 +27,11 @@
          </widget>
         </item>
         <item>
-         <widget class="QDateTimeEdit" name="geTime"/>
+         <widget class="QDateTimeEdit" name="geTime">
+          <property name="displayFormat">
+           <string>yyyy/M/d HH:mm:ss</string>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QLabel" name="leText">
@@ -37,7 +41,11 @@
          </widget>
         </item>
         <item>
-         <widget class="QDateTimeEdit" name="leTime"/>
+         <widget class="QDateTimeEdit" name="leTime">
+          <property name="displayFormat">
+           <string>yyyy/M/d HH:mm:ss</string>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="btnNew">

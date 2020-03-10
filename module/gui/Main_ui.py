@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Main.ui'
 #
-# Created by: PyQt5 UI code generator 5.14.1
+# Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -124,7 +124,9 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.geText.setText(_translate("MainWindow", "Greater than or equal to"))
+        self.geTime.setDisplayFormat(_translate("MainWindow", "yyyy/M/d HH:mm:ss"))
         self.leText.setText(_translate("MainWindow", "Less than or equal to"))
+        self.leTime.setDisplayFormat(_translate("MainWindow", "yyyy/M/d HH:mm:ss"))
         self.btnNew.setText(_translate("MainWindow", "New"))
         self.btnQuery.setText(_translate("MainWindow", "Query"))
         self.tabQuery.setTabText(self.tabQuery.indexOf(self.tab_1), _translate("MainWindow", "Tab 1"))
