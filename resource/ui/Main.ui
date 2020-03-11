@@ -129,7 +129,7 @@
           </property>
           <column>
            <property name="text">
-            <string notr="true">1</string>
+            <string>Database Tree</string>
            </property>
           </column>
          </widget>
