@@ -19,6 +19,13 @@ class LogApp(QWidget, Ui_Form):
     def __init__(self, parent=None, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.setupUi(self)
+        # 初始化显示数据
+        self.load_cbx_company()
+        self.load_cbx_category()
+        self.load_cbx_product()
+
+        # 显示窗口标题
+        self.setWindowTitle('LogTools')
 
     def load_cbx_company(self):
         cbx_comp_list = []

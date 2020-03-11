@@ -41,11 +41,15 @@ class LogMain(QMainWindow, Ui_MainWindow):
         self.tabQuery.setCurrentIndex(self.tabQuery.count() - 1)
 
     def slot_run_sql_query(self):
-        print('执行SQL查询')
-        # sqlEdit 返回的是一个 QTextEdit 对象
-        # !!! 还未解决 index 的问题，目前来看 sqlEdit 返回的值不正确，还少条件
-        sqlEdit = self.tabQuery.findChild(QTextEdit)
-        sqlEdit.setText('Hello World!')
+        # sqlEdit 返回的是当前激活的 QTextEdit 对象
+        sqlEdit = self.tabQuery.currentWidget().findChild(QTextEdit)
+        sql_str = sqlEdit.toPlainText()
+        # 判断获取的内容
+        if len(sql_str) == 0:
+            print('no input anything')
+        else:
+            print('****** execute sql query ******')
+            print(sql_str)
 
     # SQL Query Tab 关闭函数
     def slot_tab_sql_close(self, index):

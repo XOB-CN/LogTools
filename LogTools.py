@@ -9,12 +9,6 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     # 生成初始界面
     gui = LogApp()
-    # 生成初始界面的数据
-    gui.load_cbx_company()
-    gui.load_cbx_category()
-    gui.load_cbx_product()
-    # 生成窗口数据
-    gui.setWindowTitle('LogTools')
 
     # guiMain 是 LogTools 主界面的实例
     guiMain = LogMain()
