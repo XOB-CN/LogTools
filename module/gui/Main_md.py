@@ -18,16 +18,31 @@ class LogMain(QMainWindow, Ui_MainWindow):
         # 设置初始的大于时间，即当前时间 - 30day
         self.geTime.setDateTime(QDateTime.addDays(QDateTime.currentDateTime(), -30))
 
-        # 加载 QTreeWidget 中的内容
+        # 加载 QTreeWidget 中的内容，仅仅是测试用途
         self.show_db_list()
 
     # 针对 QTreeWidget 的操作
     def show_db_list(self):
+        #####################################
+        # 测试代码，仅仅用于展示效果
+        # 设置 Tree List 的根
         root = QTreeWidgetItem(self.treeList)
-        for i in range(10):
-            item = QTreeWidgetItem(root)
-            item.setText(0, str(i))
-            root.addChild(item)
+        root.setText(0, 'SD12345678')
+
+        # 设置子节点1
+        sub_item1 = QTreeWidgetItem(root)
+        sub_item1.setText(0, 'tb_System')
+
+        # 设置子节点2
+        sub_item2 = QTreeWidgetItem(root)
+        sub_item2.setText(0, 'tb_Traces')
+        # root.addChild(item)
+
+        # for i in range(10):
+        #     item = QTreeWidgetItem(root)
+        #     item.setText(0, str(i))
+        #     root.addChild(item)
+        #####################################
 
     # 创建新的 Table 标签
     def slot_new_query(self):
