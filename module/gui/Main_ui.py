@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Main.ui'
 #
-# Created by: PyQt5 UI code generator 5.14.1
+# Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -103,17 +103,19 @@ class Ui_MainWindow(object):
         self.statusBar = QtWidgets.QStatusBar(MainWindow)
         self.statusBar.setObjectName("statusBar")
         MainWindow.setStatusBar(self.statusBar)
-        self.actionRead = QtWidgets.QAction(MainWindow)
-        self.actionRead.setObjectName("actionRead")
-        self.menuFile.addAction(self.actionRead)
+        self.actionImport = QtWidgets.QAction(MainWindow)
+        self.actionImport.setCheckable(False)
+        self.actionImport.setObjectName("actionImport")
+        self.menuFile.addAction(self.actionImport)
         self.menubar.addAction(self.menuFile.menuAction())
-        self.toolBar.addAction(self.actionRead)
+        self.toolBar.addAction(self.actionImport)
 
         self.retranslateUi(MainWindow)
         self.tabQuery.setCurrentIndex(0)
         self.btnNew.clicked.connect(MainWindow.slot_new_query)
         self.btnQuery.clicked.connect(MainWindow.slot_run_sql_query)
         self.tabQuery.tabCloseRequested['int'].connect(MainWindow.slot_tab_sql_close)
+        self.actionImport.triggered.connect(MainWindow.slot_action_import)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -131,4 +133,5 @@ class Ui_MainWindow(object):
         self.tabResult.setTabText(self.tabResult.indexOf(self.tab_4), _translate("MainWindow", "Tab 2"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar"))
-        self.actionRead.setText(_translate("MainWindow", "Read"))
+        self.actionImport.setText(_translate("MainWindow", "Import"))
+        self.actionImport.setToolTip(_translate("MainWindow", "Import"))

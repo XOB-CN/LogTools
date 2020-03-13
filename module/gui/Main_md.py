@@ -80,3 +80,9 @@ class LogMain(QMainWindow, Ui_MainWindow):
     # SQL Query Tab 关闭函数
     def slot_tab_sql_close(self, index):
         self.tabQuery.removeTab(index)
+
+    # 读取日志文件
+    def slot_action_import(self):
+        # file_path = QFileDialog.getOpenFileName()
+        # print(file_path)
+        print('Action_Import!')

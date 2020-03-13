@@ -180,7 +180,7 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionRead"/>
+    <addaction name="actionImport"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -194,12 +194,18 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionRead"/>
+   <addaction name="actionImport"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionRead">
+  <action name="actionImport">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
    <property name="text">
-    <string>Read</string>
+    <string>Import</string>
+   </property>
+   <property name="toolTip">
+    <string>Import</string>
    </property>
   </action>
  </widget>
@@ -253,10 +259,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionImport</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slot_action_import()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>490</x>
+     <y>399</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>slot_new_query()</slot>
   <slot>slot_run_sql_query()</slot>
   <slot>slot_tab_sql_close()</slot>
+  <slot>slot_action_import()</slot>
  </slots>
 </ui>
