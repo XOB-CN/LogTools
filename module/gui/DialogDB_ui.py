@@ -63,11 +63,11 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.lab_filepath.setText(_translate("Dialog", "File Path"))
+        self.lab_filepath.setText(_translate("Dialog", "DB File"))
         self.lab_explain.setText(_translate("Dialog", "Please select the database you want to create or import"))
         self.lab_dbname.setText(_translate("Dialog", "DB Name"))
         self.btn_dbname.setText(_translate("Dialog", "Select DB"))
-        self.btn_filepath.setText(_translate("Dialog", "Select Path"))
+        self.btn_filepath.setText(_translate("Dialog", "File Path"))
 
 
 if __name__ == "__main__":
