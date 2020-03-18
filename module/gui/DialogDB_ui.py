@@ -58,23 +58,15 @@ class Ui_Dialog(object):
         self.retranslateUi(Dialog)
         self.buttonBox.accepted.connect(Dialog.accept)
         self.buttonBox.rejected.connect(Dialog.reject)
+        self.btn_dbname.clicked.connect(Dialog.slot_select_db)
+        self.btn_filepath.clicked.connect(Dialog.slot_file_path)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.lab_filepath.setText(_translate("Dialog", "DB File"))
+        self.lab_filepath.setText(_translate("Dialog", "LogFile"))
         self.lab_explain.setText(_translate("Dialog", "Please select the database you want to create or import"))
         self.lab_dbname.setText(_translate("Dialog", "DB Name"))
         self.btn_dbname.setText(_translate("Dialog", "Select DB"))
         self.btn_filepath.setText(_translate("Dialog", "File Path"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())

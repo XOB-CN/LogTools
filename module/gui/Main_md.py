@@ -8,6 +8,7 @@ class LogMain(QMainWindow, Ui_MainWindow):
     LogTools Main class
     """
     num_new_query = 1
+    singal_btn_import = pyqtSignal(str, str, str)
 
     def __init__(self, parent=None, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
@@ -83,6 +84,5 @@ class LogMain(QMainWindow, Ui_MainWindow):
 
     # 读取日志文件
     def slot_action_import(self):
-        # file_path = QFileDialog.getOpenFileName()
-        # print(file_path)
-        print('Action_Import!')
+        # 发射一个自定义信号，信号内容包括 "厂商" + "分类" + "产品"
+        self.singal_btn_import.emit('test_1','test_2','test_3')

@@ -3,6 +3,7 @@
 from PyQt5.Qt import *
 from module.gui.LogTools_md import LogApp
 from module.gui.Main_md import LogMain
+from module.gui.DialogDB_md import DialogDB
 
 if __name__ == '__main__':
     import sys
@@ -19,6 +20,13 @@ if __name__ == '__main__':
         # 隐藏 LogTools 初始界面
         gui.hide()
     gui.singal_btn_start.connect(enable_LogMain)
+
+    # 选择 DB 的对话框
+    dbgui = DialogDB()
+    def enable_DialogDB(company_name, category_name, product_name):
+        print(company_name, category_name, product_name)
+        dbgui.show()
+    guiMain.singal_btn_import.connect(enable_DialogDB)
 
     gui.show()
     sys.exit(app.exec_())

@@ -29,7 +29,7 @@
    <item row="5" column="0">
     <widget class="QLabel" name="lab_filepath">
      <property name="text">
-      <string>DB File</string>
+      <string>LogFile</string>
      </property>
     </widget>
    </item>
@@ -141,8 +141,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>259</x>
+     <y>190</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -157,8 +157,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>259</x>
+     <y>190</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -166,5 +166,42 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btn_dbname</sender>
+   <signal>clicked()</signal>
+   <receiver>Dialog</receiver>
+   <slot>slot_select_db()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>311</x>
+     <y>63</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>354</x>
+     <y>36</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_filepath</sender>
+   <signal>clicked()</signal>
+   <receiver>Dialog</receiver>
+   <slot>slot_file_path()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>301</x>
+     <y>128</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>355</x>
+     <y>156</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>slot_select_db()</slot>
+  <slot>slot_file_path()</slot>
+  <slot>slot1()</slot>
+ </slots>
 </ui>
