@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'DialogDB.ui'
 #
-# Created by: PyQt5 UI code generator 5.14.1
+# Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -21,11 +21,11 @@ class Ui_Dialog(object):
         self.lab_filepath = QtWidgets.QLabel(Dialog)
         self.lab_filepath.setObjectName("lab_filepath")
         self.gridLayout.addWidget(self.lab_filepath, 5, 0, 1, 1)
-        self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
-        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
-        self.buttonBox.setObjectName("buttonBox")
-        self.gridLayout.addWidget(self.buttonBox, 7, 1, 1, 1)
+        self.btn_dialog = QtWidgets.QDialogButtonBox(Dialog)
+        self.btn_dialog.setOrientation(QtCore.Qt.Horizontal)
+        self.btn_dialog.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.btn_dialog.setObjectName("btn_dialog")
+        self.gridLayout.addWidget(self.btn_dialog, 7, 1, 1, 1)
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.gridLayout.addItem(spacerItem, 6, 1, 1, 1)
         self.lab_explain = QtWidgets.QLabel(Dialog)
@@ -56,8 +56,8 @@ class Ui_Dialog(object):
         self.gridLayout.addItem(spacerItem2, 1, 0, 1, 1)
 
         self.retranslateUi(Dialog)
-        self.buttonBox.accepted.connect(Dialog.accept)
-        self.buttonBox.rejected.connect(Dialog.reject)
+        self.btn_dialog.accepted.connect(Dialog.slot_accept)
+        self.btn_dialog.rejected.connect(Dialog.reject)
         self.btn_dbname.clicked.connect(Dialog.slot_select_db)
         self.btn_filepath.clicked.connect(Dialog.slot_file_path)
         QtCore.QMetaObject.connectSlotsByName(Dialog)

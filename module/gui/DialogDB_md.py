@@ -10,6 +10,8 @@ class DialogDB(QDialog, Ui_Dialog):
     """
     # 软件所在的根目录
     basepath = os.path.abspath('.')
+    # 接收产品分类
+    product_type = []
 
     def __init__(self, parent=None, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
@@ -25,6 +27,16 @@ class DialogDB(QDialog, Ui_Dialog):
         # QlineEdit：DB Name
         self.line_dbname.setText(db_name)
 
+    # 获取文件路径，并将值填写到对应的 QlineEdit 对象
     def slot_file_path(self):
-        logpath = QFileDialog.getOpenFileName()
-        print(logpath)
+        logpath_dialog = QFileDialog.getOpenFileName()
+        logpath = logpath_dialog[0]
+        # QlineEdit：File Path
+        self.line_filepath.setText(logpath)
+
+    # 生成任务清单，准备读取日志
+    def slot_accept(self):
+        print('任务清单列表：')
+        print('数据库名：', self.line_dbname.text())
+        print('文件路径：', self.line_filepath.text())
+        print('产品分类：',self.product_type[0], self.product_type[1], self.product_type[2])

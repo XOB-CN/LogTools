@@ -12,7 +12,6 @@ class LogApp(QWidget, Ui_Form):
     cbx_data = {
         'MicroFocus':{'ITOM':['OA','OBM/OMi']},
     }
-
     # 自定义信号
     singal_btn_start = pyqtSignal(str, str, str)
 

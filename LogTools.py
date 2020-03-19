@@ -14,7 +14,8 @@ if __name__ == '__main__':
     # guiMain 是 LogTools 主界面的实例
     guiMain = LogMain()
     def enable_LogMain(company_name, category_name, product_name):
-        print(company_name + '\n' + category_name + '\n' + product_name)
+        # 将初始界面获取的产品分类数据传递到 LogTools 主界面里
+        guiMain.product_type = [company_name, category_name, product_name]
         # 显示 LogTools 主界面
         guiMain.show()
         # 隐藏 LogTools 初始界面
@@ -24,7 +25,8 @@ if __name__ == '__main__':
     # 选择 DB 的对话框
     dbgui = DialogDB()
     def enable_DialogDB(company_name, category_name, product_name):
-        print(company_name, category_name, product_name)
+        # 将主界面获取的产品分类数据传递到 Select DB 的界面里
+        dbgui.product_type = [company_name, category_name, product_name]
         dbgui.show()
     guiMain.singal_btn_import.connect(enable_DialogDB)
 

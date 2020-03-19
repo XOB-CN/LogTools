@@ -34,7 +34,7 @@
     </widget>
    </item>
    <item row="7" column="1">
-    <widget class="QDialogButtonBox" name="buttonBox">
+    <widget class="QDialogButtonBox" name="btn_dialog">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -135,10 +135,10 @@
  <resources/>
  <connections>
   <connection>
-   <sender>buttonBox</sender>
+   <sender>btn_dialog</sender>
    <signal>accepted()</signal>
    <receiver>Dialog</receiver>
-   <slot>accept()</slot>
+   <slot>slot_accept()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>259</x>
@@ -151,7 +151,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>buttonBox</sender>
+   <sender>btn_dialog</sender>
    <signal>rejected()</signal>
    <receiver>Dialog</receiver>
    <slot>reject()</slot>
@@ -202,6 +202,6 @@
  <slots>
   <slot>slot_select_db()</slot>
   <slot>slot_file_path()</slot>
-  <slot>slot1()</slot>
+  <slot>slot_accept()</slot>
  </slots>
 </ui>

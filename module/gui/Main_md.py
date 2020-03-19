@@ -10,6 +10,9 @@ class LogMain(QMainWindow, Ui_MainWindow):
     num_new_query = 1
     singal_btn_import = pyqtSignal(str, str, str)
 
+    # 接收产品分类
+    product_type = []
+
     def __init__(self, parent=None, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.setupUi(self)
@@ -85,4 +88,4 @@ class LogMain(QMainWindow, Ui_MainWindow):
     # 读取日志文件
     def slot_action_import(self):
         # 发射一个自定义信号，信号内容包括 "厂商" + "分类" + "产品"
-        self.singal_btn_import.emit('test_1','test_2','test_3')
+        self.singal_btn_import.emit(self.product_type[0], self.product_type[1], self.product_type[2])
