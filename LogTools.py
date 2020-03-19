@@ -25,10 +25,18 @@ if __name__ == '__main__':
     # 选择 DB 的对话框
     dbgui = DialogDB()
     def enable_DialogDB(company_name, category_name, product_name):
+        # 清除上一次的记录
+        dbgui.line_dbname.clear()
+        dbgui.line_filepath.clear()
         # 将主界面获取的产品分类数据传递到 Select DB 的界面里
         dbgui.product_type = [company_name, category_name, product_name]
         dbgui.show()
     guiMain.singal_btn_import.connect(enable_DialogDB)
+
+    # 日志分析线程/进程
+    def log_import(task_info):
+        print(task_info)
+    dbgui.singal_log_task.connect(log_import)
 
     gui.show()
     sys.exit(app.exec_())

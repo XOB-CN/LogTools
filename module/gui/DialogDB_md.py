@@ -12,6 +12,8 @@ class DialogDB(QDialog, Ui_Dialog):
     basepath = os.path.abspath('.')
     # 接收产品分类
     product_type = []
+    # 自定义信号，传递需要读取的日志信息的字典数据
+    singal_log_task = pyqtSignal(dict)
 
     def __init__(self, parent=None, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
@@ -36,7 +38,6 @@ class DialogDB(QDialog, Ui_Dialog):
 
     # 生成任务清单，准备读取日志
     def slot_accept(self):
-        print('任务清单列表：')
-        print('数据库名：', self.line_dbname.text())
-        print('文件路径：', self.line_filepath.text())
-        print('产品分类：',self.product_type[0], self.product_type[1], self.product_type[2])
+        self.singal_log_task.emit({'db_name':self.line_dbname.text(), 'file_path':self.line_filepath.text(),
+                                   'product_type':self.product_type[0] + '-' + self.product_type[1] + '-' + self.product_type[2]})
+        self.hide()
