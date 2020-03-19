@@ -54,6 +54,7 @@ class Ui_Dialog(object):
         self.line_dbname.setObjectName("line_dbname")
         self.gridLayout.addWidget(self.line_dbname, 3, 1, 1, 1)
         self.line_dirpath = QtWidgets.QLineEdit(Dialog)
+        self.line_dirpath.setClearButtonEnabled(True)
         self.line_dirpath.setObjectName("line_dirpath")
         self.gridLayout.addWidget(self.line_dirpath, 5, 1, 1, 1)
         self.btn_dialog = QtWidgets.QDialogButtonBox(Dialog)
