@@ -52,9 +52,9 @@ class LogMain(QMainWindow, Ui_MainWindow):
     def slot_new_query(self):
         # 新建的 Tab 名字
         self.num_new_query += 1
-        tablabel = 'Tab '+ str(self.num_new_query)
-        tlaylout = 'Layout'+ str(self.num_new_query)
-        textedit = 'sqlEdit'+ str(self.num_new_query)
+        tablabel = 'Tab' + str(self.num_new_query)
+        tlaylout = 'Layout' + str(self.num_new_query)
+        textedit = 'sqlEdit' + str(self.num_new_query)
 
         # 生成 QWidget 以及 QTextEdit 中的内容
         self.tab_page = QWidget()
