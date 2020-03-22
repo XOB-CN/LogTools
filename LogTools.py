@@ -35,7 +35,18 @@ if __name__ == '__main__':
 
     # 日志分析线程/进程
     def log_import(task_info):
-        print(task_info)
+        # 启动的任务参数数据
+        print('传递的数据:', task_info)
+        # 打开进度条
+        guiMain.progressBar.show()
+
+        ############ 暂未实现 ############
+        # 预处理：检索需要读取的日志文件列表
+        pass
+        # 处理中：读取日志/将数据写入数据库
+        pass
+        # 处理后：收尾内容，做一些后续的处理
+
     dbgui.singal_log_task.connect(log_import)
 
     gui.show()

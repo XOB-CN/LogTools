@@ -22,6 +22,10 @@ class LogMain(QMainWindow, Ui_MainWindow):
         # 设置初始的大于时间，即当前时间 - 30day
         self.geTime.setDateTime(QDateTime.addDays(QDateTime.currentDateTime(), -30))
 
+        # 隐藏/初始化进度条
+        self.progressBar.setValue(0)
+        self.progressBar.hide()
+
         # 加载 QTreeWidget 中的内容，仅仅是测试用途
         self.show_db_list()
 
