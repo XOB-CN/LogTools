@@ -4,6 +4,7 @@ from PyQt5.Qt import *
 from module.gui.LogTools_md import LogApp
 from module.gui.Main_md import LogMain
 from module.gui.DialogDB_md import DialogDB
+from module.tools.LogInsert import LogRead
 
 if __name__ == '__main__':
     import sys
@@ -33,16 +34,15 @@ if __name__ == '__main__':
         dbgui.show()
     guiMain.singal_btn_import.connect(enable_DialogDB)
 
-    # 日志分析线程/进程
+    # 日志分析线程/进程: task_info 为字典类型的任务数据
     def log_import(task_info):
-        # 启动的任务参数数据
-        print('传递的数据:', task_info)
         # 打开进度条
         guiMain.progressBar.show()
 
         ############ 暂未实现 ############
-        # 预处理：检索需要读取的日志文件列表
-        pass
+        # 预处理：检索需要读取的日志文件列表以及相关信息
+        filespath = LogRead(guiMain, task_info)
+        filespath.start()
         # 处理中：读取日志/将数据写入数据库
         pass
         # 处理后：收尾内容，做一些后续的处理
