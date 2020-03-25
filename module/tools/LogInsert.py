@@ -2,12 +2,15 @@
 
 import os
 from PyQt5.Qt import *
-from module.rules import MicroFocus_ITOM_OA_FileRule as MF_ITOM_OA_FR
 
 class LogRead(QThread):
     def __init__(self, parent=None, task_info=None):
         super().__init__(parent)
         self.task_info = task_info
+        # 匹配产品规则
+        if self.task_info.get('product_type') == 'MicroFocus-ITOM-OA':
+            from module.rules import MicroFocus_ITOM_OA_FileRule as FileRule
+            print(FileRule.FileRule)
 
     def run(self):
         '''
