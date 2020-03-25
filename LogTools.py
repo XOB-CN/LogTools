@@ -4,7 +4,7 @@ from PyQt5.Qt import *
 from module.gui.LogTools_md import LogApp
 from module.gui.Main_md import LogMain
 from module.gui.DialogDB_md import DialogDB
-from module.tools.LogInsert import LogRead
+from module.tools.LogInsert import LogInsert
 
 if __name__ == '__main__':
     import sys
@@ -40,12 +40,8 @@ if __name__ == '__main__':
         guiMain.progressBar.show()
 
         ############ 暂未实现 ############
-        # 预处理：检索需要读取的日志文件列表以及相关信息
-        filespath = LogRead(guiMain, task_info)
-        filespath.start()
-        # 处理中：读取日志/将数据写入数据库
-        pass
-        # 处理后：收尾内容，做一些后续的处理
+        thread1 = LogInsert(guiMain, task_info)
+        thread1.start()
 
     dbgui.singal_log_task.connect(log_import)
 
