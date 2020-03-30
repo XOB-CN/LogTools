@@ -9,6 +9,7 @@ from module.tools.LogInsert import LogInsert
 if __name__ == '__main__':
     import sys
     app = QApplication(sys.argv)
+
     # 生成初始界面
     gui = LogApp()
 
