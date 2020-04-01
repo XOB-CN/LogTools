@@ -49,5 +49,5 @@ class LogInsert(QThread):
 
         self.task_info['file_path'] = self.file_path
 
-        # 将信号发射出去, 传递需要分析的产品分类, 以及文件列表
+        # 将处理完成的任务数据通过信号发射出去
         self.singal_log_task_end.emit(self.task_info)

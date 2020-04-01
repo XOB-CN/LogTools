@@ -42,17 +42,18 @@ if __name__ == '__main__':
         dbgui.show()
     guiMain.singal_btn_import.connect(enable_DialogDB)
 
-    # 日志分析线程/进程: task_info 为字典类型的任务数据
+    # 日志分析进程: task_info 为字典类型的任务数据
     def log_producer(task_info):
         product_type = task_info.get('product_type')
         file_path = task_info.get('file_path')
+        # 判断产品分类
         if product_type == 'MicroFocus-ITOM-OA':
             for path in file_path:
                 print(path)
                 p.apply_async(ITOM_OA, args=(path, dataqueue, infoqueue,))
             p.close()
-            p.join()
 
+    # 日志分析线程: 用于完善 task_info 信息的
     def log_import(task_info):
         # 打开进度条
         guiMain.progressBar.show()
