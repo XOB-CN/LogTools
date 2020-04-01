@@ -19,5 +19,5 @@ class ITOM_OA():
 
     def log_system(self):
         print('3-:' ,self.filepath, self.dataqueue, self.infoqueue)
-        time.sleep(3)
+        time.sleep(10)
         print('end!')

@@ -5,16 +5,25 @@ from module.gui.LogTools_md import LogApp
 from module.gui.Main_md import LogMain
 from module.gui.DialogDB_md import DialogDB
 from module.tools.LogInsert import LogInsert
+from module.rules.MicroFocus_ITOM_OA_InsertRule import ITOM_OA
+from multiprocessing import Manager, Pool
 
 if __name__ == '__main__':
     import sys
     app = QApplication(sys.argv)
 
+    # 多进程部分
+    p = Pool()
+    dataqueue = Manager().Queue()
+    infoqueue = Manager().Queue()
+
     # 生成初始界面
     gui = LogApp()
-
+    # 选择 DB 的对话框
+    dbgui = DialogDB()
     # guiMain 是 LogTools 主界面的实例
     guiMain = LogMain()
+    ######################## 跨界面的槽函数 ##############################################
     def enable_LogMain(company_name, category_name, product_name):
         # 将初始界面获取的产品分类数据传递到 LogTools 主界面里
         guiMain.product_type = [company_name, category_name, product_name]
@@ -24,8 +33,6 @@ if __name__ == '__main__':
         gui.hide()
     gui.singal_btn_start.connect(enable_LogMain)
 
-    # 选择 DB 的对话框
-    dbgui = DialogDB()
     def enable_DialogDB(company_name, category_name, product_name):
         # 清除上一次的记录
         dbgui.line_dbname.clear()
@@ -36,15 +43,23 @@ if __name__ == '__main__':
     guiMain.singal_btn_import.connect(enable_DialogDB)
 
     # 日志分析线程/进程: task_info 为字典类型的任务数据
+    def log_producer(task_info):
+        product_type = task_info.get('product_type')
+        file_path = task_info.get('file_path')
+        if product_type == 'MicroFocus-ITOM-OA':
+            for path in file_path:
+                print(path)
+                p.apply_async(ITOM_OA, args=(path, dataqueue, infoqueue,))
+            p.close()
+            p.join()
+
     def log_import(task_info):
         # 打开进度条
         guiMain.progressBar.show()
-
-        ############ 暂未实现 ############
         thread1 = LogInsert(guiMain, task_info)
+        thread1.singal_log_task_end.connect(log_producer)
         thread1.start()
-
     dbgui.singal_log_task.connect(log_import)
-
+    #####################################################################################
     gui.show()
     sys.exit(app.exec_())

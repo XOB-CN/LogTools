@@ -4,6 +4,10 @@ import os, re
 from PyQt5.Qt import *
 
 class LogInsert(QThread):
+
+    # 发射自定义信号, 将处理完成的 task_info 传递出去
+    singal_log_task_end = pyqtSignal(dict)
+
     def __init__(self, parent=None, task_info=None):
         super().__init__(parent)
         self.task_info = task_info
@@ -15,16 +19,6 @@ class LogInsert(QThread):
             from module.rules import MicroFocus_ITOM_OA_FileRule as FileRule
             self.file_rule = FileRule.FileRule
             self.fileblk_rule = FileRule.FileBlkRule
-
-    # # 子进程：分析日志
-    # # 这里需要添加一个 @classmethod, 否则 multiprocessing.Pool.apply_async 方法无法执行!
-    # @classmethod
-    # def read_file(self, logtype, logpath):
-    #     print('1-:', logtype, logpath)
-    #     # 如果产品类型是 MicroFocus-ITOM-OA
-    #     if logtype == 'MicroFocus-ITOM-OA':
-    #         from module.rules.MicroFocus_ITOM_OA_InsertRule import ITOM_OA
-    #         ITOM_OA(logpath)
 
     def run(self):
         '''
@@ -53,11 +47,7 @@ class LogInsert(QThread):
                         if len(re.findall(blkrule, url_file, flags=re.IGNORECASE)) > 0:
                             self.file_path.pop(self.file_path.index(url_file))
 
-        ##### 测试过了, 下面代码不好用, 只能将产品分类以及日志文件列表采用信号的方法发射出去
-        # # 注意!!! 在 Pool 中如果想要传递 Queue 的话, 需要使用 multiprocessing.Manager().Queue(), 而不能使用 multiprocessing.Queue()
-        # # Pool 方法里会隐含执行 os.cpu_count(), 这里会自动算出 CPU 的核数 (包括超线程)
+        self.task_info['file_path'] = self.file_path
 
-        # p = Pool()
-        # for path in self.file_path:
-        #     p.apply_async(self.read_file, args=(log_type, path, ))
-        # p.close()
+        # 将信号发射出去, 传递需要分析的产品分类, 以及文件列表
+        self.singal_log_task_end.emit(self.task_info)
