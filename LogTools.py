@@ -49,7 +49,6 @@ if __name__ == '__main__':
         # 判断产品分类
         if product_type == 'MicroFocus-ITOM-OA':
             for path in file_path:
-                print(path)
                 p.apply_async(ITOM_OA, args=(path, dataqueue, infoqueue,))
             p.close()
 
