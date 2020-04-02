@@ -42,6 +42,13 @@ if __name__ == '__main__':
         dbgui.show()
     guiMain.singal_btn_import.connect(enable_DialogDB)
 
+    # 日志写入进程：将日志写入到数据库中
+    def log_consumer(fileslist, dataqueue, infoqueue):
+        singal_processBar_update = pyqtSignal(str)
+        print(dataqueue.get())
+        print(infoqueue.get())
+        pass
+
     # 日志分析进程: task_info 为字典类型的任务数据
     def log_producer(task_info):
         product_type = task_info.get('product_type')
@@ -60,6 +67,7 @@ if __name__ == '__main__':
         thread1.singal_log_task_end.connect(log_producer)
         thread1.start()
     dbgui.singal_log_task.connect(log_import)
+
     #####################################################################################
     gui.show()
     sys.exit(app.exec_())
