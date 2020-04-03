@@ -6,7 +6,12 @@ from module.gui.Main_md import LogMain
 from module.gui.DialogDB_md import DialogDB
 from module.tools.LogInsert import LogInsert
 from module.rules.MicroFocus_ITOM_OA_InsertRule import ITOM_OA
-from multiprocessing import Manager, Pool
+from multiprocessing import Manager, Pool, Process
+
+# 将 queue 中的数据写入到数据库中
+def sql_insert(dataqueue, infoqueue):
+    print(dataqueue.get())
+    print(infoqueue.get())
 
 if __name__ == '__main__':
     import sys
@@ -16,6 +21,10 @@ if __name__ == '__main__':
     p = Pool()
     dataqueue = Manager().Queue()
     infoqueue = Manager().Queue()
+    # 先启动录入数据的子进程, 并且将此进程设置为守护进程
+    sub_proc = Process(target=sql_insert, args=(dataqueue, infoqueue,))
+    sub_proc.daemon = True
+    sub_proc.start()
 
     # 生成初始界面
     gui = LogApp()
@@ -53,10 +62,11 @@ if __name__ == '__main__':
     def log_producer(task_info):
         product_type = task_info.get('product_type')
         file_path = task_info.get('file_path')
+        db_name = task_info.get('db_name')
         # 判断产品分类
         if product_type == 'MicroFocus-ITOM-OA':
             for path in file_path:
-                p.apply_async(ITOM_OA, args=(path, dataqueue, infoqueue,))
+                p.apply_async(ITOM_OA, args=(path, dataqueue, infoqueue, db_name,))
             p.close()
 
     # 日志分析线程: 用于完善 task_info 信息的

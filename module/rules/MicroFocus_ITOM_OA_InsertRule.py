@@ -7,10 +7,11 @@ class ITOM_OA():
     '''
     读取日志文件的类, 并将分析日志的结果放到队列中
     '''
-    def __init__(self, filepath, dataqueue, infoqueue):
+    def __init__(self, filepath, dataqueue, infoqueue, db_name):
         self.filepath = filepath
         self.dataqueue = dataqueue
         self.infoqueue = infoqueue
+        self.db_name = db_name
 
         # 如果是 system.xt 文件, 则调用 log_system 方法读取日志
         if len(re.findall('system\.txt', self.filepath, re.IGNORECASE)) > 0:
@@ -59,7 +60,7 @@ class ITOM_OA():
                             # 抹掉日志中剩下的 '/n'
                             logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
 
-                self.dataqueue.put(logdata)
+                self.dataqueue.put({'db_name':self.db_name, 'db_data':logdata})
                 self.infoqueue.put(0)
 
         except Exception as reason:
