@@ -2,6 +2,7 @@
 
 import re
 from module.rules.MicroFocus_ITOM_OA_FileRule import BlackRule
+from module.tools.SQLTools import sql_write
 
 class ITOM_OA():
     '''
@@ -20,6 +21,7 @@ class ITOM_OA():
     def log_system(self):
         # 初始化数据和相关控制参数
         logdata = []
+        sqldata = []
         isnoblk = True
         log_num = 0
         isstart = False
@@ -45,7 +47,7 @@ class ITOM_OA():
                         # 判断该行日志是否符合格式
                         if len(line.split(': ',4)) > 4:
                             log_level = line.split(': ',4)[1].strip()
-                            log_time = line.split(': ',4)[2].strip()
+                            log_time = sql_write.sqlite_to_datetime(line.split(': ',4)[2].strip())
                             log_comp = line.split(': ',4)[3].strip()
                             log_detail = line.split(': ',4)[4].strip()
                             logdata.append({'logfile':self.filepath,
@@ -54,13 +56,17 @@ class ITOM_OA():
                                             'logtime':log_time,
                                             'logcomp':log_comp,
                                             'logdetail':log_detail})
-
                         else:
                             logdata[-1]['logdetail'] = logdata[-1]['logdetail'] + '\n' + line
                             # 抹掉日志中剩下的 '/n'
                             logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
 
-                self.dataqueue.put({'db_name':self.db_name, 'db_data':logdata})
+                for data in logdata:
+                    sql_insert = 'INSEERT INTO ' + 'tb_System ' + '(logfile, logline, loglevel, logtime, logcomp, logdetail) VALUE ' + \
+                                 '(' + data.get('logfile') + ',' + str(data.get('logline')) + ',' + data.get('loglevel') + ',' + data.get('logtime') + ',' + data.get('logcomp') + ',' + data.get('logdetail') + ');'
+                    sqldata.append(sql_insert)
+
+                self.dataqueue.put({'db_name':self.db_name, 'db_data':sqldata})
                 self.infoqueue.put(0)
 
         except Exception as reason:
