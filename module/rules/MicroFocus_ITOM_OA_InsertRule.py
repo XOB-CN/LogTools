@@ -62,7 +62,7 @@ class ITOM_OA():
                             logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
 
                 for data in logdata:
-                    sql_insert = 'INSEERT INTO ' + 'tb_System ' + '(logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ' + \
+                    sql_insert = 'INSEERT INTO ' + 'tb_System ' + '(logfile, logline, loglevel, logtime, logcomp, logdetail) VALUE ' + \
                                  '(' + data.get('logfile') + ',' + str(data.get('logline')) + ',' + data.get('loglevel') + ',' + data.get('logtime') + ',' + data.get('logcomp') + ',' + data.get('logdetail') + ');'
                     sqldata.append(sql_insert)
 
