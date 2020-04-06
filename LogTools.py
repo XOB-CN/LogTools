@@ -72,12 +72,24 @@ if __name__ == '__main__':
                 p.apply_async(ITOM_OA, args=(path, dataqueue, infoqueue, db_name, product_type))
             p.close()
 
+    # 更新 GUI 的相关状态
+    def guiMain_update(value, now, total):
+        proc_bar = int(now/total)*100
+        if proc_bar == 100:
+            guiMain.statusBar.showMessage('log has been written to the database.')
+            guiMain.progressBar.hide()
+        else:
+            guiMain.statusBar.showMessage("Writing to the database, please waiting...")
+            guiMain.progressBar.setValue(proc_bar)
+
+
     # 日志分析线程: 用于完善 task_info 信息的
     def log_import(task_info):
         # 打开进度条
         guiMain.progressBar.show()
-        thread1 = LogInsert(guiMain, task_info)
+        thread1 = LogInsert(guiMain, task_info, infoqueue)
         thread1.singal_log_task_end.connect(log_producer)
+        thread1.singal_sql_write.connect(guiMain_update)
         thread1.start()
     dbgui.singal_log_task.connect(log_import)
 

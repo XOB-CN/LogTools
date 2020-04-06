@@ -64,7 +64,6 @@ class sql_write():
         for sql in db_data:
             query = QtSql.QSqlQuery()
             query.exec_(sql)
-        print(infoqueue.get())
 
 # 测试代码
 if __name__ == '__main__':

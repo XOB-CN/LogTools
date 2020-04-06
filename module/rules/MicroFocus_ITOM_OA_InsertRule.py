@@ -70,7 +70,9 @@ class ITOM_OA():
                                     'db_type':self.db_type,
                                     'db_table':'tb_System',
                                     'db_data':sqldata,})
+
                 self.infoqueue.put(0)
 
         except Exception as reason:
             print('error:', reason)
+            self.infoqueue.put(255)

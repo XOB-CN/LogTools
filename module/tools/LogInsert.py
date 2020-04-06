@@ -7,12 +7,15 @@ class LogInsert(QThread):
 
     # 发射自定义信号, 将处理完成的 task_info 传递出去
     singal_log_task_end = pyqtSignal(dict)
+    # 发射自定义信号, 将写入数据库的信息传递出去
+    singal_sql_write = pyqtSignal(int, int, int)
 
-    def __init__(self, parent=None, task_info=None):
+    def __init__(self, parent=None, task_info=None, infoqueue=None):
         super().__init__(parent)
         self.task_info = task_info
         # 需要分析的日志文件列表
         self.file_path = []
+        self.infoqueue = infoqueue
 
         # 匹配产品规则
         if self.task_info.get('product_type') == 'MicroFocus-ITOM-OA':
@@ -51,3 +54,10 @@ class LogInsert(QThread):
 
         # 将处理完成的任务数据通过信号发射出去
         self.singal_log_task_end.emit(self.task_info)
+
+        # 将数据库写入完成的信号发射出去
+        total = len(self.file_path)
+        for i in range(total):
+            value = self.infoqueue.get()
+            now = i+1
+            self.singal_sql_write.emit(value, now, total)
