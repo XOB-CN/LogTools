@@ -5,13 +5,16 @@ from module.gui.LogTools_md import LogApp
 from module.gui.Main_md import LogMain
 from module.gui.DialogDB_md import DialogDB
 from module.tools.LogInsert import LogInsert
+from module.tools.SQLTools import sql_write
 from module.rules.MicroFocus_ITOM_OA_InsertRule import ITOM_OA
 from multiprocessing import Manager, Pool, Process
 
+sql_insert_vlaue = True
+
 # 将 queue 中的数据写入到数据库中
 def sql_insert(dataqueue, infoqueue):
-    print(dataqueue.get())
-    print(infoqueue.get())
+    # while sql_insert_vlaue:
+    sql_write.sqlite_to_database(dataqueue, infoqueue)
 
 if __name__ == '__main__':
     import sys
@@ -66,7 +69,7 @@ if __name__ == '__main__':
         # 判断产品分类
         if product_type == 'MicroFocus-ITOM-OA':
             for path in file_path:
-                p.apply_async(ITOM_OA, args=(path, dataqueue, infoqueue, db_name,))
+                p.apply_async(ITOM_OA, args=(path, dataqueue, infoqueue, db_name, product_type))
             p.close()
 
     # 日志分析线程: 用于完善 task_info 信息的
