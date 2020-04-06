@@ -14,7 +14,11 @@ sql_insert_vlaue = True
 # 将 queue 中的数据写入到数据库中
 def sql_insert(dataqueue, infoqueue):
     # while sql_insert_vlaue:
-    sql_write.sqlite_to_database(dataqueue, infoqueue)
+    try:
+        while True:
+            sql_write.sqlite_to_database(dataqueue, infoqueue)
+    except:
+        print('数据库写入进程已退出!')
 
 if __name__ == '__main__':
     import sys
@@ -54,13 +58,6 @@ if __name__ == '__main__':
         dbgui.show()
     guiMain.singal_btn_import.connect(enable_DialogDB)
 
-    # 日志写入进程：将日志写入到数据库中
-    def log_consumer(fileslist, dataqueue, infoqueue):
-        singal_processBar_update = pyqtSignal(str)
-        print(dataqueue.get())
-        print(infoqueue.get())
-        pass
-
     # 日志分析进程: task_info 为字典类型的任务数据
     def log_producer(task_info):
         product_type = task_info.get('product_type')
@@ -69,12 +66,12 @@ if __name__ == '__main__':
         # 判断产品分类
         if product_type == 'MicroFocus-ITOM-OA':
             for path in file_path:
-                p.apply_async(ITOM_OA, args=(path, dataqueue, infoqueue, db_name, product_type))
+                p.apply_async(ITOM_OA, args=(path, dataqueue, db_name, product_type))
             p.close()
 
     # 更新 GUI 的相关状态
     def guiMain_update(value, now, total):
-        proc_bar = int(now/total)*100
+        proc_bar = int((now/total)*100)
         if proc_bar == 100:
             guiMain.statusBar.showMessage('log has been written to the database.')
             guiMain.progressBar.hide()

@@ -8,10 +8,9 @@ class ITOM_OA():
     '''
     读取日志文件的类, 并将分析日志的结果放到队列中
     '''
-    def __init__(self, filepath, dataqueue, infoqueue, db_name, product_type):
+    def __init__(self, filepath, dataqueue, db_name, product_type):
         self.filepath = filepath
         self.dataqueue = dataqueue
-        self.infoqueue = infoqueue
         self.db_name = db_name
         self.db_type = product_type
 
@@ -71,8 +70,5 @@ class ITOM_OA():
                                     'db_table':'tb_System',
                                     'db_data':sqldata,})
 
-                self.infoqueue.put(0)
-
         except Exception as reason:
             print('error:', reason)
-            self.infoqueue.put(255)

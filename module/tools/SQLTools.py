@@ -52,6 +52,8 @@ class sql_write():
         db.setDatabaseName(db_file)
         # 使数据库处于打开状态
         db.open()
+        # 开启事务
+        db.transaction()
 
         # 判断是否需要建立相应的表
         if db_type == 'MicroFocus-ITOM-OA':
@@ -60,10 +62,16 @@ class sql_write():
                     query = QtSql.QSqlQuery()
                     query.exec_("create table tb_System (id INTEGER PRIMARY KEY, logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
 
-        # 将获取的数据写入到指定的表中
-        for sql in db_data:
-            query = QtSql.QSqlQuery()
-            query.exec_(sql)
+        try:
+            # 将获取的数据写入到指定的表中
+            insert = QtSql.QSqlQuery()
+            for sql in db_data:
+                insert.exec_(sql)
+            # 结束事务
+            db.commit()
+            infoqueue.put(0)
+        except:
+            infoqueue.put(1)
 
 # 测试代码
 if __name__ == '__main__':
