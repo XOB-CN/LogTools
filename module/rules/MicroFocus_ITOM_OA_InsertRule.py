@@ -8,11 +8,12 @@ class ITOM_OA():
     '''
     读取日志文件的类, 并将分析日志的结果放到队列中
     '''
-    def __init__(self, filepath, dataqueue, infoqueue, db_name):
+    def __init__(self, filepath, dataqueue, infoqueue, db_name, product_type):
         self.filepath = filepath
         self.dataqueue = dataqueue
         self.infoqueue = infoqueue
         self.db_name = db_name
+        self.db_type = product_type
 
         # 如果是 system.xt 文件, 则调用 log_system 方法读取日志
         if len(re.findall('system\.txt', self.filepath, re.IGNORECASE)) > 0:
@@ -62,12 +63,16 @@ class ITOM_OA():
                             logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
 
                 for data in logdata:
-                    sql_insert = 'INSEERT INTO ' + 'tb_System ' + '(logfile, logline, loglevel, logtime, logcomp, logdetail) VALUE ' + \
-                                 '(' + data.get('logfile') + ',' + str(data.get('logline')) + ',' + data.get('loglevel') + ',' + data.get('logtime') + ',' + data.get('logcomp') + ',' + data.get('logdetail') + ');'
+                    sql_insert = 'INSERT INTO tb_System (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(data.get('logfile'), str(data.get('logline')),data.get('loglevel'),data.get('logtime'),data.get('logcomp'),data.get('logdetail'))
                     sqldata.append(sql_insert)
 
-                self.dataqueue.put({'db_name':self.db_name, 'db_data':sqldata})
+                self.dataqueue.put({'db_name':self.db_name,
+                                    'db_type':self.db_type,
+                                    'db_table':'tb_System',
+                                    'db_data':sqldata,})
+
                 self.infoqueue.put(0)
 
         except Exception as reason:
             print('error:', reason)
+            self.infoqueue.put(255)

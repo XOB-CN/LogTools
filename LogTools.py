@@ -5,13 +5,16 @@ from module.gui.LogTools_md import LogApp
 from module.gui.Main_md import LogMain
 from module.gui.DialogDB_md import DialogDB
 from module.tools.LogInsert import LogInsert
+from module.tools.SQLTools import sql_write
 from module.rules.MicroFocus_ITOM_OA_InsertRule import ITOM_OA
 from multiprocessing import Manager, Pool, Process
 
+sql_insert_vlaue = True
+
 # 将 queue 中的数据写入到数据库中
 def sql_insert(dataqueue, infoqueue):
-    print(dataqueue.get())
-    print(infoqueue.get())
+    # while sql_insert_vlaue:
+    sql_write.sqlite_to_database(dataqueue, infoqueue)
 
 if __name__ == '__main__':
     import sys
@@ -66,15 +69,27 @@ if __name__ == '__main__':
         # 判断产品分类
         if product_type == 'MicroFocus-ITOM-OA':
             for path in file_path:
-                p.apply_async(ITOM_OA, args=(path, dataqueue, infoqueue, db_name,))
+                p.apply_async(ITOM_OA, args=(path, dataqueue, infoqueue, db_name, product_type))
             p.close()
+
+    # 更新 GUI 的相关状态
+    def guiMain_update(value, now, total):
+        proc_bar = int(now/total)*100
+        if proc_bar == 100:
+            guiMain.statusBar.showMessage('log has been written to the database.')
+            guiMain.progressBar.hide()
+        else:
+            guiMain.statusBar.showMessage("Writing to the database, please waiting...")
+            guiMain.progressBar.setValue(proc_bar)
+
 
     # 日志分析线程: 用于完善 task_info 信息的
     def log_import(task_info):
         # 打开进度条
         guiMain.progressBar.show()
-        thread1 = LogInsert(guiMain, task_info)
+        thread1 = LogInsert(guiMain, task_info, infoqueue)
         thread1.singal_log_task_end.connect(log_producer)
+        thread1.singal_sql_write.connect(guiMain_update)
         thread1.start()
     dbgui.singal_log_task.connect(log_import)
 
