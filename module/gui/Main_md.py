@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import os
 from PyQt5.Qt import *
+from PyQt5 import QtSql
 from module.gui.Main_ui import Ui_MainWindow
 
 class LogMain(QMainWindow, Ui_MainWindow):
@@ -26,31 +28,35 @@ class LogMain(QMainWindow, Ui_MainWindow):
         self.progressBar.setValue(0)
         self.progressBar.hide()
 
+        # 判断数据目录是否存在, 如果不存在, 则创建该目录
+        if os.path.exists('./data') == False:
+            os.mkdir('./data')
+
         # 加载 QTreeWidget 中的内容，仅仅是测试用途
         self.show_db_list()
 
     # 针对 QTreeWidget 的操作
     def show_db_list(self):
-        #####################################
-        # 测试代码，仅仅用于展示效果
-        # 设置 Tree List 的根
-        root = QTreeWidgetItem(self.treeList)
-        root.setText(0, 'SD12345678')
+        # 获取数据库目录下的信息
+        dbfiles = os.listdir('./data')
+        if dbfiles != []:
+            dbinfo = {}
+            for dbfile in dbfiles:
+                db = QtSql.QSqlDatabase.addDatabase('QSQLITE')
+                path = os.path.join('./data', dbfile)
+                db.setDatabaseName(path)
+                db.open()
+                dbinfo[dbfile] = db.tables()
+                db.close()
 
-        # 设置子节点1
-        sub_item1 = QTreeWidgetItem(root)
-        sub_item1.setText(0, 'tb_System')
-
-        # 设置子节点2
-        sub_item2 = QTreeWidgetItem(root)
-        sub_item2.setText(0, 'tb_Traces')
-        # root.addChild(item)
-
-        # for i in range(10):
-        #     item = QTreeWidgetItem(root)
-        #     item.setText(0, str(i))
-        #     root.addChild(item)
-        #####################################
+            # 循环展示数据库列表信息
+            for db,tbs in dbinfo.items():
+                root = QTreeWidgetItem(self.treeList)
+                # 去掉数据库文件最后的三个字符 (.db)
+                root.setText(0, db[:-3])
+                for tb in tbs:
+                    sub_item = QTreeWidgetItem(root)
+                    sub_item.setText(0, tb)
 
     # 创建新的 Table 标签
     def slot_new_query(self):
