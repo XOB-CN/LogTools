@@ -275,11 +275,28 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>treeList</sender>
+   <signal>itemDoubleClicked(QTreeWidgetItem*,int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slot_dblist_sql_query()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>85</x>
+     <y>163</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>4</x>
+     <y>131</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>slot_new_query()</slot>
   <slot>slot_run_sql_query()</slot>
   <slot>slot_tab_sql_close()</slot>
   <slot>slot_action_import()</slot>
+  <slot>slot_dblist_sql_query()</slot>
  </slots>
 </ui>

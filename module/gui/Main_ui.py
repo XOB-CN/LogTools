@@ -116,6 +116,7 @@ class Ui_MainWindow(object):
         self.btnQuery.clicked.connect(MainWindow.slot_run_sql_query)
         self.tabQuery.tabCloseRequested['int'].connect(MainWindow.slot_tab_sql_close)
         self.actionImport.triggered.connect(MainWindow.slot_action_import)
+        self.treeList.itemDoubleClicked['QTreeWidgetItem*','int'].connect(MainWindow.slot_dblist_sql_query)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

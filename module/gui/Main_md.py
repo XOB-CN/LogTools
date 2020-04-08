@@ -32,7 +32,7 @@ class LogMain(QMainWindow, Ui_MainWindow):
         if os.path.exists('./data') == False:
             os.mkdir('./data')
 
-        # 加载 QTreeWidget 中的内容，仅仅是测试用途
+        # 加载 QTreeWidget 中的内容
         self.show_db_list()
 
     # 针对 QTreeWidget 的操作
@@ -80,6 +80,7 @@ class LogMain(QMainWindow, Ui_MainWindow):
         self.tabQuery.setObjectName(tablabel)
         self.tabQuery.setCurrentIndex(self.tabQuery.count() - 1)
 
+    # 执行查询语句, 并且返回结果
     def slot_run_sql_query(self):
         # sqlEdit 返回的是当前激活的 QTextEdit 对象
         sqlEdit = self.tabQuery.currentWidget().findChild(QTextEdit)
@@ -90,6 +91,14 @@ class LogMain(QMainWindow, Ui_MainWindow):
         else:
             print('****** execute sql query ******')
             print(sql_str)
+
+    # 选中 dblist 的表时, 执行 sql 查询
+    def slot_dblist_sql_query(self):
+        try:
+            print(self.treeList.currentItem().parent().text(0))
+        except:
+            print('没有父对象')
+        print(self.treeList.currentItem().text(0))
 
     # SQL Query Tab 关闭函数
     def slot_tab_sql_close(self, index):
