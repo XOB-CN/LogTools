@@ -12,6 +12,7 @@ class LogMain(QMainWindow, Ui_MainWindow):
     num_new_query = 1
     num_new_result = 1
     singal_btn_import = pyqtSignal(str, str, str)
+    query_db_file = ''
 
     # 接收产品分类
     product_type = []
@@ -92,7 +93,17 @@ class LogMain(QMainWindow, Ui_MainWindow):
             print('no input anything')
         else:
             print('****** execute sql query ******')
-            print(sql_str)
+            print('查询语句是：',sql_str)
+            print('当前数据库：', self.query_db_file)
+            if self.query_db_file != '':
+                qrydb = QtSql.QSqlDatabase.addDatabase('QSQLITE')
+                qrydb.setDatabaseName(self.query_db_file)
+                qrydb.open()
+
+                model = QSqlQueryModel()
+                model.setQuery(sql_str, db=qrydb)
+                if model.lastError().isValid():
+                    print(model.lastError().text())
 
         # 生成 QtableView 对象:self.tab_view ########################
         self.num_new_result += 1
@@ -113,13 +124,20 @@ class LogMain(QMainWindow, Ui_MainWindow):
         self.tabResult.setCurrentIndex(self.tabResult.count() - 1)
         ##############################################################
 
-    # 选中 dblist 的表时, 执行 sql 查询
+        self.tab_view.setModel(model)
+        self.tab_view.show()
+
+    # 选中 dblist 的表时, 设定选中的数据库文件
     def slot_dblist_sql_query(self):
         try:
-            print(self.treeList.currentItem().parent().text(0))
+            # 选中表时
+            self.query_db_file = os.path.join('.\\data', self.treeList.currentItem().parent().text(0) +'.db')
+            # 在 QTextEdit 中添加默认的 sql 语句 (sqlEdit 返回的是当前激活的 QTextEdit 对象)
+            sqlEdit = self.tabQuery.currentWidget().findChild(QTextEdit)
+            sqlEdit.setText('select * from {};'.format(self.treeList.currentItem().text(0)))
         except:
-            print('没有父对象')
-        print(self.treeList.currentItem().text(0))
+            # 选中数据库时
+            self.query_db_file = os.path.join('.\\data', self.treeList.currentItem().text(0) +'.db')
 
     # SQL Query Tab 关闭函数
     def slot_tab_sql_close(self, index):
