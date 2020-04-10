@@ -127,9 +127,9 @@
         <property name="tabBarAutoHide">
          <bool>false</bool>
         </property>
-        <widget class="QWidget" name="tab_1">
+        <widget class="QWidget" name="SQL_Query_1">
          <attribute name="title">
-          <string>Tab 1</string>
+          <string>SQL_Query_1</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_2">
           <item row="0" column="0">
@@ -154,7 +154,7 @@
         </sizepolicy>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>-1</number>
        </property>
        <property name="tabsClosable">
         <bool>true</bool>
@@ -162,11 +162,6 @@
        <property name="tabBarAutoHide">
         <bool>false</bool>
        </property>
-       <widget class="QWidget" name="tab_3">
-        <attribute name="title">
-         <string>Tab 1</string>
-        </attribute>
-       </widget>
       </widget>
      </widget>
     </item>
@@ -303,6 +298,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>tabResult</sender>
+   <signal>tabCloseRequested(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slot_tab_result_close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>951</x>
+     <y>355</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>982</x>
+     <y>373</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>slot_new_query()</slot>
@@ -310,5 +321,6 @@
   <slot>slot_tab_sql_close()</slot>
   <slot>slot_action_import()</slot>
   <slot>slot_dblist_sql_query()</slot>
+  <slot>slot_tab_result_close()</slot>
  </slots>
 </ui>
