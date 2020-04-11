@@ -90,7 +90,7 @@ class LogMain(QMainWindow, Ui_MainWindow):
 
         # 判断获取的内容
         if len(sql_str) == 0:
-            print('no input anything')
+            pass
         else:
             print('****** execute sql query ******')
             print('查询语句是：',sql_str)
@@ -105,27 +105,34 @@ class LogMain(QMainWindow, Ui_MainWindow):
                 if model.lastError().isValid():
                     print(model.lastError().text())
 
-        # 生成 QtableView 对象:self.tab_view ########################
-        self.num_new_result += 1
-        tablabel = sqltitle.replace('Query','Result')
-        tlaylout = 'LayResult' + str(self.num_new_result)
-        sql_rest = 'sqlResult' + str(self.num_new_result)
-        # 生成 QWidget 以及 QtableView 中的内容
-        self.tab_page_result = QWidget()
-        self.tab_page_result.setObjectName(tablabel)
-        self.tab_layout_result = QGridLayout(self.tab_page_result)
-        self.tab_layout_result.setObjectName(tlaylout)
-        self.tab_view = QTableView(self.tab_page_result)
-        self.tab_view.setObjectName(sql_rest)
-        self.tab_layout_result.addWidget(self.tab_view, 0, 0, 1, 1)
-        # 将生成的 QWidget 中的内容追加到 QTabWidget 中
-        self.tabResult.addTab(self.tab_page_result, tablabel)
-        self.tabResult.setObjectName(tablabel)
-        self.tabResult.setCurrentIndex(self.tabResult.count() - 1)
-        ##############################################################
+                # 生成 QtableView 对象:self.tab_view ########################
+                self.num_new_result += 1
+                tablabel = sqltitle.replace('Query','Result')
+                tlaylout = 'LayResult' + str(self.num_new_result)
+                sql_rest = 'sqlResult' + str(self.num_new_result)
+                # 生成 QWidget 以及 QtableView 中的内容
+                self.tab_page_result = QWidget()
+                self.tab_page_result.setObjectName(tablabel)
+                self.tab_layout_result = QGridLayout(self.tab_page_result)
+                self.tab_layout_result.setObjectName(tlaylout)
+                self.tab_view = QTableView(self.tab_page_result)
+                self.tab_view.setObjectName(sql_rest)
+                self.tab_layout_result.addWidget(self.tab_view, 0, 0, 1, 1)
+                # 将生成的 QWidget 中的内容追加到 QTabWidget 中
+                self.tabResult.addTab(self.tab_page_result, tablabel)
+                self.tabResult.setObjectName(tablabel)
+                self.tabResult.setCurrentIndex(self.tabResult.count() - 1)
+                ##############################################################
 
-        self.tab_view.setModel(model)
-        self.tab_view.show()
+                self.tab_view.setModel(model)
+                # 优化表格显示
+                ## 水平方向标签拓展剩下的窗口部分
+                self.tab_view.horizontalHeader().setStretchLastSection(True)
+                # self.tab_view.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+                ## 设置单元格默认的行高
+                self.tab_view.verticalHeader().setDefaultSectionSize(8)
+                self.tab_view.setFont(QFont('Consolas',8,QFont.Normal))
+                self.tab_view.show()
 
     # 选中 dblist 的表时, 设定选中的数据库文件
     def slot_dblist_sql_query(self):
