@@ -131,7 +131,7 @@ class LogMain(QMainWindow, Ui_MainWindow):
                 # self.tab_view.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
                 ## 设置单元格默认的行高
                 self.tab_view.verticalHeader().setDefaultSectionSize(8)
-                self.tab_view.setFont(QFont('Consolas',8,QFont.Normal))
+                self.tab_view.setFont(QFont('Arial', 8, QFont.Normal))
                 self.tab_view.show()
 
     # 选中 dblist 的表时, 设定选中的数据库文件
