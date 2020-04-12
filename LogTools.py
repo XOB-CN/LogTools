@@ -13,7 +13,6 @@ sql_insert_vlaue = True
 
 # 将 queue 中的数据写入到数据库中
 def sql_insert(dataqueue, infoqueue):
-    # while sql_insert_vlaue:
     try:
         while True:
             sql_write.sqlite_to_database(dataqueue, infoqueue)
@@ -64,10 +63,15 @@ if __name__ == '__main__':
         file_path = task_info.get('file_path')
         db_name = task_info.get('db_name')
         # 判断产品分类
-        if product_type == 'MicroFocus-ITOM-OA':
-            for path in file_path:
-                p.apply_async(ITOM_OA, args=(path, dataqueue, db_name, product_type))
-            p.close()
+        try:
+            if product_type == 'MicroFocus-ITOM-OA':
+                for path in file_path:
+                    p.apply_async(ITOM_OA, args=(path, dataqueue, db_name, product_type))
+                # 此处不能写 p.close() 这个代码
+                # p.close() 表示关闭 Pool 池, 即不在接收新的任务
+                # 如果添加了 p.close(), 那么在接收后续的分析任务时, 就会提示 Pool not running 的异常
+        except Exception as e:
+            print(e)
 
     # 更新 GUI 的相关状态
     def guiMain_update(value, now, total):
@@ -75,6 +79,7 @@ if __name__ == '__main__':
         if proc_bar == 100:
             guiMain.statusBar.showMessage('log has been written to the database.')
             guiMain.progressBar.hide()
+            guiMain.show_db_list()
         else:
             guiMain.statusBar.showMessage("Writing to the database, please waiting...")
             guiMain.progressBar.setValue(proc_bar)
@@ -83,11 +88,14 @@ if __name__ == '__main__':
     # 日志分析线程: 用于完善 task_info 信息的
     def log_import(task_info):
         # 打开进度条
-        guiMain.progressBar.show()
-        thread1 = LogInsert(guiMain, task_info, infoqueue)
-        thread1.singal_log_task_end.connect(log_producer)
-        thread1.singal_sql_write.connect(guiMain_update)
-        thread1.start()
+        try:
+            guiMain.progressBar.show()
+            thread1 = LogInsert(guiMain, task_info, infoqueue)
+            thread1.singal_log_task_end.connect(log_producer)
+            thread1.singal_sql_write.connect(guiMain_update)
+            thread1.start()
+        except Exception as e:
+            print('log_import:',e)
     dbgui.singal_log_task.connect(log_import)
 
     #####################################################################################

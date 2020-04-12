@@ -72,9 +72,10 @@ class sql_write():
                 insert.exec_(sql)
             # 结束事务
             db.commit()
-
+            db.close()
             infoqueue.put(0)
         except:
+            db.close()
             infoqueue.put(1)
 
 # 测试代码

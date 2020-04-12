@@ -51,6 +51,9 @@ class LogMain(QMainWindow, Ui_MainWindow):
                 dbinfo[dbfile] = db.tables()
                 db.close()
 
+            # 清除原先的所有内容
+            self.treeList.clear()
+
             # 循环展示数据库列表信息
             for db,tbs in dbinfo.items():
                 root = QTreeWidgetItem(self.treeList)
