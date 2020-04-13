@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import os
 from PyQt5.Qt import *
 from module.gui.LogTools_md import LogApp
 from module.gui.Main_md import LogMain
 from module.gui.DialogDB_md import DialogDB
 from module.tools.LogInsert import LogInsert
 from module.tools.SQLTools import sql_write
+from module.tools.LogRecord import logger
 from module.rules.MicroFocus_ITOM_OA_InsertRule import ITOM_OA
 from multiprocessing import Manager, Pool, Process
 
@@ -20,6 +22,11 @@ def sql_insert(dataqueue, infoqueue):
         print('数据库写入进程已退出!')
 
 if __name__ == '__main__':
+    # 生成本地 log 目录, 准备记录软件运行的日志
+    if os.path.exists('./logs') == False:
+        os.mkdir('./logs')
+
+    # 软件主流程部分
     import sys
     app = QApplication(sys.argv)
 
@@ -71,7 +78,7 @@ if __name__ == '__main__':
                 # p.close() 表示关闭 Pool 池, 即不在接收新的任务
                 # 如果添加了 p.close(), 那么在接收后续的分析任务时, 就会提示 Pool not running 的异常
         except Exception as e:
-            print(e)
+            logger.error(e)
 
     # 更新 GUI 的相关状态
     def guiMain_update(value, now, total):
@@ -96,8 +103,8 @@ if __name__ == '__main__':
             thread1.start()
         except Exception as e:
             print('log_import:',e)
+            logger.error(e)
     dbgui.singal_log_task.connect(log_import)
-
     #####################################################################################
     gui.show()
     sys.exit(app.exec_())

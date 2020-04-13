@@ -2,6 +2,7 @@
 
 from datetime import datetime
 from PyQt5 import QtSql
+from module.tools.LogRecord import logger
 
 class sql_write():
     '''
@@ -64,6 +65,7 @@ class sql_write():
                     # query.exec_("create table tb_System (id INTEGER PRIMARY KEY, logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
                     # 不自动增长的语句
                     query.exec_("create table tb_System (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
+                    logger.debug("create table tb_System (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
 
         try:
             # 将获取的数据写入到指定的表中

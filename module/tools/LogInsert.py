@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os, re
+from module.tools.LogRecord import logger
 from PyQt5.Qt import *
 
 class LogInsert(QThread):
@@ -54,6 +55,7 @@ class LogInsert(QThread):
 
         # 将处理完成的任务数据通过信号发射出去
         self.singal_log_task_end.emit(self.task_info)
+        logger.debug('信号 singal_log_task_end 已发送, 内容为 {}'.format(str(self.task_info)))
 
         # 将数据库写入完成的信号发射出去
         total = len(self.file_path)
@@ -61,3 +63,4 @@ class LogInsert(QThread):
             value = self.infoqueue.get()
             now = i+1
             self.singal_sql_write.emit(value, now, total)
+            logger.debug('信号 singal_sql_write 已发送, 内容为 value - {}, now - {}, total - {}'.format(str(value), str(now), str(total)))
