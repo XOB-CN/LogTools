@@ -3,6 +3,7 @@
 import re
 from module.rules.MicroFocus_ITOM_OA_FileRule import BlackRule
 from module.tools.SQLTools import sql_write
+from module.tools.LogRecord import logger
 
 class ITOM_OA():
     '''
@@ -30,40 +31,46 @@ class ITOM_OA():
         try:
             with open(self.filepath, mode='r', encoding='utf-8', errors='replace') as f:
                 for line in f:
-                    log_num += 1
-                    isnoblk = True
-                    for blkrule in BlackRule:
-                        if len(re.findall(blkrule, line, re.IGNORECASE)) > 0:
-                            isnoblk = False
+                    try:
+                        log_num += 1
+                        isnoblk = True
+                        for blkrule in BlackRule:
+                            if len(re.findall(blkrule, line, re.IGNORECASE)) > 0:
+                                isnoblk = False
 
-                    # 判断日志的开头是否是事件的开始, 如果不是则忽略
-                    if isstart == False:
-                        if len(re.findall('INF:|WRN:|ERR:', line)) > 0:
-                            isstart = True
+                        # 判断日志的开头是否是事件的开始, 如果不是则忽略
+                        if isstart == False:
+                            if len(re.findall('INF:|WRN:|ERR:', line)) > 0:
+                                isstart = True
 
-                    # 如果改行既不在黑名单, 并且也已经确定 isstart 为 True, 则开始日志匹配流程
-                    if isnoblk and isstart:
-                        line = line.strip()
-                        # 判断该行日志是否符合格式
-                        if len(line.split(': ',4)) > 4:
-                            log_level = line.split(': ',4)[1].strip()
-                            log_time = sql_write.sqlite_to_datetime(line.split(': ',4)[2].strip())
-                            log_comp = line.split(': ',4)[3].strip()
-                            log_detail = line.split(': ',4)[4].strip()
-                            logdata.append({'logfile':self.filepath,
-                                            'logline':log_num,
-                                            'loglevel':log_level,
-                                            'logtime':log_time,
-                                            'logcomp':log_comp,
-                                            'logdetail':log_detail})
-                        else:
-                            logdata[-1]['logdetail'] = logdata[-1]['logdetail'] + '\n' + line
-                            # 抹掉日志中剩下的 '/n'
-                            logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
+                        # 如果改行既不在黑名单, 并且也已经确定 isstart 为 True, 则开始日志匹配流程
+                        if isnoblk and isstart:
+                            line = line.strip()
+                            # 判断该行日志是否符合格式
+                            if len(line.split(': ',4)) > 4:
+                                log_level = line.split(': ',4)[1].strip()
+                                log_time = sql_write.sqlite_to_datetime(line.split(': ',4)[2].strip())
+                                log_comp = line.split(': ',4)[3].strip()
+                                log_detail = line.split(': ',4)[4].strip()
+                                logdata.append({'logfile':self.filepath,
+                                                'logline':log_num,
+                                                'loglevel':log_level,
+                                                'logtime':log_time,
+                                                'logcomp':log_comp,
+                                                'logdetail':log_detail})
+                            else:
+                                logdata[-1]['logdetail'] = logdata[-1]['logdetail'] + '\n' + line
+                                # 抹掉日志中剩下的 '/n'
+                                logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
+                    except Exception as e:
+                        logger.warn("logline can't be processed:{}".format(e))
 
                 for data in logdata:
-                    sql_insert = 'INSERT INTO tb_System (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(data.get('logfile'), str(data.get('logline')),data.get('loglevel'),data.get('logtime'),data.get('logcomp'),data.get('logdetail'))
-                    sqldata.append(sql_insert)
+                    try:
+                        sql_insert = 'INSERT INTO tb_System (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(data.get('logfile'), str(data.get('logline')),data.get('loglevel'),data.get('logtime'),data.get('logcomp'),data.get('logdetail'))
+                        sqldata.append(sql_insert)
+                    except Exception as e:
+                        logger.warn("Can't generate SQL INSERT INTO statement!")
 
                 self.dataqueue.put({'db_name':self.db_name,
                                     'db_type':self.db_type,
@@ -71,4 +78,4 @@ class ITOM_OA():
                                     'db_data':sqldata,})
 
         except Exception as reason:
-            print('error:', reason)
+            logger.warn('logfile read error:{}'.format(reason))

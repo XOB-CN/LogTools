@@ -4,6 +4,7 @@ import os
 from PyQt5.Qt import *
 from PyQt5 import QtSql
 from module.gui.Main_ui import Ui_MainWindow
+from module.tools.LogRecord import logger
 
 class LogMain(QMainWindow, Ui_MainWindow):
     """
@@ -95,9 +96,6 @@ class LogMain(QMainWindow, Ui_MainWindow):
         if len(sql_str) == 0:
             pass
         else:
-            print('****** execute sql query ******')
-            print('查询语句是：',sql_str)
-            print('当前数据库：', self.query_db_file)
             if self.query_db_file != '':
                 qrydb = QtSql.QSqlDatabase.addDatabase('QSQLITE')
                 qrydb.setDatabaseName(self.query_db_file)
@@ -106,7 +104,7 @@ class LogMain(QMainWindow, Ui_MainWindow):
                 model = QSqlQueryModel()
                 model.setQuery(sql_str, db=qrydb)
                 if model.lastError().isValid():
-                    print(model.lastError().text())
+                    logger.warn('SQL Query is not correct:{}'.format(model.lastError().text()))
 
                 # 生成 QtableView 对象:self.tab_view ########################
                 self.num_new_result += 1
@@ -161,3 +159,4 @@ class LogMain(QMainWindow, Ui_MainWindow):
     def slot_action_import(self):
         # 发射一个自定义信号，信号内容包括 "厂商" + "分类" + "产品"
         self.singal_btn_import.emit(self.product_type[0], self.product_type[1], self.product_type[2])
+        logger.debug('Singal function [singal_btn_import] has be emit, value is {}, {}, {}'.format(self.product_type[0], self.product_type[1], self.product_type[2]))

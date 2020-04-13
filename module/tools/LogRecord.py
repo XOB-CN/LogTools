@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import logging
+import os, logging
+
+if os.path.exists('./logs') == False:
+    os.mkdir('./logs')
 
 logging.basicConfig(level=logging.DEBUG,
                     filename='.\\logs\\output.log',

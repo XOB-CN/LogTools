@@ -11,22 +11,15 @@ from module.tools.LogRecord import logger
 from module.rules.MicroFocus_ITOM_OA_InsertRule import ITOM_OA
 from multiprocessing import Manager, Pool, Process
 
-sql_insert_vlaue = True
-
 # 将 queue 中的数据写入到数据库中
 def sql_insert(dataqueue, infoqueue):
     try:
         while True:
             sql_write.sqlite_to_database(dataqueue, infoqueue)
     except:
-        print('数据库写入进程已退出!')
+        logger.info('software has be logout!')
 
 if __name__ == '__main__':
-    # 生成本地 log 目录, 准备记录软件运行的日志
-    if os.path.exists('./logs') == False:
-        os.mkdir('./logs')
-
-    # 软件主流程部分
     import sys
     app = QApplication(sys.argv)
 
@@ -97,12 +90,11 @@ if __name__ == '__main__':
         # 打开进度条
         try:
             guiMain.progressBar.show()
-            thread1 = LogInsert(guiMain, task_info, infoqueue)
-            thread1.singal_log_task_end.connect(log_producer)
-            thread1.singal_sql_write.connect(guiMain_update)
-            thread1.start()
+            sub_thread = LogInsert(guiMain, task_info, infoqueue)
+            sub_thread.singal_log_task_end.connect(log_producer)
+            sub_thread.singal_sql_write.connect(guiMain_update)
+            sub_thread.start()
         except Exception as e:
-            print('log_import:',e)
             logger.error(e)
     dbgui.singal_log_task.connect(log_import)
     #####################################################################################

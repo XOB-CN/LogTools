@@ -3,6 +3,7 @@
 import os
 from PyQt5.Qt import *
 from module.gui.DialogDB_ui import Ui_Dialog
+from module.tools.LogRecord import logger
 
 class DialogDB(QDialog, Ui_Dialog):
     """
@@ -45,8 +46,10 @@ class DialogDB(QDialog, Ui_Dialog):
 
     # 生成任务清单，准备读取日志
     def slot_accept(self):
-        self.singal_log_task.emit({'db_name':self.line_dbname.text(),
+        taskdata = {'db_name':self.line_dbname.text(),
                                    'dir_path':self.line_dirpath.text(),
                                    'file_path': self.line_filepath.text(),
-                                   'product_type':self.product_type[0] + '-' + self.product_type[1] + '-' + self.product_type[2]})
+                                   'product_type':self.product_type[0] + '-' + self.product_type[1] + '-' + self.product_type[2]}
+        self.singal_log_task.emit(taskdata)
+        logger.debug('Singal function [singal_log_task] has be emit, value is {}'.format(str(taskdata)))
         self.hide()
