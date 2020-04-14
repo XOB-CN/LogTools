@@ -106,7 +106,7 @@ class LogMain(QMainWindow, Ui_MainWindow):
                 if model.lastError().isValid():
                     logger.warn('SQL Query is not correct:{}'.format(model.lastError().text()))
                 else:
-                    logger.debug('SQL Query is:{}'.format(sql_str))
+                    logger.debug('SQL Query is:[{}]'.format(sql_str))
 
                 # 生成 QtableView 对象:self.tab_view ########################
                 self.num_new_result += 1
