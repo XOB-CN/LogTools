@@ -152,7 +152,9 @@ class LogMain(QMainWindow, Ui_MainWindow):
             self.query_db_file = os.path.join('.\\data', self.treeList.currentItem().parent().text(0) +'.db')
             # 在 QTextEdit 中添加默认的 sql 语句 (sqlEdit 返回的是当前激活的 QTextEdit 对象)
             sqlEdit = self.tabQuery.currentWidget().findChild(QTextEdit)
-            sqlEdit.setText('select * from {};'.format(self.treeList.currentItem().text(0)))
+            getime = self.geTime.text().replace('/', '-')
+            letime = self.leTime.text().replace('/', '-')
+            sqlEdit.setText("select * from {}\nwhere logtime > '{}' and logtime < '{}'\norder by logtime desc;".format(self.treeList.currentItem().text(0), getime, letime))
         except:
             # 选中数据库时
             self.query_db_file = os.path.join('.\\data', self.treeList.currentItem().text(0) +'.db')
