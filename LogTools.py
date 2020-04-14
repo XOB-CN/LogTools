@@ -5,6 +5,7 @@ from PyQt5.Qt import *
 from module.gui.LogTools_md import LogApp
 from module.gui.Main_md import LogMain
 from module.gui.DialogDB_md import DialogDB
+from module.gui.CellContent_md import CellContent
 from module.tools.LogInsert import LogInsert
 from module.tools.SQLTools import sql_write
 from module.tools.LogRecord import logger
@@ -38,6 +39,9 @@ if __name__ == '__main__':
     dbgui = DialogDB()
     # guiMain 是 LogTools 主界面的实例
     guiMain = LogMain()
+    # 显示单元格内容的实例
+    cellgui = CellContent()
+    
     ######################## 跨界面的槽函数 ##############################################
     def enable_LogMain(company_name, category_name, product_name):
         # 将初始界面获取的产品分类数据传递到 LogTools 主界面里
@@ -84,6 +88,11 @@ if __name__ == '__main__':
             guiMain.statusBar.showMessage("Writing to the database, please waiting...")
             guiMain.progressBar.setValue(proc_bar)
 
+    # 双击单元格时, 显示单元格中的内容
+    def showCellContent(content):
+        cellgui.showContent(content)
+        cellgui.show()
+    guiMain.singal_cell_doubleClicked.connect(showCellContent)
 
     # 日志分析线程: 用于完善 task_info 信息的
     def log_import(task_info):

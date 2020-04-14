@@ -13,6 +13,7 @@ class LogMain(QMainWindow, Ui_MainWindow):
     num_new_query = 1
     num_new_result = 1
     singal_btn_import = pyqtSignal(str, str, str)
+    singal_cell_doubleClicked = pyqtSignal(str)
     query_db_file = ''
 
     # 接收产品分类
@@ -84,6 +85,11 @@ class LogMain(QMainWindow, Ui_MainWindow):
         self.tabQuery.setObjectName(tablabel)
         self.tabQuery.setCurrentIndex(self.tabQuery.count() - 1)
 
+    # 展示双击选中时,单元格中的内容
+    def slot_show_cell(self, cell):
+        self.singal_cell_doubleClicked.emit(cell.data())
+        logger.debug('Singal function [singal_cell_doubleClicked] has be emit, value is [{}]'.format(cell.data()))
+
     # 执行查询语句, 并且返回结果
     def slot_run_sql_query(self):
         # 获取 sqlEdit 上一级的对象名
@@ -126,7 +132,6 @@ class LogMain(QMainWindow, Ui_MainWindow):
                 self.tabResult.setObjectName(tablabel)
                 self.tabResult.setCurrentIndex(self.tabResult.count() - 1)
                 ##############################################################
-
                 self.tab_view.setModel(model)
                 # 优化表格显示
                 ## 水平方向标签拓展剩下的窗口部分
@@ -134,7 +139,10 @@ class LogMain(QMainWindow, Ui_MainWindow):
                 # self.tab_view.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
                 ## 设置单元格默认的行高
                 self.tab_view.verticalHeader().setDefaultSectionSize(8)
+                ## 设置单元格显示的字体
                 self.tab_view.setFont(QFont('Arial', 8, QFont.Normal))
+                ## 连接槽函数, 在双击单元格时触发
+                self.tab_view.doubleClicked.connect(self.slot_show_cell)
                 self.tab_view.show()
 
     # 选中 dblist 的表时, 设定选中的数据库文件
