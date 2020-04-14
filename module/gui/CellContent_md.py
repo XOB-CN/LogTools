@@ -8,6 +8,9 @@ class CellContent(QWidget, Ui_Form):
         super().__init__(parent, *args, **kwargs)
         self.setupUi(self)
 
+        # 修改标题
+        self.setWindowTitle('Cell Content')
+
     def showContent(self, content):
         self.cellText.setText(content)
         self.show()

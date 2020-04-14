@@ -13,7 +13,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(699, 521)
+        Form.resize(500, 300)
+        Form.setMinimumSize(QtCore.QSize(500, 300))
         self.horizontalLayout = QtWidgets.QHBoxLayout(Form)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.cellText = QtWidgets.QTextEdit(Form)
