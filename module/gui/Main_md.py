@@ -4,6 +4,7 @@ import os
 from PyQt5.Qt import *
 from PyQt5 import QtSql
 from module.gui.Main_ui import Ui_MainWindow
+from module.tools.SQLHighLight import SQLHighLight
 from module.tools.LogRecord import logger
 
 class LogMain(QMainWindow, Ui_MainWindow):
@@ -84,6 +85,8 @@ class LogMain(QMainWindow, Ui_MainWindow):
         self.tabQuery.addTab(self.tab_page, tablabel)
         self.tabQuery.setObjectName(tablabel)
         self.tabQuery.setCurrentIndex(self.tabQuery.count() - 1)
+        # 高亮设定
+        highlighter = SQLHighLight(self.tab_text.document())
 
     # 展示双击选中时,单元格中的内容
     def slot_show_cell(self, cell):
