@@ -4,7 +4,6 @@ import os
 from PyQt5.Qt import *
 from PyQt5 import QtSql
 from module.gui.Main_ui import Ui_MainWindow
-from module.tools.SQLHighLight import SQLHighLight
 from module.tools.LogRecord import logger
 
 class LogMain(QMainWindow, Ui_MainWindow):
@@ -40,6 +39,9 @@ class LogMain(QMainWindow, Ui_MainWindow):
         # 加载 QTreeWidget 中的内容
         self.show_db_list()
 
+        # 连接高亮信号
+        self.sqlEdit1.textChanged.connect(self.set_high_light)
+
     # 针对 QTreeWidget 的操作
     def show_db_list(self):
         # 获取数据库目录下的信息
@@ -68,21 +70,41 @@ class LogMain(QMainWindow, Ui_MainWindow):
 
     # 检查高亮
     def set_high_light(self):
-        pass
-        # try:
-        #     sqlEdit = self.tabQuery.currentWidget().findChild(QTextEdit)
-        #     sqlEdit.disconnect()
-        #     # old_pos 是 int 类型
-        #     old_pos = sqlEdit.textCursor().position()
-        #     sqlstr = sqlEdit.toPlainText()
-        #     print(sqlstr)
-        #     newstr = sqlstr.replace('select', "<font color='red'>select</font>")
-        #     sqlEdit.setText(newstr)
-        #     print(newstr)
-        #     sqlEdit.textCursor().setPosition(old_pos, mode=QTextCursor.KeepAnchor)
-        #     sqlEdit.textChanged.connect(self.set_high_light)
-        # except Exception as e:
-        #     print(e)
+        try:
+            sqlEdit = self.tabQuery.currentWidget().findChild(QTextEdit)
+            # 断开槽函数, 防止无限循环
+            sqlEdit.disconnect()
+            # 记录目前光标的位置
+            tc = sqlEdit.textCursor()
+            old_pos = tc.position()
+            # 这里先将获取的内容进行格式转换, 这样可以不用处理 html 中的特殊符号
+            sqlstr = sqlEdit.toHtml()
+            logger.debug('old_sql_text: '+ sqlstr)
+            # 高亮规则
+            keywords = {'select ':"<b><font color='blue'>select </font></b>",
+                        'from ':"<b><font color='blue'>from </font></b>",
+                        'where ':"<b><font color='blue'>where </font></b>",
+                        'and ':"<b><font color='blue'>and </font></b>",
+                        'or ':"<b><font color='blue'>or </font></b>",
+                        'not ':"<b><font color='blue'>not </font></b>",
+                        'like ':"<b><font color='blue'>like </font></b>",
+                        'order by ':"<b><font color='blue'>order by </font></b>",}
+            # 开始进行字符串的替换
+            for keyword, rep_text in keywords.items():
+                if keyword in sqlstr:
+                    sqlstr = sqlstr.replace(keyword, rep_text)
+            logger.debug('new_sql_text: '+ sqlstr)
+            sqlEdit.setText(sqlstr)
+            # 将光标设置到原先的位置(类似 MVC,其实有一个 model, 还需要执行 setTextCursor 方法才会真正移动)
+            tc.setPosition(old_pos)
+            # 移动光标
+            sqlEdit.setTextCursor(tc)
+            # 重新设置焦点, 用于显示光标
+            sqlEdit.setFocus()
+            # 重新连接槽函数
+            sqlEdit.textChanged.connect(self.set_high_light)
+        except Exception as e:
+            logger.warn(e)
 
     # 创建新的 Table 标签
     def slot_new_query(self):
@@ -175,6 +197,7 @@ class LogMain(QMainWindow, Ui_MainWindow):
             sqlEdit = self.tabQuery.currentWidget().findChild(QTextEdit)
             getime = self.geTime.text().replace('/', '-')
             letime = self.leTime.text().replace('/', '-')
+            sqlEdit.clear()
             sqlEdit.setText("select * from {}\nwhere logtime > '{}' and logtime < '{}'\norder by logtime desc;".format(self.treeList.currentItem().text(0), getime, letime))
         except:
             # 选中数据库时

@@ -27,7 +27,7 @@
       <item>
        <widget class="QDateTimeEdit" name="geTime">
         <property name="displayFormat">
-         <string>yyyy/M/d HH:mm:ss</string>
+         <string>yyyy/MM/dd HH:mm:ss</string>
         </property>
        </widget>
       </item>
@@ -41,7 +41,7 @@
       <item>
        <widget class="QDateTimeEdit" name="leTime">
         <property name="displayFormat">
-         <string>yyyy/M/d HH:mm:ss</string>
+         <string>yyyy/MM/dd HH:mm:ss</string>
         </property>
        </widget>
       </item>
