@@ -66,6 +66,24 @@ class LogMain(QMainWindow, Ui_MainWindow):
                     sub_item = QTreeWidgetItem(root)
                     sub_item.setText(0, tb)
 
+    # 检查高亮
+    def set_high_light(self):
+        pass
+        # try:
+        #     sqlEdit = self.tabQuery.currentWidget().findChild(QTextEdit)
+        #     sqlEdit.disconnect()
+        #     # old_pos 是 int 类型
+        #     old_pos = sqlEdit.textCursor().position()
+        #     sqlstr = sqlEdit.toPlainText()
+        #     print(sqlstr)
+        #     newstr = sqlstr.replace('select', "<font color='red'>select</font>")
+        #     sqlEdit.setText(newstr)
+        #     print(newstr)
+        #     sqlEdit.textCursor().setPosition(old_pos, mode=QTextCursor.KeepAnchor)
+        #     sqlEdit.textChanged.connect(self.set_high_light)
+        # except Exception as e:
+        #     print(e)
+
     # 创建新的 Table 标签
     def slot_new_query(self):
         # 新建的 Tab 名字
@@ -86,7 +104,7 @@ class LogMain(QMainWindow, Ui_MainWindow):
         self.tabQuery.setObjectName(tablabel)
         self.tabQuery.setCurrentIndex(self.tabQuery.count() - 1)
         # 高亮设定
-        highlighter = SQLHighLight(self.tab_text.document())
+        self.tab_text.textChanged.connect(self.set_high_light)
 
     # 展示双击选中时,单元格中的内容
     def slot_show_cell(self, cell):
