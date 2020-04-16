@@ -9,7 +9,6 @@ from module.gui.CellContent_md import CellContent
 from module.tools.LogInsert import LogInsert
 from module.tools.SQLTools import sql_write
 from module.tools.LogRecord import logger
-from module.rules.MicroFocus_ITOM_OA_InsertRule import ITOM_OA
 from multiprocessing import Manager, Pool, Process
 
 # 将 queue 中的数据写入到数据库中
@@ -71,6 +70,7 @@ if __name__ == '__main__':
         # 判断产品分类
         try:
             if product_type == 'MicroFocus-ITOM-OA':
+                from module.rules.MicroFocus_ITOM_OA_InsertRule import ITOM_OA
                 for path in file_path:
                     p.apply_async(ITOM_OA, args=(path, dataqueue, db_name, product_type))
                 # 此处不能写 p.close() 这个代码

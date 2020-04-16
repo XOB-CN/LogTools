@@ -24,6 +24,14 @@ class LogInsert(QThread):
             self.file_rule = FileRule.FileRule
             self.fileblk_rule = FileRule.FileBlkRule
 
+        elif self.task_info.get('product_type') == 'MicroFocus-ITOM-OBM/OMi':
+            from module.rules import MicroFocus_ITOM_OBM_FileRule as FileRule
+            self.file_rule = FileRule.FileRule
+            self.fileblk_rule = FileRule.FileBlkRule
+
+        else:
+            logger.error("Can't match product type: " + self.task_info.get('product_type'))
+
     def run(self):
         '''
         获取需要分析的文件列表, 以及日志类型
