@@ -73,6 +73,11 @@ if __name__ == '__main__':
                 from module.rules.MicroFocus_ITOM_OA_InsertRule import ITOM_OA
                 for path in file_path:
                     p.apply_async(ITOM_OA, args=(path, dataqueue, db_name, product_type))
+
+            elif product_type == 'MicroFocus-ITOM-OBM/OMi':
+                from module.rules.MicroFocus_ITOM_OBM_InsertRule import ITOM_OBM
+                for path in file_path:
+                    p.apply_async(ITOM_OBM, args=(path, dataqueue, db_name, product_type))
                 # 此处不能写 p.close() 这个代码
                 # p.close() 表示关闭 Pool 池, 即不在接收新的任务
                 # 如果添加了 p.close(), 那么在接收后续的分析任务时, 就会提示 Pool not running 的异常
