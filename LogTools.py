@@ -46,6 +46,8 @@ if __name__ == '__main__':
     def enable_LogMain(company_name, category_name, product_name):
         # 将初始界面获取的产品分类数据传递到 LogTools 主界面里
         guiMain.product_type = [company_name, category_name, product_name]
+        # 设置软件标题
+        guiMain.setWindowTitle(category_name + ' ' + product_name + ' LogTools ' + 'v0.8.0 Beta')
         # 显示 LogTools 主界面
         guiMain.show()
         # 隐藏 LogTools 初始界面
