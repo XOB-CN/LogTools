@@ -47,7 +47,6 @@ class ITOM_OBM():
                         if isnoblk and isstart:
                             line = line.strip()
                             # 判断该行日志是否符合格式
-                            print(len(line.split('; ')), line.split('; '))
                             if len(line.split('; ')) == 4:
                                 log_level = line.split(' - ')[0].split(' ')[2].strip()
                                 log_time = (line.split(' - ')[0].split(' ')[0].strip() + ' ' + line.split(' - ')[0].split(' ')[1].strip()).split(',')[0]
@@ -56,11 +55,11 @@ class ITOM_OBM():
                                 heap_used = line.split('; ')[0].split('USED:')[-1].split(',')[0].strip()
                                 heap_committed = line.split('; ')[0].split('COMMITTED:')[-1].split(',')[0].strip()
                                 heap_max = line.split('; ')[0].split('MAX:')[-1].split(',')[0].strip()
-                                heap_free = line.split('; ')[0].split('FREE:')[-1].split(',')[0].strip()
+                                heap_free = line.split('; ')[0].split('FREE:')[-1].split(',')[0].strip()[:-1]
                                 non_heap_used = line.split('; ')[1].split('USED:')[-1].split(',')[0].strip()
                                 non_heap_committed = line.split('; ')[1].split('COMMITTED:')[-1].split(',')[0].strip()
                                 non_heap_max = line.split('; ')[1].split('MAX:')[-1].split(',')[0].strip()
-                                non_heap_free = line.split('; ')[1].split('FREE:')[-1].split(',')[0].strip()
+                                non_heap_free = line.split('; ')[1].split('FREE:')[-1].split(',')[0].strip()[:-1]
                                 othermsg = line.split('; ', 2)[-1]
                                 logdata.append({'logfile':self.filepath,
                                                 'loglevel':log_level,
@@ -83,14 +82,17 @@ class ITOM_OBM():
                 for data in logdata:
                     try:
                         sql_insert = 'INSERT INTO tb_JVMStatus ' \
-                                     '(logfile, logline, loglevel, logtime, heap_used, heap_committed, heap_max, heap_free, non_heap_used, non_heap_committed, non_heap_max, non_heap_free, othermsg) VALUES ' \
-                                     '("{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}");'.format(data.get('logfile'), str(data.get('logline')), data.get('loglevel'), data.get('logtime'),
+                                     '(logfile, logline, loglevel, logtime, heap_free_percent, non_heap_free_percent, heap_used, heap_committed, heap_max, heap_free, non_heap_used, non_heap_committed, non_heap_max, non_heap_free, othermsg) VALUES ' \
+                                     '("{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}");'.format(data.get('logfile'), str(data.get('logline')), data.get('loglevel'), data.get('logtime'),
+                                                                                                                  str(round((float(data.get('heap_free'))/float(data.get('heap_max')))*100, 2)),
+                                                                                                                  str(round((float(data.get('non_heap_free'))/float(data.get('non_heap_max')))*100, 2)),
                                                                                                                   data.get('heap_used'), data.get('heap_committed'), data.get('heap_max'), data.get('heap_free'),
                                                                                                                   data.get('non_heap_used'), data.get('non_heap_committed'), data.get('non_heap_max'), data.get('non_heap_free'),
                                                                                                                   data.get('othermsg'))
                         sqldata.append(sql_insert)
                     except Exception as e:
-                        logger.warn("Can't generate SQL INSERT INTO statement!")
+                        # logger.warn("Can't generate SQL INSERT INTO statement!")
+                        print(e)
 
                 self.dataqueue.put({'db_name': self.db_name,
                                     'db_type': self.db_type,

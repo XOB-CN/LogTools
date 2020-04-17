@@ -67,6 +67,12 @@ class sql_write():
                     query.exec_("create table tb_System (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
                     logger.debug("create table tb_System (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
 
+        elif db_type == 'MicroFocus-ITOM-OBM/OMi':
+            if db_table not in db.tables():
+                if db_table == 'tb_JVMStatus':
+                    query = QtSql.QSqlQuery()
+                    query.exec_("create table tb_JVMStatus (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, heap_free_percent INT, non_heap_free_percent INT, heap_used INT, heap_committed INT, heap_max INT, heap_free INT, non_heap_used INT, non_heap_committed INT, non_heap_max INT, non_heap_free INT, othermsg TEXT);")
+                    logger.debug("create table tb_JVMStatus (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, heap_free_percent INT, non_heap_free_percent INT, heap_used INT, heap_committed INT, heap_max INT, heap_free INT, non_heap_used INT, non_heap_committed INT, non_heap_max INT, non_heap_free INT, othermsg TEXT);")
         try:
             # 将获取的数据写入到指定的表中
             insert = QtSql.QSqlQuery()

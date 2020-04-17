@@ -81,14 +81,14 @@ class LogMain(QMainWindow, Ui_MainWindow):
             sqlstr = sqlEdit.toHtml()
             logger.debug('old_sql_text: '+ sqlstr)
             # 高亮规则
-            keywords = {'select ':"<b><font color='blue'>select </font></b>",
-                        'from ':"<b><font color='blue'>from </font></b>",
-                        'where ':"<b><font color='blue'>where </font></b>",
-                        'and ':"<b><font color='blue'>and </font></b>",
-                        'or ':"<b><font color='blue'>or </font></b>",
-                        'not ':"<b><font color='blue'>not </font></b>",
-                        'like ':"<b><font color='blue'>like </font></b>",
-                        'order by ':"<b><font color='blue'>order by </font></b>",}
+            keywords = {'select ':"<font color='blue'>select</font> ",
+                        'from ':"<font color='blue'>from</font> ",
+                        'where ':"<font color='blue'>where</font> ",
+                        'and ':"<font color='blue'>and</font> ",
+                        'or ':"<font color='blue'>or</font> ",
+                        'not ':"<font color='blue'>not</font> ",
+                        'like ':"<font color='blue'>like</font> ",
+                        'order by ':"<font color='blue'>order by</font> " ,}
             # 开始进行字符串的替换
             for keyword, rep_text in keywords.items():
                 if keyword in sqlstr:
