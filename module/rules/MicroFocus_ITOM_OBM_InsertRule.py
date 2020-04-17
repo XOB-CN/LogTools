@@ -62,25 +62,40 @@ class ITOM_OBM():
                                 non_heap_max = line.split('; ')[1].split('MAX:')[-1].split(',')[0].strip()
                                 non_heap_free = line.split('; ')[1].split('FREE:')[-1].split(',')[0].strip()
                                 othermsg = line.split('; ', 2)[-1]
-                                print('logtest:', othermsg)
+                                logdata.append({'logfile':self.filepath,
+                                                'loglevel':log_level,
+                                                'logtime':log_time,
+                                                'logline':log_line,
+                                                'heap_used':heap_used,
+                                                'heap_committed':heap_committed,
+                                                'heap_max':heap_max,
+                                                'heap_free':heap_free,
+                                                'non_heap_used':non_heap_used,
+                                                'non_heap_committed':non_heap_committed,
+                                                'non_heap_max':non_heap_max,
+                                                'non_heap_free':non_heap_free,
+                                                'othermsg':othermsg,})
                             else:
                                 logger.debug("Skip line {}, Because not match rule".format(str(log_num)))
                     except Exception as e:
                         logger.warn("logline can't be processed:{}".format(e))
 
-                # for data in logdata:
-                #     try:
-                #         sql_insert = 'INSERT INTO tb_System (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(
-                #             data.get('logfile'), str(data.get('logline')), data.get('loglevel'), data.get('logtime'),
-                #             data.get('logcomp'), data.get('logdetail'))
-                #         sqldata.append(sql_insert)
-                #     except Exception as e:
-                #         logger.warn("Can't generate SQL INSERT INTO statement!")
-                #
-                # self.dataqueue.put({'db_name': self.db_name,
-                #                     'db_type': self.db_type,
-                #                     'db_table': 'tb_System',
-                #                     'db_data': sqldata, })
+                for data in logdata:
+                    try:
+                        sql_insert = 'INSERT INTO tb_JVMStatus ' \
+                                     '(logfile, logline, loglevel, logtime, heap_used, heap_committed, heap_max, heap_free, non_heap_used, non_heap_committed, non_heap_max, non_heap_free, othermsg) VALUES ' \
+                                     '("{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}");'.format(data.get('logfile'), str(data.get('logline')), data.get('loglevel'), data.get('logtime'),
+                                                                                                                  data.get('heap_used'), data.get('heap_committed'), data.get('heap_max'), data.get('heap_free'),
+                                                                                                                  data.get('non_heap_used'), data.get('non_heap_committed'), data.get('non_heap_max'), data.get('non_heap_free'),
+                                                                                                                  data.get('othermsg'))
+                        sqldata.append(sql_insert)
+                    except Exception as e:
+                        logger.warn("Can't generate SQL INSERT INTO statement!")
+
+                self.dataqueue.put({'db_name': self.db_name,
+                                    'db_type': self.db_type,
+                                    'db_table': 'tb_JVMStatus',
+                                    'db_data': sqldata, })
 
         except Exception as reason:
             logger.warn('logfile read error:{}'.format(reason))
