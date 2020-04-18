@@ -4,6 +4,7 @@ import os
 from PyQt5.Qt import *
 from PyQt5 import QtSql
 from module.gui.Main_ui import Ui_MainWindow
+from module.tools.SQLHighLight import SQLHighLighter
 from module.tools.LogRecord import logger
 
 class LogMain(QMainWindow, Ui_MainWindow):
@@ -38,6 +39,9 @@ class LogMain(QMainWindow, Ui_MainWindow):
 
         # 加载 QTreeWidget 中的内容
         self.show_db_list()
+
+        # 设置高亮部分
+        self.highlight = SQLHighLighter(self.sqlEdit1.document())
 
     # 针对 QTreeWidget 的操作
     def show_db_list(self):
@@ -167,6 +171,11 @@ class LogMain(QMainWindow, Ui_MainWindow):
     # SQL Result Tab 关闭函数
     def slot_tab_result_close(self, index):
         self.tabResult.removeTab(index)
+
+    # 设置 QTextEdit 的高亮
+    def slot_sql_highlight(self):
+        sqlEdit = self.tabQuery.currentWidget().findChild(QTextEdit)
+        self.highlight = SQLHighLighter(sqlEdit.document())
 
     # 读取日志文件
     def slot_action_import(self):

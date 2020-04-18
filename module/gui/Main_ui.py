@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Main.ui'
 #
-# Created by: PyQt5 UI code generator 5.14.1
+# Created by: PyQt5 UI code generator 5.14.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -122,6 +122,7 @@ class Ui_MainWindow(object):
         self.tabQuery.tabCloseRequested['int'].connect(MainWindow.slot_tab_sql_close)
         self.btnQuery.clicked.connect(MainWindow.slot_run_sql_query)
         self.tabResult.tabCloseRequested['int'].connect(MainWindow.slot_tab_result_close)
+        self.tabQuery.currentChanged['int'].connect(MainWindow.slot_sql_highlight)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

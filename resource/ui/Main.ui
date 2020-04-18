@@ -314,6 +314,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>tabQuery</sender>
+   <signal>currentChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slot_sql_highlight()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>871</x>
+     <y>93</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>972</x>
+     <y>54</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>slot_new_query()</slot>
@@ -322,5 +338,6 @@
   <slot>slot_action_import()</slot>
   <slot>slot_dblist_sql_query()</slot>
   <slot>slot_tab_result_close()</slot>
+  <slot>slot_sql_highlight()</slot>
  </slots>
 </ui>
