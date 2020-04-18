@@ -16,6 +16,7 @@ class sql_write():
         :return: str(datetime)
         '''
         datetime_format = [
+            '%Y-%m-%d %H:%M:%S.%f',
             "%a %b %d %H:%M:%S %Y",
             "%Y-%m-%d %H:%M:%S",
             "%Y/%m/%d %H:%M:%S",
@@ -27,10 +28,12 @@ class sql_write():
         for time_format in datetime_format:
             try:
                 datetime_str = datetime.strptime(date, time_format)
-                return datetime_str.strftime('%Y-%m-%d %H:%M:%S')
+                if time_format == '%Y-%m-%d %H:%M:%S.%f':
+                    return datetime_str.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+                else:
+                    return datetime_str.strftime('%Y-%m-%d %H:%M:%S')
             except:
                 pass
-
         return str('Null')
 
     @staticmethod

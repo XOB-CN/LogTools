@@ -27,7 +27,7 @@
       <item>
        <widget class="QDateTimeEdit" name="geTime">
         <property name="displayFormat">
-         <string>yyyy/MM/dd HH:mm:ss</string>
+         <string>yyyy/MM/dd HH:mm:ss.zzz</string>
         </property>
        </widget>
       </item>
@@ -41,7 +41,7 @@
       <item>
        <widget class="QDateTimeEdit" name="leTime">
         <property name="displayFormat">
-         <string>yyyy/MM/dd HH:mm:ss</string>
+         <string>yyyy/MM/dd HH:mm:ss.zzz</string>
         </property>
        </widget>
       </item>
@@ -139,6 +139,11 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <family>Microsoft YaHei UI</family>
+             </font>
             </property>
            </widget>
           </item>

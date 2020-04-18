@@ -49,7 +49,7 @@ class ITOM_OBM():
                             # 判断该行日志是否符合格式
                             if len(line.split('; ')) == 4:
                                 log_level = line.split(' - ')[0].split(' ')[2].strip()
-                                log_time = (line.split(' - ')[0].split(' ')[0].strip() + ' ' + line.split(' - ')[0].split(' ')[1].strip()).split(',')[0]
+                                log_time = (line.split(' - ')[0].split(' ')[0].strip() + ' ' + line.split(' - ')[0].split(' ')[1].strip()).replace(',','.')
                                 log_time = sql_write.sqlite_to_datetime(log_time)
                                 log_line = str(log_num)
                                 heap_used = line.split('; ')[0].split('USED:')[-1].split(',')[0].strip()
@@ -77,7 +77,7 @@ class ITOM_OBM():
                             else:
                                 logger.debug("Skip line {}, Because not match rule".format(str(log_num)))
                     except Exception as e:
-                        logger.warn("logline can't be processed:{}".format(e))
+                        logger.warning("logline can't be processed:{}".format(e))
 
                 for data in logdata:
                     try:
@@ -91,7 +91,7 @@ class ITOM_OBM():
                                                                                                                   data.get('othermsg'))
                         sqldata.append(sql_insert)
                     except Exception as e:
-                        # logger.warn("Can't generate SQL INSERT INTO statement!")
+                        logger.warning("Can't generate SQL INSERT INTO statement!")
                         print(e)
 
                 self.dataqueue.put({'db_name': self.db_name,
