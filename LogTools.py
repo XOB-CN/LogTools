@@ -24,7 +24,9 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
 
     # 多进程部分
-    p = Pool()
+    # 此处是三元表达式, value = a-b if a>b else a+b(如果 a>b, 则 a-b, 否则 a+b)
+    process_count = 2 if int(os.cpu_count()/2-1)<=2 else int(os.cpu_count()/2-1)
+    p = Pool(process_count)
     dataqueue = Manager().Queue()
     infoqueue = Manager().Queue()
     # 先启动录入数据的子进程, 并且将此进程设置为守护进程
