@@ -9,7 +9,7 @@ from module.gui.CellContent_md import CellContent
 from module.tools.LogInsert import LogInsert
 from module.tools.SQLTools import sql_write
 from module.tools.LogRecord import logger
-from multiprocessing import Manager, Pool, Process
+from multiprocessing import Manager, Pool, Process, freeze_support
 
 # 将 queue 中的数据写入到数据库中
 def sql_insert(dataqueue, infoqueue):
@@ -20,6 +20,10 @@ def sql_insert(dataqueue, infoqueue):
         logger.info('software has be logout!')
 
 if __name__ == '__main__':
+    # 在 Windows 环境下可以正常运行多进程
+    freeze_support()
+
+    # 主程序开始
     import sys
     app = QApplication(sys.argv)
 
