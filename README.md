@@ -1,5 +1,5 @@
 # LogTools
-
+[中文版说明](https://github.com/XOB-CN/LogTools/blob/master/README_CN.md)
 ## Overview
 LogTools is a general log analysis software based on PyQt.  
 It can use SQL query to filter out and get what you want log content.  
@@ -15,6 +15,7 @@ It can use SQL query to filter out and get what you want log content.
     pip install pyqt5 
     ```
 4. Double-click the LogTools.py file
+5. if you don't want see cmd console, you can rename LogTools.py to LogTools.pyw
 
 ## Current state
 Basic functions have been finish. now planning to add logs for MicroFocus ITOM products
