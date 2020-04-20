@@ -17,6 +17,7 @@ class sql_write():
         '''
         datetime_format = [
             '%Y-%m-%d %H:%M:%S.%f',
+            '%Y-%m-%d %H:%M:%S,%f',
             "%a %b %d %H:%M:%S %Y",
             "%Y-%m-%d %H:%M:%S",
             "%Y/%m/%d %H:%M:%S",
@@ -29,6 +30,8 @@ class sql_write():
             try:
                 datetime_str = datetime.strptime(date, time_format)
                 if time_format == '%Y-%m-%d %H:%M:%S.%f':
+                    return datetime_str.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+                elif time_format == '%Y-%m-%d %H:%M:%S,%f':
                     return datetime_str.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
                 else:
                     return datetime_str.strftime('%Y-%m-%d %H:%M:%S')
@@ -76,6 +79,15 @@ class sql_write():
                     query = QtSql.QSqlQuery()
                     query.exec_("create table tb_JVMStatus (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, heap_free_percent INT, non_heap_free_percent INT, heap_used INT, heap_committed INT, heap_max INT, heap_free INT, non_heap_used INT, non_heap_committed INT, non_heap_max INT, non_heap_free INT, othermsg TEXT);")
                     logger.debug("create table tb_JVMStatus (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, heap_free_percent INT, non_heap_free_percent INT, heap_used INT, heap_committed INT, heap_max INT, heap_free INT, non_heap_used INT, non_heap_committed INT, non_heap_max INT, non_heap_free INT, othermsg TEXT);")
+                elif db_table == 'tb_opr_ciresolver':
+                    query = QtSql.QSqlQuery()
+                    query.exec_("create table tb_opr_ciresolver (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
+                elif db_table == 'tb_opr_backend':
+                    query = QtSql.QSqlQuery()
+                    query.exec_("create table tb_opr_backend (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
+                elif db_table == 'tb_opr_gateway':
+                    query = QtSql.QSqlQuery()
+                    query.exec_("create table tb_opr_gateway (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
         try:
             # 将获取的数据写入到指定的表中
             insert = QtSql.QSqlQuery()
