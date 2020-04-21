@@ -16,11 +16,16 @@ class ITOM_OBM():
         self.db_type = product_type
 
         # 如果是 system.xt 文件, 则调用 log_system 方法读取日志
-        if len(re.findall('jvm_statistics\.log', self.filepath, re.IGNORECASE)) > 0:
+        if len(re.findall('jvm_statistics\.log|busjvm_statistics\.log', self.filepath, re.IGNORECASE)) > 0:
             self.log_jvm_statistics()
-        elif len(re.findall('opr-ciresolver\.log|opr-backend\.log|opr-gateway\.log|opr-svcdiscserver\.log|opr-scripting-host\.log', self.filepath, re.IGNORECASE)) > 0:
-            # 读取 opr-开头的日志, 基本都是一个日志格式
-            self.log_opr_logfiles()
+        elif len(re.findall('opr-ciresolver\.log|opr-backend\.log|opr-gateway\.log|opr-svcdiscserver\.log|opr-scripting-host\.log|bus\.log|opr-webapp\.log|opr-configserver\.log', self.filepath, re.IGNORECASE)) > 0:
+            self.log_obm_logfiles_type1()
+        elif len(re.findall('opr-svcdiscserver-citrace\.log', self.filepath, re.IGNORECASE)) > 0:
+            self.log_obm_logfiles_type2()
+        elif len(re.findall('downtime\.log', self.filepath, re.IGNORECASE)) > 0:
+            self.log_obm_logfiles_type3()
+        elif len (re.findall('pmi\.log', self.filepath, re.IGNORECASE)) > 0:
+            self.log_obm_pmi()
 
     def log_jvm_statistics(self):
         # 初始化数据和相关控制参数
@@ -105,7 +110,7 @@ class ITOM_OBM():
         except Exception as reason:
             logger.warn('logfile read error:{}'.format(reason))
 
-    def log_opr_logfiles(self):
+    def log_obm_pmi(self):
         # 初始化数据和相关控制参数
         logdata = []
         sqldata = []
@@ -113,16 +118,97 @@ class ITOM_OBM():
         log_num = 0
         isstart = False
         # db_table 名字
-        if re.findall('opr-ciresolver', self.filepath):
+        if re.findall('pmi\.log', self.filepath):
+            self.db_table = 'tb_pmi'
+
+        # 尝试开始读取文件
+        try:
+            with open(self.filepath, mode='r', encoding='utf-8', errors='replace') as f:
+                for line in f:
+                    try:
+                        log_num += 1
+                        isnoblk = True
+                        for blkrule in BlackRule:
+                            if len(re.findall(blkrule, line, re.IGNORECASE)) > 0:
+                                isnoblk = False
+
+                        # 判断日志的开头是否是事件的开始, 如果不是则忽略
+                        if isstart == False:
+                            if len(re.findall('INFO |WARN |ERROR |DEBUG', line)) > 0:
+                                isstart = True
+
+                        # 如果改行既不在黑名单, 并且也已经确定 isstart 为 True, 则开始日志匹配流程
+                        if isnoblk and isstart:
+                            line = line.strip()
+                            # 判断该行日志是否符合格式
+                            if len(re.findall('\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.*\[.*\]', line)) > 0:
+                                log_level = line.split('] ')[1].split(': ')[0].strip()
+                                log_time = line.split('[',1)[0].strip()
+                                log_time = sql_write.sqlite_to_datetime(log_time)
+                                log_comp = line.split('[', 1)[1].split(']',1)[0].strip()
+                                if re.findall(' INFO :', line):
+                                    log_detail = line.split(' INFO :', 1)[-1].strip()
+                                elif re.findall(' WARN ', line):
+                                    log_detail = line.split(' WARN ', 1)[-1].strip()
+                                elif re.findall(' ERROR: ', line):
+                                    log_detail = line.split(' ERROR: ', 1)[-1].strip()
+                                elif re.findall(' DEBUG ', line):
+                                    log_detail = line.split(' DEBUG ', 1)[-1].strip()
+                                logdata.append({'logfile': self.filepath,
+                                                'logline': log_num,
+                                                'loglevel': log_level,
+                                                'logtime': log_time,
+                                                'logcomp': log_comp,
+                                                'logdetail': log_detail})
+                            else:
+                                logdata[-1]['logdetail'] = logdata[-1]['logdetail'] + '\n' + line
+                                # 抹掉日志中剩下的 '/n'
+                                logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
+
+                    except Exception as e:
+                        logger.warning("logline can't be processed:{}".format(e))
+
+                for data in logdata:
+                    try:
+                        sql_insert = 'INSERT INTO {} (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(self.db_table,
+                            data.get('logfile'), str(data.get('logline')), data.get('loglevel'), data.get('logtime'),
+                            data.get('logcomp'), data.get('logdetail'))
+                        sqldata.append(sql_insert)
+                    except Exception as e:
+                        logger.warnning("Can't generate SQL INSERT INTO statement!")
+
+                self.dataqueue.put({'db_name': self.db_name,
+                                    'db_type': self.db_type,
+                                    'db_table': self.db_table,
+                                    'db_data': sqldata, })
+
+        except Exception as reason:
+            logger.warnning('logfile read error:{}'.format(reason))
+
+    def log_obm_logfiles_type1(self):
+        # 初始化数据和相关控制参数
+        logdata = []
+        sqldata = []
+        isnoblk = True
+        log_num = 0
+        isstart = False
+        # db_table 名字
+        if re.findall('bus\.log', self.filepath):
+            self.db_table = 'tb_bus'
+        elif re.findall('opr-ciresolver\.log', self.filepath):
             self.db_table = 'tb_opr_ciresolver'
-        elif re.findall('opr-backend', self.filepath):
+        elif re.findall('opr-backend\.log', self.filepath):
             self.db_table = 'tb_opr_backend'
-        elif re.findall('opr-gateway', self.filepath):
+        elif re.findall('opr-gateway\.log', self.filepath):
             self.db_table = 'tb_opr_gateway'
-        elif re.findall('opr-svcdiscserver', self.filepath):
+        elif re.findall('opr-svcdiscserver\.log', self.filepath):
             self.db_table = 'tb_opr_svcdiscserver'
-        elif re.findall('opr-scripting-host', self.filepath):
+        elif re.findall('opr-scripting-host\.log', self.filepath):
             self.db_table = 'tb_opr_scripting_host'
+        elif re.findall('opr-webapp\.log', self.filepath):
+            self.db_table = 'tb_opr_webapp'
+        elif re.findall('opr-configserver\.log', self.filepath):
+            self.db_table = 'tb_opr_configserver'
 
         # 尝试开始读取文件
         try:
@@ -188,8 +274,153 @@ class ITOM_OBM():
         except Exception as reason:
             logger.warnning('logfile read error:{}'.format(reason))
 
+    def log_obm_logfiles_type2(self):
+        # 初始化数据和相关控制参数
+        logdata = []
+        sqldata = []
+        isnoblk = True
+        log_num = 0
+        isstart = False
+        # db_table 名字
+        if re.findall('opr-svcdiscserver-citrace\.log', self.filepath):
+            self.db_table = 'tb_opr_svcdiscserver_citrace'
+
+        # 尝试开始读取文件
+        try:
+            with open(self.filepath, mode='r', encoding='utf-8', errors='replace') as f:
+                for line in f:
+                    try:
+                        log_num += 1
+                        isnoblk = True
+                        for blkrule in BlackRule:
+                            if len(re.findall(blkrule, line, re.IGNORECASE)) > 0:
+                                isnoblk = False
+
+                        # 判断日志的开头是否是事件的开始, 如果不是则忽略
+                        if isstart == False:
+                            if len(re.findall('INFO |WARN |ERROR |DEBUG', line)) > 0:
+                                isstart = True
+
+                        # 如果改行既不在黑名单, 并且也已经确定 isstart 为 True, 则开始日志匹配流程
+                        if isnoblk and isstart:
+                            line = line.strip()
+                            # 判断该行日志是否符合格式
+                            if len(re.findall('\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.*-', line)) > 0:
+                                log_level = line.split(' ',3)[2].strip()
+                                log_time = line.split(' ', 2)[0] + ' ' + line.split(' ', 2)[1]
+                                log_time = sql_write.sqlite_to_datetime(log_time)
+                                log_comp = line.split('-', 3)[-1].split(':', 1)[0].strip()
+                                log_detail = line.split(' - ', 1)[-1].split(': ',1)[-1].strip()
+                                logdata.append({'logfile': self.filepath,
+                                                'logline': log_num,
+                                                'loglevel': log_level,
+                                                'logtime': log_time,
+                                                'logcomp': log_comp,
+                                                'logdetail': log_detail})
+                            else:
+                                logdata[-1]['logdetail'] = logdata[-1]['logdetail'] + '\n' + line
+                                # 抹掉日志中剩下的 '/n'
+                                logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
+
+                    except Exception as e:
+                        logger.warning("logline can't be processed:{}".format(e))
+
+                for data in logdata:
+                    try:
+                        sql_insert = 'INSERT INTO {} (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(
+                            self.db_table,
+                            data.get('logfile'), str(data.get('logline')), data.get('loglevel'), data.get('logtime'),
+                            data.get('logcomp'), data.get('logdetail'))
+                        sqldata.append(sql_insert)
+                    except Exception as e:
+                        logger.warnning("Can't generate SQL INSERT INTO statement!")
+
+                self.dataqueue.put({'db_name': self.db_name,
+                                    'db_type': self.db_type,
+                                    'db_table': self.db_table,
+                                    'db_data': sqldata, })
+
+        except Exception as reason:
+            logger.warnning('logfile read error:{}'.format(reason))
+
+    def log_obm_logfiles_type3(self):
+        # 初始化数据和相关控制参数
+        logdata = []
+        sqldata = []
+        isnoblk = True
+        log_num = 0
+        isstart = False
+        # db_table 名字
+        if re.findall('downtime\.log', self.filepath):
+            self.db_table = 'tb_downtime'
+
+        # 尝试开始读取文件
+        try:
+            with open(self.filepath, mode='r', encoding='utf-8', errors='replace') as f:
+                for line in f:
+                    try:
+                        log_num += 1
+                        isnoblk = True
+                        for blkrule in BlackRule:
+                            if len(re.findall(blkrule, line, re.IGNORECASE)) > 0:
+                                isnoblk = False
+
+                        # 判断日志的开头是否是事件的开始, 如果不是则忽略
+                        if isstart == False:
+                            if len(re.findall('INFO |WARN |ERROR |DEBUG', line)) > 0:
+                                isstart = True
+
+                        # 如果改行既不在黑名单, 并且也已经确定 isstart 为 True, 则开始日志匹配流程
+                        if isnoblk and isstart:
+                            line = line.strip()
+                            # 判断该行日志是否符合格式
+                            if len(re.findall('\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.*\[.*\]', line)) > 0:
+                                log_level = line.split(') ')[1].split(' - ')[0].strip()
+                                log_time = line.split(' ',2)[0] + ' ' + line.split(' ',2)[1]
+                                log_time = sql_write.sqlite_to_datetime(log_time)
+                                log_comp = line.split('[', 1)[1].split(']',1)[0].strip()
+                                if re.findall(' INFO ', line):
+                                    log_detail = line.split(' INFO ', 1)[-1].strip()
+                                elif re.findall(' WARN ', line):
+                                    log_detail = line.split(' WARN ', 1)[-1].strip()
+                                elif re.findall(' ERROR ', line):
+                                    log_detail = line.split(' ERROR ', 1)[-1].strip()
+                                elif re.findall(' DEBUG ', line):
+                                    log_detail = line.split(' DEBUG ', 1)[-1].strip()
+                                logdata.append({'logfile': self.filepath,
+                                                'logline': log_num,
+                                                'loglevel': log_level,
+                                                'logtime': log_time,
+                                                'logcomp': log_comp,
+                                                'logdetail': log_detail})
+                            else:
+                                logdata[-1]['logdetail'] = logdata[-1]['logdetail'] + '\n' + line
+                                # 抹掉日志中剩下的 '/n'
+                                logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
+
+                    except Exception as e:
+                        logger.warning("logline can't be processed:{}".format(e))
+
+                for data in logdata:
+                    try:
+                        sql_insert = 'INSERT INTO {} (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(self.db_table,
+                            data.get('logfile'), str(data.get('logline')), data.get('loglevel'), data.get('logtime'),
+                            data.get('logcomp'), data.get('logdetail'))
+                        sqldata.append(sql_insert)
+                    except Exception as e:
+                        logger.warnning("Can't generate SQL INSERT INTO statement!")
+
+                self.dataqueue.put({'db_name': self.db_name,
+                                    'db_type': self.db_type,
+                                    'db_table': self.db_table,
+                                    'db_data': sqldata, })
+
+        except Exception as reason:
+            logger.warnning('logfile read error:{}'.format(reason))
+
+
 if __name__ == '__main__':
-    filepath = 'D:\\opr-ciresolver.log'
+    filepath = 'D:\\demo\pmi.log'
     dataqueue = 'test_queue'
     db_name = 'test_db'
     product_type = 'test_product'
