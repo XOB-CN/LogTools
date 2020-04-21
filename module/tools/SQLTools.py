@@ -88,6 +88,12 @@ class sql_write():
                 elif db_table == 'tb_opr_gateway':
                     query = QtSql.QSqlQuery()
                     query.exec_("create table tb_opr_gateway (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
+                elif db_table == 'tb_opr_svcdiscserver':
+                    query = QtSql.QSqlQuery()
+                    query.exec_("create table tb_opr_svcdiscserver (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
+                elif db_table == 'tb_opr_scripting_host':
+                    query = QtSql.QSqlQuery()
+                    query.exec_("create table tb_opr_scripting_host (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
         try:
             # 将获取的数据写入到指定的表中
             insert = QtSql.QSqlQuery()

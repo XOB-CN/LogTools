@@ -18,7 +18,7 @@ class ITOM_OBM():
         # 如果是 system.xt 文件, 则调用 log_system 方法读取日志
         if len(re.findall('jvm_statistics\.log', self.filepath, re.IGNORECASE)) > 0:
             self.log_jvm_statistics()
-        elif len(re.findall('opr-ciresolver\.log|opr-backend\.log|opr-gateway\.log', self.filepath, re.IGNORECASE)) > 0:
+        elif len(re.findall('opr-ciresolver\.log|opr-backend\.log|opr-gateway\.log|opr-svcdiscserver\.log|opr-scripting-host\.log', self.filepath, re.IGNORECASE)) > 0:
             # 读取 opr-开头的日志, 基本都是一个日志格式
             self.log_opr_logfiles()
 
@@ -119,6 +119,10 @@ class ITOM_OBM():
             self.db_table = 'tb_opr_backend'
         elif re.findall('opr-gateway', self.filepath):
             self.db_table = 'tb_opr_gateway'
+        elif re.findall('opr-svcdiscserver', self.filepath):
+            self.db_table = 'tb_opr_svcdiscserver'
+        elif re.findall('opr-scripting-host', self.filepath):
+            self.db_table = 'tb_opr_scripting_host'
 
         # 尝试开始读取文件
         try:
