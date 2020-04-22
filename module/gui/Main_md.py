@@ -54,7 +54,7 @@ class LogMain(QMainWindow, Ui_MainWindow):
                 path = os.path.join('./data', dbfile)
                 db.setDatabaseName(path)
                 db.open()
-                dbinfo[dbfile] = db.tables()
+                dbinfo[dbfile] = (sorted(db.tables()))
                 db.close()
 
             # 清除原先的所有内容
