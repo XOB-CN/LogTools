@@ -174,7 +174,7 @@ class ITOM_OBM():
                             data.get('logcomp'), data.get('logdetail'))
                         sqldata.append(sql_insert)
                     except Exception as e:
-                        logger.warnning("Can't generate SQL INSERT INTO statement!")
+                        logger.warnning("Can't generate SQL INSERT INTO statement! " + str(e))
 
                 self.dataqueue.put({'db_name': self.db_name,
                                     'db_type': self.db_type,
@@ -332,7 +332,7 @@ class ITOM_OBM():
                             data.get('logcomp'), data.get('logdetail'))
                         sqldata.append(sql_insert)
                     except Exception as e:
-                        logger.warnning("Can't generate SQL INSERT INTO statement!")
+                        logger.warnning("Can't generate SQL INSERT INTO statement!" + str(e))
 
                 self.dataqueue.put({'db_name': self.db_name,
                                     'db_type': self.db_type,
@@ -407,7 +407,7 @@ class ITOM_OBM():
                             data.get('logcomp'), data.get('logdetail'))
                         sqldata.append(sql_insert)
                     except Exception as e:
-                        logger.warnning("Can't generate SQL INSERT INTO statement!")
+                        logger.warnning("Can't generate SQL INSERT INTO statement!" + str(e))
 
                 self.dataqueue.put({'db_name': self.db_name,
                                     'db_type': self.db_type,
