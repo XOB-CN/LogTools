@@ -72,3 +72,6 @@ class LogInsert(QThread):
             now = i+1
             self.singal_sql_write.emit(value, now, total)
             logger.debug('Singal function [singal_sql_write] has be emit, value is - {}, now - {}, total - {}'.format(str(value), str(now), str(total)))
+
+        # 退出该线程
+        self.exec()
