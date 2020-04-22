@@ -14,7 +14,7 @@ class SQLHighLighter(QSyntaxHighlighter):
         sql_keyword_format.setForeground(Qt.blue)
         sql_keyword_format.setFontWeight(QFont.Bold)
         # 需要高亮的关键字
-        sql_keywords = ['select ', 'from ', 'where ', 'order by ', ' and ', ' or ', ]
+        sql_keywords = ['select ', 'from ', 'where ', 'order by ', ' and ', ' or ', ' like ', ' join ', ]
         # 根据前两个来生成高亮规则
         self.highlightRules = [(QRegExp(pattern), sql_keyword_format) for pattern in sql_keywords]
 

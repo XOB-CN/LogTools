@@ -114,7 +114,8 @@ class LogMain(QMainWindow, Ui_MainWindow):
                 model = QSqlQueryModel()
                 model.setQuery(sql_str, db=qrydb)
                 if model.lastError().isValid():
-                    logger.warn('SQL Query is not correct:{}'.format(model.lastError().text()))
+                    logger.warning('SQL Query is not correct:{}'.format(model.lastError().text()))
+                    QMessageBox.warning(self, 'SQL Error', model.lastError().text())
                 else:
                     logger.debug('SQL Query is:[{}]'.format(sql_str))
 
