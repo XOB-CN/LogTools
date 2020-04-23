@@ -6,7 +6,7 @@ from module.gui.LogTools_md import LogApp
 from module.gui.Main_md import LogMain
 from module.gui.DialogDB_md import DialogDB
 from module.gui.CellContent_md import CellContent
-from module.tools.LogInsert import LogInsert
+from module.tools.LogCheck import LogCheck
 from module.tools.SQLTools import sql_write
 from module.tools.LogRecord import logger
 from multiprocessing import Manager, Pool, Process, freeze_support
@@ -27,16 +27,16 @@ if __name__ == '__main__':
     import sys
     app = QApplication(sys.argv)
 
-    # 多进程部分
-    # 此处是三元表达式, value = a-b if a>b else a+b(如果 a>b, 则 a-b, 否则 a+b)
-    process_count = 2 if int(os.cpu_count()/2-1)<=2 else int(os.cpu_count()/2-1)
-    p = Pool(process_count)
-    dataqueue = Manager().Queue()
-    infoqueue = Manager().Queue()
-    # 先启动录入数据的子进程, 并且将此进程设置为守护进程
-    sub_proc = Process(target=sql_insert, args=(dataqueue, infoqueue,))
-    sub_proc.daemon = True
-    sub_proc.start()
+    # # 多进程部分
+    # # 此处是三元表达式, value = a-b if a>b else a+b(如果 a>b, 则 a-b, 否则 a+b)
+    # process_count = 2 if int(os.cpu_count()/2-1)<=2 else int(os.cpu_count()/2-1)
+    # p = Pool(process_count)
+    # dataqueue = Manager().Queue()
+    # infoqueue = Manager().Queue()
+    # # 先启动录入数据的子进程, 并且将此进程设置为守护进程
+    # sub_proc = Process(target=sql_insert, args=(dataqueue, infoqueue,))
+    # sub_proc.daemon = True
+    # sub_proc.start()
 
     # 生成初始界面
     gui = LogApp()
@@ -68,57 +68,56 @@ if __name__ == '__main__':
         dbgui.show()
     guiMain.singal_btn_import.connect(enable_DialogDB)
 
-    # 日志分析进程: task_info 为字典类型的任务数据
-    def log_producer(task_info):
-        product_type = task_info.get('product_type')
-        file_path = task_info.get('file_path')
-        db_name = task_info.get('db_name')
-        # 判断产品分类
-        try:
-            if product_type == 'MicroFocus-ITOM-OA':
-                from module.rules.MicroFocus_ITOM_OA_InsertRule import ITOM_OA
-                for path in file_path:
-                    p.apply_async(ITOM_OA, args=(path, dataqueue, db_name, product_type))
+    # 日志预处理, 获取待分析的文件信息
+    def task_per_process(task_info):
+        obj_task = LogCheck(task_info)
+        task_data = obj_task.check()
+        guiMain.log_insert(task_data)
+    dbgui.singal_log_task.connect(task_per_process)
 
-            elif product_type == 'MicroFocus-ITOM-OBM/OMi':
-                from module.rules.MicroFocus_ITOM_OBM_InsertRule import ITOM_OBM
-                for path in file_path:
-                    p.apply_async(ITOM_OBM, args=(path, dataqueue, db_name, product_type))
-                # 此处不能写 p.close() 这个代码
-                # p.close() 表示关闭 Pool 池, 即不在接收新的任务
-                # 如果添加了 p.close(), 那么在接收后续的分析任务时, 就会提示 Pool not running 的异常
-        except Exception as e:
-            logger.error(e)
+    # 真正的日志分析进程
+    def task_running(task_info):
+        print('多进程:', task_info)
+    guiMain.singal_task_start.connect(task_running)
 
-    # 更新 GUI 的相关状态
-    def guiMain_update(value, now, total):
-        proc_bar = int((now/total)*100)
-        if proc_bar == 100:
-            guiMain.statusBar.showMessage('log has been written to the database.')
-            guiMain.progressBar.hide()
-            guiMain.show_db_list()
-        else:
-            guiMain.statusBar.showMessage("Writing to the database, please waiting...")
-            guiMain.progressBar.setValue(proc_bar)
+    # # 日志分析进程: task_info 为字典类型的任务数据
+    # def log_producer(task_info):
+    #     product_type = task_info.get('product_type')
+    #     file_path = task_info.get('file_path')
+    #     db_name = task_info.get('db_name')
+    #     # 判断产品分类
+    #     try:
+    #         if product_type == 'MicroFocus-ITOM-OA':
+    #             from module.rules.MicroFocus_ITOM_OA_InsertRule import ITOM_OA
+    #             for path in file_path:
+    #                 p.apply_async(ITOM_OA, args=(path, dataqueue, db_name, product_type))
+    #
+    #         elif product_type == 'MicroFocus-ITOM-OBM/OMi':
+    #             from module.rules.MicroFocus_ITOM_OBM_InsertRule import ITOM_OBM
+    #             for path in file_path:
+    #                 p.apply_async(ITOM_OBM, args=(path, dataqueue, db_name, product_type))
+    #             # 此处不能写 p.close() 这个代码
+    #             # p.close() 表示关闭 Pool 池, 即不在接收新的任务
+    #             # 如果添加了 p.close(), 那么在接收后续的分析任务时, 就会提示 Pool not running 的异常
+    #     except Exception as e:
+    #         logger.error(e)
+
+    # # 更新 GUI 的相关状态
+    # def guiMain_update(value, now, total):
+    #     proc_bar = int((now/total)*100)
+    #     if proc_bar == 100:
+    #         guiMain.statusBar.showMessage('log has been written to the database.')
+    #         guiMain.progressBar.hide()
+    #         guiMain.show_db_list()
+    #     else:
+    #         guiMain.statusBar.showMessage("Writing to the database, please waiting...")
+    #         guiMain.progressBar.setValue(proc_bar)
 
     # 双击单元格时, 显示单元格中的内容
     def showCellContent(content):
         cellgui.showContent(content)
         cellgui.show()
     guiMain.singal_cell_doubleClicked.connect(showCellContent)
-
-    # 日志分析线程: 用于完善 task_info 信息的
-    def log_import(task_info):
-        # 打开进度条
-        try:
-            guiMain.progressBar.show()
-            sub_thread = LogInsert(guiMain, task_info, infoqueue)
-            sub_thread.singal_log_task_end.connect(log_producer)
-            sub_thread.singal_sql_write.connect(guiMain_update)
-            sub_thread.start()
-        except Exception as e:
-            logger.error(e)
-    dbgui.singal_log_task.connect(log_import)
     #####################################################################################
     gui.show()
     sys.exit(app.exec_())

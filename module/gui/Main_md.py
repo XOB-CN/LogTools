@@ -11,11 +11,15 @@ class LogMain(QMainWindow, Ui_MainWindow):
     """
     LogTools Main class
     """
+    query_db_file = ''
     num_new_query = 1
     num_new_result = 1
+    # 点击 import 时发射信号
     singal_btn_import = pyqtSignal(str, str, str)
+    # 双击表的单元格时发射信号
     singal_cell_doubleClicked = pyqtSignal(str)
-    query_db_file = ''
+    # 启动日志分析任务的信号
+    singal_task_start = pyqtSignal(dict)
 
     # 接收产品分类
     product_type = []
@@ -183,3 +187,7 @@ class LogMain(QMainWindow, Ui_MainWindow):
         # 发射一个自定义信号，信号内容包括 "厂商" + "分类" + "产品"
         self.singal_btn_import.emit(self.product_type[0], self.product_type[1], self.product_type[2])
         logger.debug('Singal function [singal_btn_import] has be emit, value is {}, {}, {}'.format(self.product_type[0], self.product_type[1], self.product_type[2]))
+
+    # 将指定的日志文件分析并写入到数据库
+    def log_insert(self, taskdata):
+        self.singal_task_start.emit(taskdata)
