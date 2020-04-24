@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import os
+import traceback
 from PyQt5.Qt import *
 from module.gui.LogTools_md import LogApp
 from module.gui.Main_md import LogMain
 from module.gui.DialogDB_md import DialogDB
 from module.gui.CellContent_md import CellContent
 from module.tools.LogCheck import LogCheck
+from module.tools.LogInsert import LogInsert
 from module.tools.SQLTools import sql_write
 from module.tools.LogRecord import logger
 from multiprocessing import Manager, Pool, Process, freeze_support
@@ -75,10 +77,17 @@ if __name__ == '__main__':
         guiMain.log_insert(task_data)
     dbgui.singal_log_task.connect(task_per_process)
 
-    # 真正的日志分析进程
+    # 真正的日志分析线程
     def task_running(task_info):
-        print('多进程:', task_info)
+        print('多线程:', task_info)
+        sub_thread = LogInsert(parent=guiMain, task_data=task_info)
+        sub_thread.singal_had_write.connect(gui_update_process)
+        sub_thread.start()
     guiMain.singal_task_start.connect(task_running)
+
+    # 界面状态更新
+    def gui_update_process(value):
+        print(value)
 
     # # 日志分析进程: task_info 为字典类型的任务数据
     # def log_producer(task_info):
