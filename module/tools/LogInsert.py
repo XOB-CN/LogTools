@@ -31,10 +31,7 @@ class LogInsert(QThread):
                 value += 1
                 SQL = LogSQL(filepath, self.db_name, self.product_type)
                 SQLData = SQL.SQLData
-                try:
-                    sql_write.sqlite_to_database(SQLData)
-                except Exception as e:
-                    print(e)
+                sql_write.sqlite_to_database(SQLData)
                 self.singal_had_write.emit(value, total)
 
         # 如果文件列表为零, 直接传递为零, 代表没数据
