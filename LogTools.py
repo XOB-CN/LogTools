@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-import traceback
 from PyQt5.Qt import *
 from module.gui.LogTools_md import LogApp
 from module.gui.Main_md import LogMain
@@ -12,14 +11,6 @@ from module.tools.LogInsert import LogInsert
 from module.tools.SQLTools import sql_write
 from module.tools.LogRecord import logger
 from multiprocessing import Manager, Pool, Process, freeze_support
-
-# 将 queue 中的数据写入到数据库中
-def sql_insert(dataqueue, infoqueue):
-    try:
-        while True:
-            sql_write.sqlite_to_database(dataqueue, infoqueue)
-    except:
-        logger.info('software has be logout!')
 
 if __name__ == '__main__':
     # 在 Windows 环境下可以正常运行多进程
@@ -79,15 +70,16 @@ if __name__ == '__main__':
 
     # 真正的日志分析线程
     def task_running(task_info):
-        print('多线程:', task_info)
         sub_thread = LogInsert(parent=guiMain, task_data=task_info)
         sub_thread.singal_had_write.connect(gui_update_process)
         sub_thread.start()
     guiMain.singal_task_start.connect(task_running)
 
     # 界面状态更新
-    def gui_update_process(value):
-        print(value)
+    def gui_update_process(value, total):
+        process_status = value/total
+        process_status = round(process_status, 2)
+        print(process_status)
 
     # # 日志分析进程: task_info 为字典类型的任务数据
     # def log_producer(task_info):

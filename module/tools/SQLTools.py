@@ -40,14 +40,11 @@ class sql_write():
         return str('Null')
 
     @staticmethod
-    def sqlite_to_database(dataqueue, infoqueue):
+    def sqlite_to_database(logdata):
         '''
         将获取的数据写入到 sqlite 数据库中
-        :param dataqueue:
-        :param infoqueue:
-        :return:
         '''
-        sqldata = dataqueue.get()
+        sqldata = logdata
         db_name = sqldata.get('db_name')
         db_file = '.\\data\\' + db_name + '.db'
         db_type = sqldata.get('db_type')
@@ -55,7 +52,7 @@ class sql_write():
         db_data = sqldata.get('db_data')
 
         # 使用 Qt 内嵌的 QSqlite 驱动来建立 Sqlite 数据库
-        db = QtSql.QSqlDatabase.addDatabase('QSQLITE')
+        db = QtSql.QSqlDatabase.addDatabase('QSQLITE', 'SQLInsert')
         db.setDatabaseName(db_file)
         # 使数据库处于打开状态
         db.open()
@@ -67,8 +64,6 @@ class sql_write():
             if db_table not in db.tables():
                 if db_table == 'tb_System':
                     query = QtSql.QSqlQuery()
-                    # 带自动增长的语句
-                    # query.exec_("create table tb_System (id INTEGER PRIMARY KEY, logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
                     # 不自动增长的语句
                     query.exec_("create table tb_System (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
                     logger.debug("create table tb_System (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
@@ -93,18 +88,22 @@ class sql_write():
                                   'tb_pmi',]:
                     query = QtSql.QSqlQuery()
                     query.exec_("create table {} (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);".format(db_table))
+                    if query.lastError().isValid():
+                        print(query.lastError().text())
         try:
             # 将获取的数据写入到指定的表中
             insert = QtSql.QSqlQuery()
             for sql in db_data:
                 insert.exec_(sql)
+                # if insert.lastError().isValid():
+                #     print(insert.lastError().text())
             # 结束事务
             db.commit()
             db.close()
-            infoqueue.put(0)
-        except:
+
+        except Exception as e:
+            print(e)
             db.close()
-            infoqueue.put(1)
 
 # 测试代码
 if __name__ == '__main__':

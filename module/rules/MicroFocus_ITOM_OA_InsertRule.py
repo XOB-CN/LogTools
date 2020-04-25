@@ -7,11 +7,12 @@ from module.tools.LogRecord import logger
 
 class ITOM_OA():
     '''
-    读取日志文件的类, 并将分析日志的结果放到队列中
+    读取日志文件的类, 并返回分析的数据
     '''
-    def __init__(self, filepath, dataqueue, db_name, product_type):
+    SQLData = {}
+
+    def __init__(self, filepath, db_name, product_type):
         self.filepath = filepath
-        self.dataqueue = dataqueue
         self.db_name = db_name
         self.db_type = product_type
 
@@ -72,10 +73,10 @@ class ITOM_OA():
                     except Exception as e:
                         logger.warn("Can't generate SQL INSERT INTO statement!")
 
-                self.dataqueue.put({'db_name':self.db_name,
-                                    'db_type':self.db_type,
-                                    'db_table':'tb_System',
-                                    'db_data':sqldata,})
+                self.SQLData = ({'db_name':self.db_name,
+                                 'db_type':self.db_type,
+                                 'db_table':'tb_System',
+                                 'db_data':sqldata,})
 
         except Exception as reason:
             logger.warn('logfile read error:{}'.format(reason))

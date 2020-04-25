@@ -9,9 +9,11 @@ class ITOM_OBM():
     '''
     读取日志文件的类, 并将分析日志的结果放到队列中
     '''
-    def __init__(self, filepath, dataqueue, db_name, product_type):
+
+    SQLData = {}
+
+    def __init__(self, filepath, db_name, product_type):
         self.filepath = filepath
-        self.dataqueue = dataqueue
         self.db_name = db_name
         self.db_type = product_type
 
@@ -101,10 +103,10 @@ class ITOM_OBM():
                     except Exception as e:
                         logger.warning("Can't generate SQL INSERT INTO statement! Reason: " + str(e))
 
-                self.dataqueue.put({'db_name': self.db_name,
-                                    'db_type': self.db_type,
-                                    'db_table': 'tb_JVMStatus',
-                                    'db_data': sqldata, })
+                return ({'db_name': self.db_name,
+                         'db_type': self.db_type,
+                         'db_table': 'tb_JVMStatus',
+                         'db_data': sqldata, })
 
         except Exception as reason:
             logger.warn('logfile read error:{}'.format(reason))
@@ -176,10 +178,10 @@ class ITOM_OBM():
                     except Exception as e:
                         logger.warnning("Can't generate SQL INSERT INTO statement! " + str(e))
 
-                self.dataqueue.put({'db_name': self.db_name,
-                                    'db_type': self.db_type,
-                                    'db_table': self.db_table,
-                                    'db_data': sqldata, })
+                self.SQLData = ({'db_name': self.db_name,
+                                 'db_type': self.db_type,
+                                 'db_table': self.db_table,
+                                 'db_data': sqldata, })
 
         except Exception as reason:
             logger.warnning('logfile read error:{}'.format(reason))
@@ -265,10 +267,10 @@ class ITOM_OBM():
                     except Exception as e:
                         logger.warnning("Can't generate SQL INSERT INTO statement! Reason: " + str(e))
 
-                self.dataqueue.put({'db_name': self.db_name,
-                                    'db_type': self.db_type,
-                                    'db_table': self.db_table,
-                                    'db_data': sqldata, })
+                self.SQLData = ({'db_name': self.db_name,
+                                 'db_type': self.db_type,
+                                 'db_table': self.db_table,
+                                 'db_data': sqldata, })
 
         except Exception as reason:
             logger.warnning('logfile read error:{}'.format(reason))
@@ -334,10 +336,10 @@ class ITOM_OBM():
                     except Exception as e:
                         logger.warnning("Can't generate SQL INSERT INTO statement!" + str(e))
 
-                self.dataqueue.put({'db_name': self.db_name,
-                                    'db_type': self.db_type,
-                                    'db_table': self.db_table,
-                                    'db_data': sqldata, })
+                self.SQLData = ({'db_name': self.db_name,
+                                 'db_type': self.db_type,
+                                 'db_table': self.db_table,
+                                 'db_data': sqldata, })
 
         except Exception as reason:
             logger.warnning('logfile read error:{}'.format(reason))
@@ -409,18 +411,18 @@ class ITOM_OBM():
                     except Exception as e:
                         logger.warnning("Can't generate SQL INSERT INTO statement!" + str(e))
 
-                self.dataqueue.put({'db_name': self.db_name,
-                                    'db_type': self.db_type,
-                                    'db_table': self.db_table,
-                                    'db_data': sqldata, })
+                self.SQLData = ({'db_name': self.db_name,
+                                 'db_type': self.db_type,
+                                 'db_table': self.db_table,
+                                 'db_data': sqldata, })
 
         except Exception as reason:
             logger.warnning('logfile read error:{}'.format(reason))
 
-
 if __name__ == '__main__':
-    filepath = 'D:\\demo\pmi.log'
-    dataqueue = 'test_queue'
-    db_name = 'test_db'
-    product_type = 'test_product'
-    test = ITOM_OBM(filepath, dataqueue, db_name, product_type)
+    pass
+    # filepath = 'D:\\demo\pmi.log'
+    # dataqueue = 'test_queue'
+    # db_name = 'test_db'
+    # product_type = 'test_product'
+    # test = ITOM_OBM(filepath, dataqueue, db_name, product_type)
