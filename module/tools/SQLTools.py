@@ -67,7 +67,9 @@ class sql_write():
                         query = QtSql.QSqlQuery()
                         # 不自动增长的语句
                         query.exec_("create table tb_System (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
-                        logger.debug("create table tb_System (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
+                        if query.lastError().isValid():
+                            print('MicroFocus-ITOM-OA: ', query.lastError().text())
+
 
             elif db_type == 'MicroFocus-ITOM-OBM/OMi':
                 if db_table not in db.tables():
@@ -75,8 +77,7 @@ class sql_write():
                         query = QtSql.QSqlQuery()
                         query.exec_("create table tb_JVMStatus (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, heap_free_percent INT, non_heap_free_percent INT, heap_used INT, heap_committed INT, heap_max INT, heap_free INT, non_heap_used INT, non_heap_committed INT, non_heap_max INT, non_heap_free INT, othermsg TEXT);")
                         if query.lastError().isValid():
-                            print(query.lastError().text())
-                        logger.debug("create table tb_JVMStatus (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, heap_free_percent INT, non_heap_free_percent INT, heap_used INT, heap_committed INT, heap_max INT, heap_free INT, non_heap_used INT, non_heap_committed INT, non_heap_max INT, non_heap_free INT, othermsg TEXT);")
+                            print('MicroFocus-ITOM-OBM/OMi: ', query.lastError().text())
 
                     elif db_table in ['tb_bus',
                                       'tb_downtime',
@@ -92,9 +93,10 @@ class sql_write():
                         query = QtSql.QSqlQuery()
                         query.exec_("create table {} (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);".format(db_table))
                         if query.lastError().isValid():
-                            print(query.lastError().text())
+                            print('MicroFocus-ITOM-OA: ', query.lastError().text())
+
         except Exception as e:
-            print(e)
+            print('Insert SQL 1:', e)
 
         try:
             # 将获取的数据写入到指定的表中
@@ -107,10 +109,8 @@ class sql_write():
             # 结束事务
             db.commit()
             # db.close()
-
         except Exception as e:
-            print(e)
-            # db.close()
+            print('Insert SQL 2:' , e)
 
 # 测试代码
 if __name__ == '__main__':

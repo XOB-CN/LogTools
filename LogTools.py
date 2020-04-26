@@ -73,11 +73,12 @@ if __name__ == '__main__':
         sub_thread = LogInsert(parent=guiMain, task_data=task_info)
         sub_thread.singal_had_write.connect(gui_update_process)
         sub_thread.start()
+        guiMain.progressBar.show()
     guiMain.singal_task_start.connect(task_running)
 
     # 界面状态更新
     def gui_update_process(value, total):
-        process_status = value/total
+        process_status = (value/total)*100
         process_status = round(process_status, 2)
         print(process_status)
 
