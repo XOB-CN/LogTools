@@ -3,7 +3,7 @@
 import re
 from module.rules.MicroFocus_ITOM_OBM_FileRule import BlackRule
 from module.tools.SQLTools import sql_write
-from module.tools.LogRecord import logger
+from module.tools.LogRecord import logSQLCreate
 
 class ITOM_OBM():
     '''
@@ -85,9 +85,9 @@ class ITOM_OBM():
                                                 'non_heap_free':non_heap_free,
                                                 'othermsg':othermsg,})
                             else:
-                                logger.debug("Skip line {}, Because not match rule".format(str(log_num)))
+                                logSQLCreate.info("logline can't match rule - {}".format(line))
                     except Exception as e:
-                        logger.warning("logline can't be processed:{}".format(e))
+                        logSQLCreate.warning("line:{}\nSource:{}\nException:{}".format(str(log_num), line, e))
 
                 for data in logdata:
                     try:
@@ -101,7 +101,7 @@ class ITOM_OBM():
                                                                                                                   data.get('othermsg'))
                         sqldata.append(sql_insert)
                     except Exception as e:
-                        logger.warning("Can't generate SQL INSERT INTO statement! Reason: " + str(e))
+                        logSQLCreate.warning("Can't generate SQL INSERT INTO statement! Reason: " + str(e))
 
                 return ({'db_name': self.db_name,
                          'db_type': self.db_type,
@@ -109,7 +109,7 @@ class ITOM_OBM():
                          'db_data': sqldata, })
 
         except Exception as reason:
-            logger.warn('logfile read error:{}'.format(reason))
+            logSQLCreate.error('logfile read error:{}'.format(reason))
 
     def log_obm_pmi(self):
         # 初始化数据和相关控制参数
@@ -167,7 +167,7 @@ class ITOM_OBM():
                                 logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
 
                     except Exception as e:
-                        logger.warning("logline can't be processed:{}".format(e))
+                        logSQLCreate.warning("line:{}\nSource:{}\nException:{}".format(str(log_num), line, e))
 
                 for data in logdata:
                     try:
@@ -176,7 +176,7 @@ class ITOM_OBM():
                             data.get('logcomp'), data.get('logdetail'))
                         sqldata.append(sql_insert)
                     except Exception as e:
-                        logger.warnning("Can't generate SQL INSERT INTO statement! " + str(e))
+                        logSQLCreate.warning("Can't generate SQL INSERT INTO statement! " + str(e))
 
                 self.SQLData = ({'db_name': self.db_name,
                                  'db_type': self.db_type,
@@ -184,7 +184,7 @@ class ITOM_OBM():
                                  'db_data': sqldata, })
 
         except Exception as reason:
-            logger.warnning('logfile read error:{}'.format(reason))
+            logSQLCreate.error('logfile read error:{}'.format(reason))
 
     def log_obm_logfiles_type1(self):
         # 初始化数据和相关控制参数
@@ -256,7 +256,7 @@ class ITOM_OBM():
                                 logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
 
                     except Exception as e:
-                        logger.warning("logline can't be processed:{}".format(e))
+                        logSQLCreate.warning("line:{}\nSource:{}\nException:{}".format(str(log_num), line, e))
 
                 for data in logdata:
                     try:
@@ -265,7 +265,7 @@ class ITOM_OBM():
                             data.get('logcomp'), data.get('logdetail'))
                         sqldata.append(sql_insert)
                     except Exception as e:
-                        logger.warnning("Can't generate SQL INSERT INTO statement! Reason: " + str(e))
+                        logSQLCreate.warnning("Can't generate SQL INSERT INTO statement! Reason: " + str(e))
 
                 self.SQLData = ({'db_name': self.db_name,
                                  'db_type': self.db_type,
@@ -273,7 +273,7 @@ class ITOM_OBM():
                                  'db_data': sqldata, })
 
         except Exception as reason:
-            logger.warnning('logfile read error:{}'.format(reason))
+            logSQLCreate.error('logfile read error:{}'.format(reason))
 
     def log_obm_logfiles_type2(self):
         # 初始化数据和相关控制参数
@@ -324,7 +324,7 @@ class ITOM_OBM():
                                 logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
 
                     except Exception as e:
-                        logger.warning("logline can't be processed:{}".format(e))
+                        logSQLCreate.warning("line:{}\nSource:{}\nException:{}".format(str(log_num), line, e))
 
                 for data in logdata:
                     try:
@@ -334,7 +334,7 @@ class ITOM_OBM():
                             data.get('logcomp'), data.get('logdetail'))
                         sqldata.append(sql_insert)
                     except Exception as e:
-                        logger.warnning("Can't generate SQL INSERT INTO statement!" + str(e))
+                        logSQLCreate.warnning("Can't generate SQL INSERT INTO statement!" + str(e))
 
                 self.SQLData = ({'db_name': self.db_name,
                                  'db_type': self.db_type,
@@ -342,7 +342,7 @@ class ITOM_OBM():
                                  'db_data': sqldata, })
 
         except Exception as reason:
-            logger.warnning('logfile read error:{}'.format(reason))
+            logSQLCreate.error('logfile read error:{}'.format(reason))
 
     def log_obm_logfiles_type3(self):
         # 初始化数据和相关控制参数
@@ -400,7 +400,7 @@ class ITOM_OBM():
                                 logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
 
                     except Exception as e:
-                        logger.warning("logline can't be processed:{}".format(e))
+                        logSQLCreate.warning("line:{}\nSource:{}\nException:{}".format(str(log_num), line, e))
 
                 for data in logdata:
                     try:
@@ -409,7 +409,7 @@ class ITOM_OBM():
                             data.get('logcomp'), data.get('logdetail'))
                         sqldata.append(sql_insert)
                     except Exception as e:
-                        logger.warnning("Can't generate SQL INSERT INTO statement!" + str(e))
+                        logSQLCreate.warnning("Can't generate SQL INSERT INTO statement!" + str(e))
 
                 self.SQLData = ({'db_name': self.db_name,
                                  'db_type': self.db_type,
@@ -417,7 +417,7 @@ class ITOM_OBM():
                                  'db_data': sqldata, })
 
         except Exception as reason:
-            logger.warnning('logfile read error:{}'.format(reason))
+            logSQLCreate.error('logfile read error:{}'.format(reason))
 
 if __name__ == '__main__':
     pass

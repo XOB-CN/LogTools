@@ -3,7 +3,7 @@
 import re
 from module.rules.MicroFocus_ITOM_OA_FileRule import BlackRule
 from module.tools.SQLTools import sql_write
-from module.tools.LogRecord import logger
+from module.tools.LogRecord import logSQLCreate
 
 class ITOM_OA():
     '''
@@ -64,14 +64,14 @@ class ITOM_OA():
                                 # 抹掉日志中剩下的 '/n'
                                 logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
                     except Exception as e:
-                        logger.warn("logline can't be processed:{}".format(e))
+                        logSQLCreate.warning("line:{}\nSource:{}\nException:{}".format(str(log_num),line,e))
 
                 for data in logdata:
                     try:
                         sql_insert = 'INSERT INTO tb_System (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(data.get('logfile'), str(data.get('logline')),data.get('loglevel'),data.get('logtime'),data.get('logcomp'),data.get('logdetail'))
                         sqldata.append(sql_insert)
                     except Exception as e:
-                        logger.warn("Can't generate SQL INSERT INTO statement!")
+                        logSQLCreate.warning("Can't generate SQL INSERT INTO statement! - {}".format(e))
 
                 self.SQLData = ({'db_name':self.db_name,
                                  'db_type':self.db_type,
@@ -79,4 +79,4 @@ class ITOM_OA():
                                  'db_data':sqldata,})
 
         except Exception as reason:
-            logger.warn('logfile read error:{}'.format(reason))
+            logSQLCreate.error('logfile read error:{}'.format(reason))

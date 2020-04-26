@@ -5,8 +5,7 @@ from PyQt5.Qt import *
 from PyQt5 import QtSql
 from module.gui.Main_ui import Ui_MainWindow
 from module.tools.SQLHighLight import SQLHighLighter
-from module.tools.LogRecord import logger
-
+from module.tools.LogRecord import logSQLQuery
 class LogMain(QMainWindow, Ui_MainWindow):
     """
     LogTools Main class
@@ -96,7 +95,6 @@ class LogMain(QMainWindow, Ui_MainWindow):
     # 展示双击选中时,单元格中的内容
     def slot_show_cell(self, cell):
         self.singal_cell_doubleClicked.emit(cell.data())
-        logger.debug('Singal function [singal_cell_doubleClicked] has be emit, value is [{}]'.format(cell.data()))
 
     # 执行查询语句, 并且返回结果
     def slot_run_sql_query(self):
@@ -118,10 +116,10 @@ class LogMain(QMainWindow, Ui_MainWindow):
                 model = QSqlQueryModel()
                 model.setQuery(sql_str, db=qrydb)
                 if model.lastError().isValid():
-                    logger.warning('SQL Query is not correct:{}'.format(model.lastError().text()))
+                    logSQLQuery.warning(model.lastError().text())
                     QMessageBox.warning(self, 'SQL Error', model.lastError().text())
                 else:
-                    logger.debug('SQL Query is:[{}]'.format(sql_str))
+                    logSQLQuery.info(sql_str)
 
                 # 生成 QtableView 对象:self.tab_view ########################
                 self.num_new_result += 1
@@ -186,7 +184,6 @@ class LogMain(QMainWindow, Ui_MainWindow):
     def slot_action_import(self):
         # 发射一个自定义信号，信号内容包括 "厂商" + "分类" + "产品"
         self.singal_btn_import.emit(self.product_type[0], self.product_type[1], self.product_type[2])
-        logger.debug('Singal function [singal_btn_import] has be emit, value is {}, {}, {}'.format(self.product_type[0], self.product_type[1], self.product_type[2]))
 
     # 将指定的日志文件分析并写入到数据库
     def log_insert(self, taskdata):

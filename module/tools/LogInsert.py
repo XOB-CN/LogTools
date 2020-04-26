@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from PyQt5 import QtSql
 from PyQt5.Qt import *
 from module.tools.SQLTools import sql_write
 

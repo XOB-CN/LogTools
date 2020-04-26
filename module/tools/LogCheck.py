@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import os, re
-from module.tools.LogRecord import logger
 
 class LogCheck():
 
@@ -20,9 +19,6 @@ class LogCheck():
             from module.rules import MicroFocus_ITOM_OBM_FileRule as FileRule
             self.file_rule = FileRule.FileRule
             self.fileblk_rule = FileRule.FileBlkRule
-
-        else:
-            logger.error("Can't match product type: " + self.task_info.get('product_type'))
 
     def check(self):
         '''
