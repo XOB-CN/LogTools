@@ -94,7 +94,8 @@ class LogMain(QMainWindow, Ui_MainWindow):
 
     # 展示双击选中时,单元格中的内容
     def slot_show_cell(self, cell):
-        self.singal_cell_doubleClicked.emit(cell.data())
+        # cell.data() 的结果需要使用 str 转换一下, 否则如果是纯数字的话会出错
+        self.singal_cell_doubleClicked.emit(str(cell.data()))
 
     # 执行查询语句, 并且返回结果
     def slot_run_sql_query(self):
@@ -163,9 +164,11 @@ class LogMain(QMainWindow, Ui_MainWindow):
             letime = self.leTime.text().replace('/', '-')
             sqlEdit.clear()
             sqlEdit.setText("select * from {}\nwhere logtime > '{}' and logtime < '{}'\norder by logtime desc;".format(self.treeList.currentItem().text(0), getime, letime))
+            self.statusBar.showMessage("Table [{}] has been selected".format(self.treeList.currentItem().text(0)))
         except:
             # 选中数据库时
             self.query_db_file = os.path.join('.\\data', self.treeList.currentItem().text(0) +'.db')
+            self.statusBar.showMessage("DB [{}] has been selected".format(self.treeList.currentItem().text(0)))
 
     # SQL Query Tab 关闭函数
     def slot_tab_sql_close(self, index):
