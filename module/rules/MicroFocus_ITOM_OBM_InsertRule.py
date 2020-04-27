@@ -103,10 +103,10 @@ class ITOM_OBM():
                     except Exception as e:
                         logSQLCreate.warning("Can't generate SQL INSERT INTO statement! Reason: " + str(e))
 
-                return ({'db_name': self.db_name,
-                         'db_type': self.db_type,
-                         'db_table': 'tb_JVMStatus',
-                         'db_data': sqldata, })
+                self.SQLData = ({'db_name': self.db_name,
+                                 'db_type': self.db_type,
+                                 'db_table': 'tb_JVMStatus',
+                                 'db_data': sqldata, })
 
         except Exception as reason:
             logSQLCreate.error('logfile read error:{}'.format(reason))
@@ -173,7 +173,7 @@ class ITOM_OBM():
                     try:
                         sql_insert = 'INSERT INTO {} (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(self.db_table,
                             data.get('logfile'), str(data.get('logline')), data.get('loglevel'), data.get('logtime'),
-                            data.get('logcomp'), data.get('logdetail'))
+                            data.get('logcomp'), data.get('logdetail').replace('"',"'"))
                         sqldata.append(sql_insert)
                     except Exception as e:
                         logSQLCreate.warning("Can't generate SQL INSERT INTO statement! " + str(e))
@@ -262,7 +262,7 @@ class ITOM_OBM():
                     try:
                         sql_insert = 'INSERT INTO {} (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(self.db_table,
                             data.get('logfile'), str(data.get('logline')), data.get('loglevel'), data.get('logtime'),
-                            data.get('logcomp'), data.get('logdetail'))
+                            data.get('logcomp'), data.get('logdetail').replace('"',"'"))
                         sqldata.append(sql_insert)
                     except Exception as e:
                         logSQLCreate.warnning("Can't generate SQL INSERT INTO statement! Reason: " + str(e))
@@ -331,7 +331,7 @@ class ITOM_OBM():
                         sql_insert = 'INSERT INTO {} (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(
                             self.db_table,
                             data.get('logfile'), str(data.get('logline')), data.get('loglevel'), data.get('logtime'),
-                            data.get('logcomp'), data.get('logdetail'))
+                            data.get('logcomp'), data.get('logdetail').replace('"',"'"))
                         sqldata.append(sql_insert)
                     except Exception as e:
                         logSQLCreate.warnning("Can't generate SQL INSERT INTO statement!" + str(e))
@@ -406,7 +406,7 @@ class ITOM_OBM():
                     try:
                         sql_insert = 'INSERT INTO {} (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(self.db_table,
                             data.get('logfile'), str(data.get('logline')), data.get('loglevel'), data.get('logtime'),
-                            data.get('logcomp'), data.get('logdetail'))
+                            data.get('logcomp'), data.get('logdetail').replace('"',"'"))
                         sqldata.append(sql_insert)
                     except Exception as e:
                         logSQLCreate.warnning("Can't generate SQL INSERT INTO statement!" + str(e))
