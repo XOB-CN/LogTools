@@ -8,6 +8,7 @@ from module.gui.DialogDB_md import DialogDB
 from module.gui.CellContent_md import CellContent
 from module.tools.LogCheck import LogCheck
 from module.tools.LogInsert import LogInsert
+from module.tools.MenuTools import AddMenuTools
 from multiprocessing import freeze_support
 
 if __name__ == '__main__':
@@ -33,31 +34,9 @@ if __name__ == '__main__':
         guiMain.product_type = [company_name, category_name, product_name]
         # 设置软件标题
         guiMain.setWindowTitle(category_name + ' ' + product_name + ' LogTools ' + 'Beta v2')
-        # 显示 LogTools 主界面
-
         # 判断产品分类, 加载不同的菜单
-        if product_name == 'OBM/OMi':
-            try:
-                menu = guiMain.menubar.addMenu("Tools")
-                menu_ci_resolver = menu.addAction('CI Resolver')
-                menu_rtsm = menu.addAction('RTSM')
-                menu_epi = menu.addAction('Event Processing Interface')
-                menu_pd = menu.addAction('Performance Dashboard')
-                menu_ma = menu.addAction('Monitoring Automation')
-
-                def demo(x=None, y=None, z=None):
-                    print('demo',x,y,z)
-
-                def demo2(x=None, y=None, z=None):
-                    print('demo2',x,y,z)
-
-                menu_ci_resolver.triggered.connect(demo)
-                menu_rtsm.triggered.connect(demo2)
-
-                # guiMain.menubar.addAction(guiMain, menuTools)
-            except Exception as e:
-                print(e)
-
+        AddMenuTools(product_name, guiMain)
+        # 显示 LogTools 主界面
         guiMain.show()
         # 隐藏 LogTools 初始界面
         gui.hide()
