@@ -176,3 +176,42 @@ class AddMenuTools():
                     QMessageBox.information(self.guiMain, 'No Data!', 'No CI Resolver Information!')
         # 连接 select_epi 槽函数
         menu_epi.triggered.connect(select_epi)
+
+        def select_ma():
+            kylist = []
+            tblist = self._active_db_tables()
+            sqledit = self._active_sqledit()
+            if tblist != False:
+                # 判断 Monitoring Automation 具体包含哪张表
+                for key in ['tb_opr_webapp', 'tb_opr_configserver', 'tb_MI_MonitorAdministration']:
+                    if key in tblist:
+                        kylist.append(key)
+
+                if len(kylist) == 3:
+                    sqltext = "select * from {} union all\n" \
+                              "select * from {} union all\n" \
+                              "select * from {}\n" \
+                              "where logtime > '{}' and logtime < '{}'\n" \
+                              "order by logtime desc;".format(kylist[0],
+                                                              kylist[1],
+                                                              kylist[2],
+                                                              self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'))
+                    sqledit.setText(sqltext)
+                elif len(kylist) == 2:
+                    sqltext = "select * from {} union all\n" \
+                              "select * from {}\n" \
+                              "where logtime > '{}' and logtime < '{}'\n" \
+                              "order by logtime desc;".format(kylist[0],
+                                                              kylist[1],
+                                                              self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'))
+                    sqledit.setText(sqltext)
+                elif len(kylist) == 1:
+                    sqltext = "select * from {}\n" \
+                              "where logtime > '{}' and logtime < '{}'\n" \
+                              "order by logtime desc;".format(kylist[0],
+                                                              self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'))
+                    sqledit.setText(sqltext)
+                else:
+                    QMessageBox.information(self.guiMain, 'No Data!', 'No CI Resolver Information!')
+        # 连接 select_ma 槽函数
+        menu_ma.triggered.connect(select_ma)
