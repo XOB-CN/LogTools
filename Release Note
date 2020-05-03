@@ -1,9 +1,12 @@
-2020-04-28 Beta v2
+2020-05-03 Beta v0.1.0 (coding)
+# 添加：针对 MicroFocus ITOM OBM 工具, 菜单栏中增加 Tools, 可以自动生成多表查询语句 (正在开发)
+
+2020-04-28 Beta v0.0.2
 # 修复: 当单元格显示的内容为数字时, 双击会导致程序退出的问题
 # 修复: 当生成的 SQL 语句中, logdetail 列如果有双引号, 会导致该语句无法写入到数据库的问题
 # 修复: MicroFocus ITOM OBM 产品中, jvm_statistics.log 日志文件没有办法正常返回 SQLData 的问题
 # 添加: 增加 SQL Highlight 关键字 union 和 union all
 # 修改: 微调状态栏提示内容
 
-2020-04-27 Beta v1
+2020-04-27 Beta v0.0.1
 # 初始版本

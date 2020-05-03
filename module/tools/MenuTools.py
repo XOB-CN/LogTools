@@ -42,10 +42,10 @@ class AddMenuTools():
     def set_mf_itom_obm_menu(self):
         menu = self.guiMain.menubar.addMenu('Tools')
         menu_ci_resolver = menu.addAction('CI Resolver')
-        menu_rtsm = menu.addAction('RTSM')
         menu_epi = menu.addAction('Event Processing Interface')
         menu_pd = menu.addAction('Performance Dashboard')
         menu_ma = menu.addAction('Monitoring Automation')
+        menu_rtsm = menu.addAction('RTSM')
 
         def select_ci_resolver():
             kylist = []
@@ -57,7 +57,8 @@ class AddMenuTools():
                     if key in tblist:
                         kylist.append(key)
                 if len(kylist) == 2:
-                    sqltext = "select * from {} union all select * from {}\n" \
+                    sqltext = "select * from {} union all\n" \
+                              "select * from {}\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
                               "order by logtime desc;".format(kylist[0], kylist[1], self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'))
                     sqledit.setText(sqltext)
@@ -70,3 +71,108 @@ class AddMenuTools():
                     QMessageBox.information(self.guiMain, 'No Data!', 'No CI Resolver Information!')
         # 连接 select_ci_resolver 槽函数
         menu_ci_resolver.triggered.connect(select_ci_resolver)
+
+        def select_epi():
+            kylist = []
+            tblist = self._active_db_tables()
+            sqledit = self._active_sqledit()
+            if tblist != False:
+                # 判断 Event Processing Interface 具体包含哪张表
+                for key in ['tb_opr_gateway', 'tb_opr_gateway_flowtrace', 'tb_opr_event_sync_adapter', 'tb_opr_scripting_host', 'tb_scripts', 'tb_opr_backend', 'tb_opr_flowtrace_backend']:
+                    if key in tblist:
+                        kylist.append(key)
+                if len(kylist) == 7:
+                    sqltext = "select * from {} union all\n" \
+                              "select * from {} union all\n" \
+                              "select * from {} union all\n" \
+                              "select * from {} union all\n" \
+                              "select * from {} union all\n" \
+                              "select * from {} union all\n" \
+                              "select * from {}\n" \
+                              "where logtime > '{}' and logtime < '{}'\n" \
+                              "order by logtime desc;".format(kylist[0],
+                                                              kylist[1],
+                                                              kylist[2],
+                                                              kylist[3],
+                                                              kylist[4],
+                                                              kylist[5],
+                                                              kylist[6],
+                                                              self.guiMain.geTime.text().replace('/', '-'),
+                                                              self.guiMain.leTime.text().replace('/', '-'))
+                    sqledit.setText(sqltext)
+                elif len(kylist) == 6:
+                    sqltext = "select * from {} union all\n" \
+                              "select * from {} union all\n" \
+                              "select * from {} union all\n" \
+                              "select * from {} union all\n" \
+                              "select * from {} union all\n" \
+                              "select * from {}\n" \
+                              "where logtime > '{}' and logtime < '{}'\n" \
+                              "order by logtime desc;".format(kylist[0],
+                                                              kylist[1],
+                                                              kylist[2],
+                                                              kylist[3],
+                                                              kylist[4],
+                                                              kylist[5],
+                                                              self.guiMain.geTime.text().replace('/', '-'),
+                                                              self.guiMain.leTime.text().replace('/', '-'))
+                    sqledit.setText(sqltext)
+                elif len(kylist) == 5:
+                    sqltext = "select * from {} union all\n" \
+                              "select * from {} union all\n" \
+                              "select * from {} union all\n" \
+                              "select * from {} union all\n" \
+                              "select * from {}\n" \
+                              "where logtime > '{}' and logtime < '{}'\n" \
+                              "order by logtime desc;".format(kylist[0],
+                                                              kylist[1],
+                                                              kylist[2],
+                                                              kylist[3],
+                                                              kylist[4],
+                                                              self.guiMain.geTime.text().replace('/', '-'),
+                                                              self.guiMain.leTime.text().replace('/', '-'))
+                    sqledit.setText(sqltext)
+                elif len(kylist) == 4:
+                    sqltext = "select * from {} union all\n" \
+                              "select * from {} union all\n" \
+                              "select * from {} union all\n" \
+                              "select * from {}\n" \
+                              "where logtime > '{}' and logtime < '{}'\n" \
+                              "order by logtime desc;".format(kylist[0],
+                                                              kylist[1],
+                                                              kylist[2],
+                                                              kylist[3],
+                                                              self.guiMain.geTime.text().replace('/', '-'),
+                                                              self.guiMain.leTime.text().replace('/', '-'))
+                    sqledit.setText(sqltext)
+                elif len(kylist) == 3:
+                    sqltext = "select * from {} union all\n" \
+                              "select * from {} union all\n" \
+                              "select * from {}\n" \
+                              "where logtime > '{}' and logtime < '{}'\n" \
+                              "order by logtime desc;".format(kylist[0],
+                                                              kylist[1],
+                                                              kylist[2],
+                                                              self.guiMain.geTime.text().replace('/', '-'),
+                                                              self.guiMain.leTime.text().replace('/', '-'))
+                    sqledit.setText(sqltext)
+                elif len(kylist) == 2:
+                    sqltext = "select * from {} union all\n" \
+                              "select * from {}\n" \
+                              "where logtime > '{}' and logtime < '{}'\n" \
+                              "order by logtime desc;".format(kylist[0],
+                                                              kylist[1],
+                                                              self.guiMain.geTime.text().replace('/', '-'),
+                                                              self.guiMain.leTime.text().replace('/', '-'))
+                    sqledit.setText(sqltext)
+                elif len(kylist) == 1:
+                    sqltext = "select * from {}\n" \
+                              "where logtime > '{}' and logtime < '{}'\n" \
+                              "order by logtime desc;".format(kylist[0],
+                                                              self.guiMain.geTime.text().replace('/', '-'),
+                                                              self.guiMain.leTime.text().replace('/', '-'))
+                    sqledit.setText(sqltext)
+                else:
+                    QMessageBox.information(self.guiMain, 'No Data!', 'No CI Resolver Information!')
+        # 连接 select_epi 槽函数
+        menu_epi.triggered.connect(select_epi)
