@@ -57,8 +57,9 @@ class AddMenuTools():
                     if key in tblist:
                         kylist.append(key)
                 if len(kylist) == 2:
-                    sqltext = "select * from {} union all\n" \
-                              "select * from {}\n" \
+                    sqltext = "select * from (\n" \
+                              "select * from {} union all\n" \
+                              "select * from {}\n)\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
                               "order by logtime desc;".format(kylist[0], kylist[1], self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'))
                     sqledit.setText(sqltext)
@@ -82,13 +83,14 @@ class AddMenuTools():
                     if key in tblist:
                         kylist.append(key)
                 if len(kylist) == 7:
-                    sqltext = "select * from {} union all\n" \
+                    sqltext = "select * from (\n" \
                               "select * from {} union all\n" \
                               "select * from {} union all\n" \
                               "select * from {} union all\n" \
                               "select * from {} union all\n" \
                               "select * from {} union all\n" \
-                              "select * from {}\n" \
+                              "select * from {} union all\n" \
+                              "select * from {}\n)\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
                               "order by logtime desc;".format(kylist[0],
                                                               kylist[1],
@@ -101,12 +103,13 @@ class AddMenuTools():
                                                               self.guiMain.leTime.text().replace('/', '-'))
                     sqledit.setText(sqltext)
                 elif len(kylist) == 6:
-                    sqltext = "select * from {} union all\n" \
+                    sqltext = "select * from (\n"\
                               "select * from {} union all\n" \
                               "select * from {} union all\n" \
                               "select * from {} union all\n" \
                               "select * from {} union all\n" \
-                              "select * from {}\n" \
+                              "select * from {} union all\n" \
+                              "select * from {}\n)\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
                               "order by logtime desc;".format(kylist[0],
                                                               kylist[1],
@@ -118,11 +121,12 @@ class AddMenuTools():
                                                               self.guiMain.leTime.text().replace('/', '-'))
                     sqledit.setText(sqltext)
                 elif len(kylist) == 5:
-                    sqltext = "select * from {} union all\n" \
+                    sqltext = "select * from (\n"\
                               "select * from {} union all\n" \
                               "select * from {} union all\n" \
                               "select * from {} union all\n" \
-                              "select * from {}\n" \
+                              "select * from {} union all\n" \
+                              "select * from {}\n)\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
                               "order by logtime desc;".format(kylist[0],
                                                               kylist[1],
@@ -133,10 +137,11 @@ class AddMenuTools():
                                                               self.guiMain.leTime.text().replace('/', '-'))
                     sqledit.setText(sqltext)
                 elif len(kylist) == 4:
-                    sqltext = "select * from {} union all\n" \
+                    sqltext = "select * from (\n"\
                               "select * from {} union all\n" \
                               "select * from {} union all\n" \
-                              "select * from {}\n" \
+                              "select * from {} union all\n" \
+                              "select * from {}\n)\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
                               "order by logtime desc;".format(kylist[0],
                                                               kylist[1],
@@ -146,9 +151,10 @@ class AddMenuTools():
                                                               self.guiMain.leTime.text().replace('/', '-'))
                     sqledit.setText(sqltext)
                 elif len(kylist) == 3:
-                    sqltext = "select * from {} union all\n" \
+                    sqltext = "select * from (\n"\
                               "select * from {} union all\n" \
-                              "select * from {}\n" \
+                              "select * from {} union all\n" \
+                              "select * from {}\n)\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
                               "order by logtime desc;".format(kylist[0],
                                                               kylist[1],
@@ -157,8 +163,9 @@ class AddMenuTools():
                                                               self.guiMain.leTime.text().replace('/', '-'))
                     sqledit.setText(sqltext)
                 elif len(kylist) == 2:
-                    sqltext = "select * from {} union all\n" \
-                              "select * from {}\n" \
+                    sqltext = "select * from (\n"\
+                              "select * from {} union all\n" \
+                              "select * from {}\n)\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
                               "order by logtime desc;".format(kylist[0],
                                                               kylist[1],
@@ -188,9 +195,10 @@ class AddMenuTools():
                         kylist.append(key)
 
                 if len(kylist) == 3:
-                    sqltext = "select * from {} union all\n" \
+                    sqltext = "select * from (\n"\
                               "select * from {} union all\n" \
-                              "select * from {}\n" \
+                              "select * from {} union all\n" \
+                              "select * from {}\n)\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
                               "order by logtime desc;".format(kylist[0],
                                                               kylist[1],
@@ -198,8 +206,9 @@ class AddMenuTools():
                                                               self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'))
                     sqledit.setText(sqltext)
                 elif len(kylist) == 2:
-                    sqltext = "select * from {} union all\n" \
-                              "select * from {}\n" \
+                    sqltext = "select * from (\n"\
+                              "select * from {} union all\n" \
+                              "select * from {}\n)\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
                               "order by logtime desc;".format(kylist[0],
                                                               kylist[1],
