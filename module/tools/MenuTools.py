@@ -79,7 +79,7 @@ class AddMenuTools():
             sqledit = self._active_sqledit()
             if tblist != False:
                 # 判断 Event Processing Interface 具体包含哪张表
-                for key in ['tb_opr_gateway', 'tb_opr_gateway_flowtrace', 'tb_opr_event_sync_adapter', 'tb_opr_scripting_host', 'tb_scripts', 'tb_opr_backend', 'tb_opr_flowtrace_backend']:
+                for key in ['tb_opr_gateway', 'tb_opr_gateway_flowtrace', 'tb_opr_event_sync_adapter', 'tb_opr_backend', 'tb_opr_flowtrace_backend', 'tb_opr_scripting_host', 'tb_scripts',]:
                     if key in tblist:
                         kylist.append(key)
                 if len(kylist) == 7:

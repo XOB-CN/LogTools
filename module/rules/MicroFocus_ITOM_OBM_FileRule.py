@@ -15,6 +15,7 @@ FileRule = [
     'opr-webapp\.log',
     'downtime\.log',
     'pmi\.log',
+    'scripts.\log',
 ]
 
 # 文件级别的反匹规则

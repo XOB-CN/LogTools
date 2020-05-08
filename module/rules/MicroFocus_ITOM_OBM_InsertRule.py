@@ -20,7 +20,7 @@ class ITOM_OBM():
         # 如果是 system.xt 文件, 则调用 log_system 方法读取日志
         if len(re.findall('jvm_statistics\.log|busjvm_statistics\.log', self.filepath, re.IGNORECASE)) > 0:
             self.log_jvm_statistics()
-        elif len(re.findall('opr-ciresolver\.log|opr-backend\.log|opr-gateway\.log|opr-svcdiscserver\.log|opr-scripting-host\.log|bus\.log|opr-webapp\.log|opr-configserver\.log', self.filepath, re.IGNORECASE)) > 0:
+        elif len(re.findall('opr-ciresolver\.log|opr-backend\.log|opr-gateway\.log|opr-svcdiscserver\.log|opr-scripting-host\.log|scripts\.log|bus\.log|opr-webapp\.log|opr-configserver\.log', self.filepath, re.IGNORECASE)) > 0:
             self.log_obm_logfiles_type1()
         elif len(re.findall('opr-svcdiscserver-citrace\.log', self.filepath, re.IGNORECASE)) > 0:
             self.log_obm_logfiles_type2()
@@ -206,6 +206,8 @@ class ITOM_OBM():
             self.db_table = 'tb_opr_svcdiscserver'
         elif re.findall('opr-scripting-host\.log', self.filepath):
             self.db_table = 'tb_opr_scripting_host'
+        elif re.findall('scripts\.log', self.filepath):
+            self.db_table = 'tb_scripts'
         elif re.findall('opr-webapp\.log', self.filepath):
             self.db_table = 'tb_opr_webapp'
         elif re.findall('opr-configserver\.log', self.filepath):
