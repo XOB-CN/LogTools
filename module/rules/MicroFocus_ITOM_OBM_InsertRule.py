@@ -28,6 +28,8 @@ class ITOM_OBM():
             self.log_obm_logfiles_type3()
         elif len (re.findall('pmi\.log', self.filepath, re.IGNORECASE)) > 0:
             self.log_obm_pmi()
+        elif len (re.findall('cmdb\.reconciliation\.identification\.log|cmdb\.reconciliation\.datain\.merged\.log|cmdb\.reconciliation\.datain\.ignored\.log', self.filepath, re.IGNORECASE)) > 0:
+            self.log_obm_logfiles_type4()
 
     def log_jvm_statistics(self):
         # 初始化数据和相关控制参数
@@ -421,10 +423,83 @@ class ITOM_OBM():
         except Exception as reason:
             logSQLCreate.error('logfile read error:{}'.format(reason))
 
+    def log_obm_logfiles_type4(self):
+        # 初始化数据和相关控制参数
+        logdata = []
+        sqldata = []
+        isnoblk = True
+        log_num = 0
+        isstart = False
+        # db_table 名字
+        if re.findall('cmdb\.reconciliation\.identification\.log', self.filepath):
+            self.db_table = 'tb_rtsm_identification'
+        elif re.findall('cmdb\.reconciliation\.datain\.merged\.log', self.filepath):
+            self.db_table = 'tb_rtsm_merged'
+        elif re.findall('cmdb\.reconciliation\.datain\.ignored\.log', self.filepath):
+            self.db_table = 'tb_rtsm_ignored'
+
+        # 尝试开始读取文件
+        try:
+            with open(self.filepath, mode='r', encoding='utf-8', errors='replace') as f:
+                for line in f:
+                    try:
+                        log_num += 1
+                        isnoblk = True
+                        for blkrule in BlackRule:
+                            if len(re.findall(blkrule, line, re.IGNORECASE)) > 0:
+                                isnoblk = False
+
+                        # 判断日志的开头是否是事件的开始, 如果不是则忽略
+                        if isstart == False:
+                            if len(re.findall(' INFO | WARN | ERROR | DEBUG ', line)) > 0:
+                                isstart = True
+
+                        # 如果改行既不在黑名单, 并且也已经确定 isstart 为 True, 则开始日志匹配流程
+                        if isnoblk and isstart:
+                            line = line.strip()
+                            # 判断该行日志是否符合格式
+                            if len(re.findall('\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.*\[.*\]', line)) > 0:
+                                log_level = line.split(' ')[3].strip()
+                                log_time = line.split(' ',2)[0] + ' ' + line.split(' ',2)[1]
+                                log_time = sql_write.sqlite_to_datetime(log_time)
+                                log_comp = line.split('[', 1)[1].split(']',1)[0].strip()
+                                log_detail = '[' + line.split('[',2)[-1]
+                                logdata.append({'logfile': self.filepath,
+                                                'logline': log_num,
+                                                'loglevel': log_level,
+                                                'logtime': log_time,
+                                                'logcomp': log_comp,
+                                                'logdetail': log_detail})
+                            else:
+                                logdata[-1]['logdetail'] = logdata[-1]['logdetail'] + '\n' + line
+                                # 抹掉日志中剩下的 '/n'
+                                logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
+
+                    except Exception as e:
+                        logSQLCreate.warning("line:{}\nSource:{}\nException:{}".format(str(log_num), line, e))
+
+                for data in logdata:
+                    try:
+                        sql_insert = 'INSERT INTO {} (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(self.db_table,
+                            data.get('logfile'), str(data.get('logline')), data.get('loglevel'), data.get('logtime'),
+                            data.get('logcomp'), data.get('logdetail').replace('"',"'"))
+                        sqldata.append(sql_insert)
+                    except Exception as e:
+                        logSQLCreate.warnning("Can't generate SQL INSERT INTO statement!" + str(e))
+
+                self.SQLData = ({'db_name': self.db_name,
+                                 'db_type': self.db_type,
+                                 'db_table': self.db_table,
+                                 'db_data': sqldata, })
+
+        except Exception as reason:
+            logSQLCreate.error('logfile read error:{}'.format(reason))
+            # print(reason)
+
 if __name__ == '__main__':
     pass
-    # filepath = 'D:\\demo\pmi.log'
+    # filepath = 'D:\\cmdb.reconciliation.datain.ignored.log'
     # dataqueue = 'test_queue'
     # db_name = 'test_db'
     # product_type = 'test_product'
-    # test = ITOM_OBM(filepath, dataqueue, db_name, product_type)
+    # test = ITOM_OBM(filepath, db_name, product_type)

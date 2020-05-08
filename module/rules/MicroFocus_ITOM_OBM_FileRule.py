@@ -15,7 +15,10 @@ FileRule = [
     'opr-webapp\.log',
     'downtime\.log',
     'pmi\.log',
-    'scripts.\log',
+    'scripts\.log',
+    'cmdb\.reconciliation\.identification\.log',
+    'cmdb\.reconciliation\.datain\.merged\.log',
+    'cmdb\.reconciliation\.datain\.ignored\.log',
 ]
 
 # 文件级别的反匹规则

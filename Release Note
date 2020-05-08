@@ -1,5 +1,5 @@
-2020-05-03 Beta v0.1.0 (coding)
-# 添加：针对 MicroFocus ITOM OBM 工具, 菜单栏中增加 Tools, 可以自动生成多表查询语句 (正在开发)
+2020-05-08 Beta v0.1.0 (coding)
+# 添加：MicroFocus ITOM OBM 日志工具的菜单栏中增加 Tools, 可以自动生成多表查询语句
 
 2020-04-28 Beta v0.0.2
 # 修复: 当单元格显示的内容为数字时, 双击会导致程序退出的问题

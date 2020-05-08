@@ -180,9 +180,30 @@ class AddMenuTools():
                                                               self.guiMain.leTime.text().replace('/', '-'))
                     sqledit.setText(sqltext)
                 else:
-                    QMessageBox.information(self.guiMain, 'No Data!', 'No CI Resolver Information!')
+                    QMessageBox.information(self.guiMain, 'No Data!', 'No Event EPI(Event Processing Interface) Information!')
         # 连接 select_epi 槽函数
         menu_epi.triggered.connect(select_epi)
+
+        def select_pd():
+            kylist = []
+            tblist = self._active_db_tables()
+            sqledit = self._active_sqledit()
+            if tblist != False:
+                # 判断 Performance Dashboard 具体包含哪张表
+                for key in ['tb_pmi', ]:
+                    if key in tblist:
+                        kylist.append(key)
+
+                if len(kylist) == 1:
+                    sqltext = "select * from {}\n" \
+                              "where logtime > '{}' and logtime < '{}'\n" \
+                              "order by logtime desc;".format(kylist[0],
+                                                              self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'))
+                    sqledit.setText(sqltext)
+                else:
+                    QMessageBox.information(self.guiMain, 'No Data!', 'No Performance Dashboard Information!')
+        # 连接 select_pd 槽函数
+        menu_pd.triggered.connect(select_pd)
 
         def select_ma():
             kylist = []
@@ -221,6 +242,47 @@ class AddMenuTools():
                                                               self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'))
                     sqledit.setText(sqltext)
                 else:
-                    QMessageBox.information(self.guiMain, 'No Data!', 'No CI Resolver Information!')
+                    QMessageBox.information(self.guiMain, 'No Data!', 'No Monitoring Automation Information!')
         # 连接 select_ma 槽函数
         menu_ma.triggered.connect(select_ma)
+
+        def select_rtsm():
+            kylist = []
+            tblist = self._active_db_tables()
+            sqledit = self._active_sqledit()
+            if tblist != False:
+                # 判断 RTSM 具体包含哪张表
+                for key in ['tb_rtsm_identification', 'tb_rtsm_merged', 'tb_rtsm_ignored']:
+                    if key in tblist:
+                        kylist.append(key)
+
+                if len(kylist) == 3:
+                    sqltext = "select * from (\n"\
+                              "select * from {} union all\n" \
+                              "select * from {} union all\n" \
+                              "select * from {}\n)\n" \
+                              "where logtime > '{}' and logtime < '{}'\n" \
+                              "order by logtime desc;".format(kylist[0],
+                                                              kylist[1],
+                                                              kylist[2],
+                                                              self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'))
+                    sqledit.setText(sqltext)
+                elif len(kylist) == 2:
+                    sqltext = "select * from (\n"\
+                              "select * from {} union all\n" \
+                              "select * from {}\n)\n" \
+                              "where logtime > '{}' and logtime < '{}'\n" \
+                              "order by logtime desc;".format(kylist[0],
+                                                              kylist[1],
+                                                              self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'))
+                    sqledit.setText(sqltext)
+                elif len(kylist) == 1:
+                    sqltext = "select * from {}\n" \
+                              "where logtime > '{}' and logtime < '{}'\n" \
+                              "order by logtime desc;".format(kylist[0],
+                                                              self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'))
+                    sqledit.setText(sqltext)
+                else:
+                    QMessageBox.information(self.guiMain, 'No Data!', 'No RTSM Information!')
+        # 连接 select_rtsm 槽函数
+        menu_rtsm.triggered.connect(select_rtsm)

@@ -89,7 +89,10 @@ class sql_write():
                                       'tb_opr_svcdiscserver_citrace',
                                       'tb_opr_webapp',
                                       'tb_pmi',
-                                      'tb_scripts',]:
+                                      'tb_scripts',
+                                      'tb_rtsm_identification',
+                                      'tb_rtsm_merged',
+                                      'tb_rtsm_ignored',]:
                         query = QtSql.QSqlQuery()
                         query.exec_("create table {} (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);".format(db_table))
                         if query.lastError().isValid():
