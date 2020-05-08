@@ -149,6 +149,8 @@ class LogMain(QMainWindow, Ui_MainWindow):
                 self.tab_view.verticalHeader().setDefaultSectionSize(8)
                 ## 设置单元格显示的字体
                 self.tab_view.setFont(QFont('Microsoft YaHei UI', 8, QFont.Normal))
+                ## 自动调整每列的宽度
+                self.tab_view.resizeColumnsToContents()
                 ## 连接槽函数, 在双击单元格时触发
                 self.tab_view.doubleClicked.connect(self.slot_show_cell)
                 self.tab_view.show()
