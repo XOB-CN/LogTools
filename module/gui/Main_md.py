@@ -6,11 +6,13 @@ from PyQt5 import QtSql
 from module.gui.Main_ui import Ui_MainWindow
 from module.tools.SQLHighLight import SQLHighLighter
 from module.tools.LogRecord import logSQLQuery
+from module.tools.LogRecord import loglogTools
 class LogMain(QMainWindow, Ui_MainWindow):
     """
     LogTools Main class
     """
     query_db_file = ''
+    rmove_db_file = ''
     num_new_query = 1
     num_new_result = 1
     # 点击 import 时发射信号
@@ -71,6 +73,9 @@ class LogMain(QMainWindow, Ui_MainWindow):
                 for tb in tbs:
                     sub_item = QTreeWidgetItem(root)
                     sub_item.setText(0, tb)
+        else:
+            # 此处为删除数据库时调用, 如果删除的是最后一个数据库, 则列表返回为空
+            self.treeList.clear()
 
     # 创建新的 Table 标签
     def slot_new_query(self):
@@ -154,6 +159,8 @@ class LogMain(QMainWindow, Ui_MainWindow):
                 ## 连接槽函数, 在双击单元格时触发
                 self.tab_view.doubleClicked.connect(self.slot_show_cell)
                 self.tab_view.show()
+                ##############################################################
+                qrydb.close()
 
     # 选中 dblist 的表时, 设定选中的数据库文件
     def slot_dblist_sql_query(self):
@@ -189,6 +196,23 @@ class LogMain(QMainWindow, Ui_MainWindow):
     def slot_action_import(self):
         # 发射一个自定义信号，信号内容包括 "厂商" + "分类" + "产品"
         self.singal_btn_import.emit(self.product_type[0], self.product_type[1], self.product_type[2])
+
+    # 删除指定的 SQLite 数据库
+    def slot_action_delete(self):
+        if self.rmove_db_file != '':
+            try:
+                os.remove(self.rmove_db_file)
+                self.show_db_list()
+            except Exception as e:
+                loglogTools.warning(str(e))
+                self.show_db_list()
+
+    # 设定需要删除数据库的文件
+    def slot_set_remove_db_file(self):
+        try:
+            self.rmove_db_file = os.path.join('.\\data', self.treeList.currentItem().parent().text(0) +'.db')
+        except:
+            self.rmove_db_file = os.path.join('.\\data', self.treeList.currentItem().text(0) +'.db')
 
     # 将指定的日志文件分析并写入到数据库
     def log_insert(self, taskdata):

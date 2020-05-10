@@ -112,9 +112,13 @@ class Ui_MainWindow(object):
         self.actionImport = QtWidgets.QAction(MainWindow)
         self.actionImport.setCheckable(False)
         self.actionImport.setObjectName("actionImport")
+        self.actionDelete = QtWidgets.QAction(MainWindow)
+        self.actionDelete.setObjectName("actionDelete")
         self.menuFile.addAction(self.actionImport)
+        self.menuFile.addAction(self.actionDelete)
         self.menubar.addAction(self.menuFile.menuAction())
         self.toolBar.addAction(self.actionImport)
+        self.toolBar.addAction(self.actionDelete)
 
         self.retranslateUi(MainWindow)
         self.tabQuery.setCurrentIndex(0)
@@ -126,6 +130,8 @@ class Ui_MainWindow(object):
         self.btnQuery.clicked.connect(MainWindow.slot_run_sql_query)
         self.tabResult.tabCloseRequested['int'].connect(MainWindow.slot_tab_result_close)
         self.tabQuery.currentChanged['int'].connect(MainWindow.slot_sql_highlight)
+        self.actionDelete.triggered.connect(MainWindow.slot_action_delete)
+        self.treeList.clicked['QModelIndex'].connect(MainWindow.slot_set_remove_db_file)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -143,3 +149,4 @@ class Ui_MainWindow(object):
         self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar"))
         self.actionImport.setText(_translate("MainWindow", "Import"))
         self.actionImport.setToolTip(_translate("MainWindow", "Import"))
+        self.actionDelete.setText(_translate("MainWindow", "Delete"))

@@ -193,6 +193,7 @@
      <string>File</string>
     </property>
     <addaction name="actionImport"/>
+    <addaction name="actionDelete"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -207,6 +208,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionImport"/>
+   <addaction name="actionDelete"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionImport">
@@ -218,6 +220,11 @@
    </property>
    <property name="toolTip">
     <string>Import</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="text">
+    <string>Delete</string>
    </property>
   </action>
  </widget>
@@ -335,6 +342,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionDelete</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slot_action_delete()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>490</x>
+     <y>399</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>treeList</sender>
+   <signal>clicked(QModelIndex)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slot_set_remove_db_file()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>88</x>
+     <y>155</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>2</x>
+     <y>103</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>slot_new_query()</slot>
@@ -344,5 +383,7 @@
   <slot>slot_dblist_sql_query()</slot>
   <slot>slot_tab_result_close()</slot>
   <slot>slot_sql_highlight()</slot>
+  <slot>slot_action_delete()</slot>
+  <slot>slot_set_remove_db_file()</slot>
  </slots>
 </ui>
