@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
+from xml.etree import ElementTree as ET
 from module.rules.MicroFocus_ITOM_OA_FileRule import BlackRule
 from module.tools.SQLTools import sql_write
 from module.tools.LogRecord import logSQLCreate
@@ -16,9 +17,13 @@ class ITOM_OA():
         self.db_name = db_name
         self.db_type = product_type
 
-        # 如果是 system.xt 文件, 则调用 log_system 方法读取日志
+        # 如果是 system.txt 文件, 则调用 log_system 方法读取日志
         if len(re.findall('system\.txt', self.filepath, re.IGNORECASE)) > 0:
             self.log_system()
+
+        elif len(re.findall('\w{8}-\w{4}-\w{4}-\w{4}-\w{12}_header\.xml', self.filepath, re.IGNORECASE)) > 0:
+            self.cfg_policy()
+
 
     def log_system(self):
         # 初始化数据和相关控制参数
@@ -80,3 +85,13 @@ class ITOM_OA():
 
         except Exception as reason:
             logSQLCreate.error('logfile read error:{}'.format(reason))
+
+    def cfg_policy(self):
+        oa_policy = ET.parse(self.filepath)
+
+        print(oa_policy.findall('name', namespaces={'':'http://openview.hp.com/xmlns/conf/2003/04'}))
+
+
+if __name__ == '__main__':
+    filepath = r'D:\05.Code\policies\monitortmpl\2a1a3226-85f3-4de4-bd66-d3f742da42a8_header.xml'
+    test_obj = ITOM_OA(filepath, 'demodb', 'oa')

@@ -1,3 +1,6 @@
+2020-05-13 Beta v0.2.0(coding)
+# 添加：MicroFocus ITOM OA 目前可以获取 policy 的相关信息
+
 2020-05-10 Beta v0.1.0
 # 添加：MicroFocus ITOM OBM 日志工具的菜单栏中增加 Tools, 可以自动生成多表查询语句
 # 添加：增加软件本身的日志, 方便调试
