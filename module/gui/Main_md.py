@@ -7,6 +7,7 @@ from module.gui.Main_ui import Ui_MainWindow
 from module.tools.SQLHighLight import SQLHighLighter
 from module.tools.LogRecord import logSQLQuery
 from module.tools.LogRecord import loglogTools
+
 class LogMain(QMainWindow, Ui_MainWindow):
     """
     LogTools Main class
@@ -162,7 +163,7 @@ class LogMain(QMainWindow, Ui_MainWindow):
                 ##############################################################
                 qrydb.close()
 
-    # 选中 dblist 的表时, 设定选中的数据库文件
+    # 选中 dblist 的表时, 设定选中的数据库文件, 并且自动生成 SQL 查询语句
     def slot_dblist_sql_query(self):
         try:
             # 选中表时
@@ -172,7 +173,11 @@ class LogMain(QMainWindow, Ui_MainWindow):
             getime = self.geTime.text().replace('/', '-')
             letime = self.leTime.text().replace('/', '-')
             sqlEdit.clear()
-            sqlEdit.setText("select * from {}\nwhere logtime > '{}' and logtime < '{}'\norder by logtime desc;".format(self.treeList.currentItem().text(0), getime, letime))
+            # 如果表名为 tb_Policy, 则生成特殊的 SQL 语句
+            if self.treeList.currentItem().text(0) == 'tb_Policy':
+                sqlEdit.setText("select * from tb_Policy\norder by ply_name;")
+            else:
+                sqlEdit.setText("select * from {}\nwhere logtime > '{}' and logtime < '{}'\norder by logtime desc;".format(self.treeList.currentItem().text(0), getime, letime))
             self.statusBar.showMessage("Table [{}] has been selected".format(self.treeList.currentItem().text(0)))
         except:
             # 选中数据库时

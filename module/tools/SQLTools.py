@@ -70,6 +70,13 @@ class sql_write():
                         if query.lastError().isValid():
                             logSQLInsert.error('MicroFocus-ITOM-OA:\n{}'.format(query.lastError().text()))
 
+                    if db_table == 'tb_Policy':
+                        query = QtSql.QSqlQuery()
+                        # 不自动增长的语句
+                        query.exec_("create table tb_Policy (ply_name TEXT, ply_version TEXT, ply_status TEXT, ply_type TEXT, ply_data TEXT, ply_param TEXT);")
+                        if query.lastError().isValid():
+                            logSQLInsert.error('MicroFocus-ITOM-OA:\n{}'.format(query.lastError().text()))
+
             elif db_type == 'MicroFocus-ITOM-OBM/OMi':
                 if db_table not in db.tables():
                     if db_table == 'tb_JVMStatus':
