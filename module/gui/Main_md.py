@@ -10,11 +10,16 @@ from module.tools.LogRecord import loglogTools
 
 class LogMain(QMainWindow, Ui_MainWindow):
     """
-    LogTools Main class
+    LogTools 主界面 class
     """
+
+    # 准备查询的数据库文件路径
     query_db_file = ''
+    # 准备删除的数据库文件路径
     rmove_db_file = ''
+    # Query Tab 的数字编号
     num_new_query = 1
+    # Query Tab 对应结果的编号
     num_new_result = 1
     # 点击 import 时发射信号
     singal_btn_import = pyqtSignal(str, str, str)
@@ -22,7 +27,6 @@ class LogMain(QMainWindow, Ui_MainWindow):
     singal_cell_doubleClicked = pyqtSignal(str)
     # 启动日志分析任务的信号
     singal_task_start = pyqtSignal(dict)
-
     # 接收产品分类
     product_type = []
 
@@ -49,8 +53,10 @@ class LogMain(QMainWindow, Ui_MainWindow):
         # 设置高亮部分
         self.highlight = SQLHighLighter(self.sqlEdit1.document())
 
-    # 针对 QTreeWidget 的操作
     def show_db_list(self):
+        """
+        展示/刷新 QTreeWidget 中的 items
+        """
         # 获取数据库目录下的信息
         dbfiles = os.listdir('./data')
         if dbfiles != []:
@@ -78,8 +84,10 @@ class LogMain(QMainWindow, Ui_MainWindow):
             # 此处为删除数据库时调用, 如果删除的是最后一个数据库, 则列表返回为空
             self.treeList.clear()
 
-    # 创建新的 Table 标签
     def slot_new_query(self):
+        """
+        槽函数：创建新的 Table 标签
+        """
         # 新建的 Tab 名字
         self.num_new_query += 1
         tablabel = 'SQL_Query_' + str(self.num_new_query)
@@ -98,13 +106,18 @@ class LogMain(QMainWindow, Ui_MainWindow):
         self.tabQuery.setObjectName(tablabel)
         self.tabQuery.setCurrentIndex(self.tabQuery.count() - 1)
 
-    # 展示双击选中时,单元格中的内容
     def slot_show_cell(self, cell):
+        """
+        槽函数：展示双击选中时, 发射单元格中的内容信号
+        :param cell: 单元格对象
+        """
         # cell.data() 的结果需要使用 str 转换一下, 否则如果是纯数字的话会出错
         self.singal_cell_doubleClicked.emit(str(cell.data()))
 
-    # 执行查询语句, 并且返回结果
     def slot_run_sql_query(self):
+        """
+        槽函数：执行查询语句, 并且返回结果
+        """
         # 获取 sqlEdit 上一级的对象名
         sqltitle = self.tabQuery.currentWidget().objectName()
         # sqlEdit 返回的是当前激活的 QTextEdit 对象
@@ -163,8 +176,10 @@ class LogMain(QMainWindow, Ui_MainWindow):
                 ##############################################################
                 qrydb.close()
 
-    # 选中 dblist 的表时, 设定选中的数据库文件, 并且自动生成 SQL 查询语句
     def slot_dblist_sql_query(self):
+        """
+        槽函数：选中 dblist 的表时, 设定选中的数据库文件, 并且自动生成 SQL 查询语句
+        """
         try:
             # 选中表时
             self.query_db_file = os.path.join('.\\data', self.treeList.currentItem().parent().text(0) +'.db')
@@ -184,26 +199,38 @@ class LogMain(QMainWindow, Ui_MainWindow):
             self.query_db_file = os.path.join('.\\data', self.treeList.currentItem().text(0) +'.db')
             self.statusBar.showMessage("DB [{}] has been selected".format(self.treeList.currentItem().text(0)))
 
-    # SQL Query Tab 关闭函数
     def slot_tab_sql_close(self, index):
+        """
+        槽函数：SQL Query Tab 关闭函数
+        :param index: QtabWidget 的 index
+        """
         self.tabQuery.removeTab(index)
 
-    # SQL Result Tab 关闭函数
     def slot_tab_result_close(self, index):
+        """
+        槽函数：SQL Result Tab 关闭函数
+        :param index: QtabWidget 的 index
+        """
         self.tabResult.removeTab(index)
 
-    # 设置 QTextEdit 的高亮
     def slot_sql_highlight(self):
+        """
+        槽函数：设置 QTextEdit 的高亮
+        """
         sqlEdit = self.tabQuery.currentWidget().findChild(QTextEdit)
         self.highlight = SQLHighLighter(sqlEdit.document())
 
-    # 读取日志文件
     def slot_action_import(self):
+        """
+        槽函数：读取日志文件的按钮
+        """
         # 发射一个自定义信号，信号内容包括 "厂商" + "分类" + "产品"
         self.singal_btn_import.emit(self.product_type[0], self.product_type[1], self.product_type[2])
 
-    # 删除指定的 SQLite 数据库
     def slot_action_delete(self):
+        """
+        槽函数：删除指定的 SQLite 数据库
+        """
         if self.rmove_db_file != '':
             try:
                 os.remove(self.rmove_db_file)
@@ -212,13 +239,18 @@ class LogMain(QMainWindow, Ui_MainWindow):
                 loglogTools.warning(str(e))
                 self.show_db_list()
 
-    # 设定需要删除数据库的文件
     def slot_set_remove_db_file(self):
+        """
+        槽函数：设定需要删除数据库的文件
+        """
         try:
             self.rmove_db_file = os.path.join('.\\data', self.treeList.currentItem().parent().text(0) +'.db')
         except:
             self.rmove_db_file = os.path.join('.\\data', self.treeList.currentItem().text(0) +'.db')
 
-    # 将指定的日志文件分析并写入到数据库
     def log_insert(self, taskdata):
+        """
+        将指定的日志文件进行分析并写入到数据库
+        :param taskdata: dict
+        """
         self.singal_task_start.emit(taskdata)

@@ -5,7 +5,7 @@ from module.gui.LogTools_ui import Ui_Form
 
 class LogApp(QWidget, Ui_Form):
     """
-    LogTools GUI class
+    LogTools 启动界面的 class
     """
 
     # 支持的软件产品
@@ -22,11 +22,13 @@ class LogApp(QWidget, Ui_Form):
         self.load_cbx_company()
         self.load_cbx_category()
         self.load_cbx_product()
-
         # 显示窗口标题
         self.setWindowTitle('LogTools')
 
     def load_cbx_company(self):
+        """
+        加载公司的组合框 (Combo box)
+        """
         cbx_comp_list = []
         for i in self.cbx_data:
             cbx_comp_list.append(i)
@@ -34,6 +36,9 @@ class LogApp(QWidget, Ui_Form):
         self.cbx_company.addItems(cbx_comp_list)
 
     def load_cbx_category(self):
+        """
+        加载分类的组合框 (Combo box)
+        """
         cbx_cate_list = []
         cbx_cate_data = self.cbx_data.get(self.cbx_company.currentText())
         for i in cbx_cate_data:
@@ -42,16 +47,28 @@ class LogApp(QWidget, Ui_Form):
         self.cbx_category.addItems(cbx_cate_list)
 
     def load_cbx_product(self):
+        """
+        加载产品的组合框 (Combo box)
+        """
         cbx_prod_list = self.cbx_data.get(self.cbx_company.currentText()).get(self.cbx_category.currentText())
         self.cbx_product.clear()
         self.cbx_product.addItems(cbx_prod_list)
 
     def slot_update_cate(self):
+        """
+        槽函数：更新分类和软件产品列表
+        """
         self.load_cbx_category()
         self.load_cbx_product()
 
     def slot_update_prod(self):
+        """
+        槽函数：更新软件产品列表
+        """
         self.load_cbx_product()
 
     def slot_btn_start(self):
+        """
+        槽函数：点击 start 按钮后, 将会发射 [公司, 分类, 产品] 的信号
+        """
         self.singal_btn_start.emit(self.cbx_company.currentText(), self.cbx_category.currentText(), self.cbx_product.currentText())
