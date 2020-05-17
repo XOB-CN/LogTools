@@ -69,7 +69,11 @@ if __name__ == '__main__':
         """
         obj_task = LogCheck(task_info)
         task_data = obj_task.check()
-        guiMain.log_insert(task_data)
+        # 判断文件列表是否为空
+        if task_data.get('file_path') == []:
+            QMessageBox.warning(guiMain, 'No Files!', 'No files need to be analyzed!')
+        else:
+            guiMain.log_insert(task_data)
     dbgui.singal_log_task.connect(task_per_process)
 
     def task_running(task_info):
