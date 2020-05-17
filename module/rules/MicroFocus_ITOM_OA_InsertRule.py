@@ -7,9 +7,9 @@ from module.tools.SQLTools import sql_write
 from module.tools.LogRecord import logSQLCreate
 
 class ITOM_OA():
-    '''
+    """
     读取日志文件的类, 并返回分析的数据
-    '''
+    """
     SQLData = {}
 
     def __init__(self, filepath, db_name, product_type):
@@ -20,12 +20,14 @@ class ITOM_OA():
         # 如果是 system.txt 文件, 则调用 log_system 方法读取日志
         if len(re.findall('system\.txt', self.filepath, re.IGNORECASE)) > 0:
             self.log_system()
-
+        # 如果是 OA policy 的文件, 则调用 cfg_policy 方法来读取日志
         elif len(re.findall('\w{8}-\w{4}-\w{4}-\w{4}-\w{12}_header\.xml', self.filepath, re.IGNORECASE)) > 0:
             self.cfg_policy()
 
-
     def log_system(self):
+        """
+        针对 MicroFocus ITOM OA 中的 System.txt 文件
+        """
         # 初始化数据和相关控制参数
         logdata = []
         sqldata = []
@@ -87,6 +89,9 @@ class ITOM_OA():
             logSQLCreate.error('logfile read error:{}'.format(reason))
 
     def cfg_policy(self):
+        """
+        针对 MicroFocus ITOM OA 中的 Policy 文件
+        """
         # 初始变量
         sqldata = []
         ply_name = 'Null'

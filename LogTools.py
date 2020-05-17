@@ -29,6 +29,12 @@ if __name__ == '__main__':
     
     ######################## 跨界面的槽函数 ##############################################
     def enable_LogMain(company_name, category_name, product_name):
+        """
+        跳转到软件主界面
+        :param company_name: str
+        :param category_name: str
+        :param product_name: str
+        """
         # 将初始界面获取的产品分类数据传递到 LogTools 主界面里
         guiMain.product_type = [company_name, category_name, product_name]
         # 设置软件标题
@@ -42,6 +48,12 @@ if __name__ == '__main__':
     gui.singal_btn_start.connect(enable_LogMain)
 
     def enable_DialogDB(company_name, category_name, product_name):
+        """
+        显示日志录入界面
+        :param company_name: str
+        :param category_name: str
+        :param product_name: str
+        """
         # 清除上一次的记录
         dbgui.line_dbname.clear()
         dbgui.line_filepath.clear()
@@ -50,23 +62,33 @@ if __name__ == '__main__':
         dbgui.show()
     guiMain.singal_btn_import.connect(enable_DialogDB)
 
-    # 日志预处理, 获取待分析的文件信息
     def task_per_process(task_info):
+        """
+        日志预处理, 获取待分析的文件信息
+        :param task_info: dict
+        """
         obj_task = LogCheck(task_info)
         task_data = obj_task.check()
         guiMain.log_insert(task_data)
     dbgui.singal_log_task.connect(task_per_process)
 
-    # 真正的日志分析线程
     def task_running(task_info):
+        """
+        真正的日志分析线程
+        :param task_info: dict
+        """
         sub_thread = LogInsert(parent=guiMain, task_data=task_info)
         sub_thread.singal_had_write.connect(gui_update_process)
         sub_thread.start()
         guiMain.progressBar.show()
     guiMain.singal_task_start.connect(task_running)
 
-    # 界面状态更新
     def gui_update_process(value, total):
+        """
+        界面状态更新
+        :param value: int
+        :param total: int
+        """
         process_status = (value/total)*100
         process_status = round(process_status, 2)
         guiMain.progressBar.setValue(process_status)
@@ -76,8 +98,11 @@ if __name__ == '__main__':
             guiMain.statusBar.showMessage('log has been written to the database.')
             guiMain.show_db_list()
 
-    # 双击单元格时, 显示单元格中的内容
     def showCellContent(content):
+        """
+        双击单元格时, 显示单元格中的内容
+        :param content: str
+        """
         cellgui.showContent(content)
         cellgui.show()
     guiMain.singal_cell_doubleClicked.connect(showCellContent)

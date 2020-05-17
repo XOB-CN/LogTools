@@ -5,16 +5,16 @@ from PyQt5 import QtSql
 from module.tools.LogRecord import logSQLInsert
 
 class sql_write():
-    '''
+    """
     数据库写入类
-    '''
+    """
     @staticmethod
     def sqlite_to_datetime(date):
-        '''
+        """
         转换接收的时间字符串, 返回符合 sqlite 存储的时间字符串
         :param date: str
         :return: str(datetime)
-        '''
+        """
         datetime_format = [
             '%Y-%m-%d %H:%M:%S.%f',
             '%Y-%m-%d %H:%M:%S,%f',
@@ -41,9 +41,9 @@ class sql_write():
 
     @staticmethod
     def sqlite_to_database(logdata):
-        '''
+        """
         将获取的数据写入到 sqlite 数据库中
-        '''
+        """
         try:
             sqldata = logdata
             db_name = sqldata.get('db_name')

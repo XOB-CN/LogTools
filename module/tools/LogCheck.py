@@ -4,7 +4,9 @@ import os, re
 from module.tools.LogRecord import loglogTools
 
 class LogCheck():
-
+    """
+    检查文件列表中有哪些文件需要被分析
+    """
     def __init__(self, task_info):
         self.task_info = task_info
         # 需要分析的日志文件列表
@@ -22,9 +24,10 @@ class LogCheck():
             self.fileblk_rule = FileRule.FileBlkRule
 
     def check(self):
-        '''
+        """
         获取需要分析的文件列表, 以及日志类型
-        '''
+        :return: dict
+        """
         try:
             # self.file_path 为获取需要进一步分析的文件列表
             filepath = self.task_info.get('file_path')

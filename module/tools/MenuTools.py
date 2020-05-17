@@ -3,9 +3,9 @@
 from PyQt5.Qt import *
 
 class AddMenuTools():
-    '''
+    """
     针对不同的产品, 在 guiMain 上的 Tools 下面增加不同的选项
-    '''
+    """
     def __init__(self, product_name, guiMain):
         self.procuct_name = product_name
         self.guiMain = guiMain

@@ -6,10 +6,9 @@ from module.tools.SQLTools import sql_write
 from module.tools.LogRecord import logSQLCreate
 
 class ITOM_OBM():
-    '''
+    """
     读取日志文件的类, 并将分析日志的结果放到队列中
-    '''
-
+    """
     SQLData = {}
 
     def __init__(self, filepath, db_name, product_type):
@@ -17,7 +16,7 @@ class ITOM_OBM():
         self.db_name = db_name
         self.db_type = product_type
 
-        # 如果是 system.xt 文件, 则调用 log_system 方法读取日志
+        # 如果是 jvm 的统计信息类型的日志, 则调用 log_jvm_statistivs 方法
         if len(re.findall('jvm_statistics\.log|busjvm_statistics\.log', self.filepath, re.IGNORECASE)) > 0:
             self.log_jvm_statistics()
         elif len(re.findall('opr-ciresolver\.log|opr-backend\.log|opr-gateway\.log|opr-svcdiscserver\.log|opr-scripting-host\.log|scripts\.log|bus\.log|opr-webapp\.log|opr-configserver\.log', self.filepath, re.IGNORECASE)) > 0:

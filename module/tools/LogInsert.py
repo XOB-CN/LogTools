@@ -30,6 +30,7 @@ class LogInsert(QThread):
                 value += 1
                 SQL = LogSQL(filepath, self.db_name, self.product_type)
                 SQLData = SQL.SQLData
+                # 将获取的数据写入 SQLite 数据库
                 sql_write.sqlite_to_database(SQLData)
                 self.singal_had_write.emit(value, total)
 
