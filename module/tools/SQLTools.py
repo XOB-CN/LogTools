@@ -63,43 +63,43 @@ class sql_write():
             # 判断是否需要建立相应的表
             if db_type == 'MicroFocus-ITOM-OA':
                 if db_table not in db.tables():
-                    if db_table == 'tb_System':
+                    if db_table == 'log_System':
                         query = QtSql.QSqlQuery()
                         # 不自动增长的语句
-                        query.exec_("create table tb_System (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
+                        query.exec_("create table log_System (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
                         if query.lastError().isValid():
                             logSQLInsert.error('MicroFocus-ITOM-OA:\n{}'.format(query.lastError().text()))
 
-                    if db_table == 'tb_Policy':
+                    if db_table == 'cfg_Policy':
                         query = QtSql.QSqlQuery()
                         # 不自动增长的语句
-                        query.exec_("create table tb_Policy (ply_name TEXT, ply_version TEXT, ply_status TEXT, ply_type TEXT, ply_data TEXT, ply_param TEXT);")
+                        query.exec_("create table cfg_Policy (ply_name TEXT, ply_version TEXT, ply_status TEXT, ply_type TEXT, ply_data TEXT, ply_param TEXT);")
                         if query.lastError().isValid():
                             logSQLInsert.error('MicroFocus-ITOM-OA:\n{}'.format(query.lastError().text()))
 
             elif db_type == 'MicroFocus-ITOM-OBM/OMi':
                 if db_table not in db.tables():
-                    if db_table == 'tb_JVMStatus':
+                    if db_table == 'log_JVMStatus':
                         query = QtSql.QSqlQuery()
-                        query.exec_("create table tb_JVMStatus (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, heap_free_percent INT, non_heap_free_percent INT, heap_used INT, heap_committed INT, heap_max INT, heap_free INT, non_heap_used INT, non_heap_committed INT, non_heap_max INT, non_heap_free INT, othermsg TEXT);")
+                        query.exec_("create table log_JVMStatus (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, heap_free_percent INT, non_heap_free_percent INT, heap_used INT, heap_committed INT, heap_max INT, heap_free INT, non_heap_used INT, non_heap_committed INT, non_heap_max INT, non_heap_free INT, othermsg TEXT);")
                         if query.lastError().isValid():
                             logSQLInsert.error('MicroFocus-ITOM-OBM/OMi:\n{}'.format(query.lastError().text()))
 
-                    elif db_table in ['tb_bus',
-                                      'tb_downtime',
-                                      'tb_opr_backend',
-                                      'tb_opr_ciresolver',
-                                      'tb_opr_configserver',
-                                      'tb_opr_gateway',
-                                      'tb_opr_scripting_host',
-                                      'tb_opr_svcdiscserver',
-                                      'tb_opr_svcdiscserver_citrace',
-                                      'tb_opr_webapp',
-                                      'tb_pmi',
-                                      'tb_scripts',
-                                      'tb_rtsm_identification',
-                                      'tb_rtsm_merged',
-                                      'tb_rtsm_ignored',]:
+                    elif db_table in ['log_bus',
+                                      'log_downtime',
+                                      'log_opr_backend',
+                                      'log_opr_ciresolver',
+                                      'log_opr_configserver',
+                                      'log_opr_gateway',
+                                      'log_opr_scripting_host',
+                                      'log_opr_svcdiscserver',
+                                      'log_opr_svcdiscserver_citrace',
+                                      'log_opr_webapp',
+                                      'log_pmi',
+                                      'log_scripts',
+                                      'log_rtsm_identification',
+                                      'log_rtsm_merged',
+                                      'log_rtsm_ignored',]:
                         query = QtSql.QSqlQuery()
                         query.exec_("create table {} (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);".format(db_table))
                         if query.lastError().isValid():

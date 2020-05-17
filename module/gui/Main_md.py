@@ -189,8 +189,8 @@ class LogMain(QMainWindow, Ui_MainWindow):
             letime = self.leTime.text().replace('/', '-')
             sqlEdit.clear()
             # 如果表名为 tb_Policy, 则生成特殊的 SQL 语句
-            if self.treeList.currentItem().text(0) == 'tb_Policy':
-                sqlEdit.setText("select * from tb_Policy\norder by ply_name;")
+            if self.treeList.currentItem().text(0) == 'cfg_Policy':
+                sqlEdit.setText("select * from cfg_Policy\norder by ply_name;")
             else:
                 sqlEdit.setText("select * from {}\nwhere logtime > '{}' and logtime < '{}'\norder by logtime desc;".format(self.treeList.currentItem().text(0), getime, letime))
             self.statusBar.showMessage("Table [{}] has been selected".format(self.treeList.currentItem().text(0)))

@@ -75,14 +75,14 @@ class ITOM_OA():
 
                 for data in logdata:
                     try:
-                        sql_insert = 'INSERT INTO tb_System (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(data.get('logfile'), str(data.get('logline')),data.get('loglevel'),data.get('logtime'),data.get('logcomp'),data.get('logdetail').replace('"',"'"))
+                        sql_insert = 'INSERT INTO log_System (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(data.get('logfile'), str(data.get('logline')),data.get('loglevel'),data.get('logtime'),data.get('logcomp'),data.get('logdetail').replace('"',"'"))
                         sqldata.append(sql_insert)
                     except Exception as e:
                         logSQLCreate.warning("Can't generate SQL INSERT INTO statement! - {}".format(e))
 
                 self.SQLData = ({'db_name':self.db_name,
                                  'db_type':self.db_type,
-                                 'db_table':'tb_System',
+                                 'db_table':'log_System',
                                  'db_data':sqldata,})
 
         except Exception as reason:
@@ -162,13 +162,13 @@ class ITOM_OA():
                 ply_data = 'Null'
 
         # 生成 SQL 语句
-        sql_insert = 'INSERT INTO tb_Policy (ply_name, ply_version, ply_status, ply_type, ply_data, ply_param) VALUES ("{}","{}","{}","{}","{}","{}");'.format(ply_name, ply_version, ply_status, ply_type, ply_data, ply_param)
+        sql_insert = 'INSERT INTO cfg_Policy (ply_name, ply_version, ply_status, ply_type, ply_data, ply_param) VALUES ("{}","{}","{}","{}","{}","{}");'.format(ply_name, ply_version, ply_status, ply_type, ply_data, ply_param)
         sqldata.append(sql_insert)
 
         # 传递数据
         self.SQLData = ({'db_name':self.db_name,
                          'db_type':self.db_type,
-                         'db_table':'tb_Policy',
+                         'db_table':'cfg_Policy',
                          'db_data':sqldata,})
 
 if __name__ == '__main__':

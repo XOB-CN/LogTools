@@ -92,7 +92,7 @@ class ITOM_OBM():
 
                 for data in logdata:
                     try:
-                        sql_insert = 'INSERT INTO tb_JVMStatus ' \
+                        sql_insert = 'INSERT INTO log_JVMStatus ' \
                                      '(logfile, logline, loglevel, logtime, heap_free_percent, non_heap_free_percent, heap_used, heap_committed, heap_max, heap_free, non_heap_used, non_heap_committed, non_heap_max, non_heap_free, othermsg) VALUES ' \
                                      '("{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}");'.format(data.get('logfile'), str(data.get('logline')), data.get('loglevel'), data.get('logtime'),
                                                                                                                   str(round((float(data.get('heap_free'))/float(data.get('heap_max')))*100, 2)),
@@ -106,7 +106,7 @@ class ITOM_OBM():
 
                 self.SQLData = ({'db_name': self.db_name,
                                  'db_type': self.db_type,
-                                 'db_table': 'tb_JVMStatus',
+                                 'db_table': 'log_JVMStatus',
                                  'db_data': sqldata, })
 
         except Exception as reason:
@@ -121,7 +121,7 @@ class ITOM_OBM():
         isstart = False
         # db_table 名字
         if re.findall('pmi\.log', self.filepath):
-            self.db_table = 'tb_pmi'
+            self.db_table = 'log_pmi'
 
         # 尝试开始读取文件
         try:
@@ -196,23 +196,23 @@ class ITOM_OBM():
         isstart = False
         # db_table 名字
         if re.findall('bus\.log', self.filepath):
-            self.db_table = 'tb_bus'
+            self.db_table = 'log_bus'
         elif re.findall('opr-ciresolver\.log', self.filepath):
-            self.db_table = 'tb_opr_ciresolver'
+            self.db_table = 'log_opr_ciresolver'
         elif re.findall('opr-backend\.log', self.filepath):
-            self.db_table = 'tb_opr_backend'
+            self.db_table = 'log_opr_backend'
         elif re.findall('opr-gateway\.log', self.filepath):
-            self.db_table = 'tb_opr_gateway'
+            self.db_table = 'log_opr_gateway'
         elif re.findall('opr-svcdiscserver\.log', self.filepath):
-            self.db_table = 'tb_opr_svcdiscserver'
+            self.db_table = 'log_opr_svcdiscserver'
         elif re.findall('opr-scripting-host\.log', self.filepath):
-            self.db_table = 'tb_opr_scripting_host'
+            self.db_table = 'log_opr_scripting_host'
         elif re.findall('scripts\.log', self.filepath):
-            self.db_table = 'tb_scripts'
+            self.db_table = 'log_scripts'
         elif re.findall('opr-webapp\.log', self.filepath):
-            self.db_table = 'tb_opr_webapp'
+            self.db_table = 'log_opr_webapp'
         elif re.findall('opr-configserver\.log', self.filepath):
-            self.db_table = 'tb_opr_configserver'
+            self.db_table = 'log_opr_configserver'
 
         # 尝试开始读取文件
         try:
@@ -287,7 +287,7 @@ class ITOM_OBM():
         isstart = False
         # db_table 名字
         if re.findall('opr-svcdiscserver-citrace\.log', self.filepath):
-            self.db_table = 'tb_opr_svcdiscserver_citrace'
+            self.db_table = 'log_opr_svcdiscserver_citrace'
 
         # 尝试开始读取文件
         try:
@@ -356,7 +356,7 @@ class ITOM_OBM():
         isstart = False
         # db_table 名字
         if re.findall('downtime\.log', self.filepath):
-            self.db_table = 'tb_downtime'
+            self.db_table = 'log_downtime'
 
         # 尝试开始读取文件
         try:
@@ -431,11 +431,11 @@ class ITOM_OBM():
         isstart = False
         # db_table 名字
         if re.findall('cmdb\.reconciliation\.identification\.log', self.filepath):
-            self.db_table = 'tb_rtsm_identification'
+            self.db_table = 'log_rtsm_identification'
         elif re.findall('cmdb\.reconciliation\.datain\.merged\.log', self.filepath):
-            self.db_table = 'tb_rtsm_merged'
+            self.db_table = 'log_rtsm_merged'
         elif re.findall('cmdb\.reconciliation\.datain\.ignored\.log', self.filepath):
-            self.db_table = 'tb_rtsm_ignored'
+            self.db_table = 'log_rtsm_ignored'
 
         # 尝试开始读取文件
         try:
