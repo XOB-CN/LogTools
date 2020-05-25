@@ -86,9 +86,9 @@ class ITOM_OBM():
                                                 'non_heap_free':non_heap_free,
                                                 'othermsg':othermsg,})
                             else:
-                                logSQLCreate.info("logline can't match rule - {}".format(line))
+                                logSQLCreate.info("file:{}\nlogline can't match rule - {}".format(self.filepath, line))
                     except Exception as e:
-                        logSQLCreate.warning("line:{}\nSource:{}\nException:{}".format(str(log_num), line, e))
+                        logSQLCreate.warning("file:{}\nline:{}\nSource:{}\nException:{}".format(self.filepath,str(log_num), line, e))
 
                 for data in logdata:
                     try:
@@ -168,7 +168,7 @@ class ITOM_OBM():
                                 logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
 
                     except Exception as e:
-                        logSQLCreate.warning("line:{}\nSource:{}\nException:{}".format(str(log_num), line, e))
+                        logSQLCreate.warning("file:{}\nline:{}\nSource:{}\nException:{}".format(self.filepath,str(log_num), line, e))
 
                 for data in logdata:
                     try:
@@ -259,7 +259,7 @@ class ITOM_OBM():
                                 logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
 
                     except Exception as e:
-                        logSQLCreate.warning("line:{}\nSource:{}\nException:{}".format(str(log_num), line, e))
+                        logSQLCreate.warning("file:{}\nline:{}\nSource:{}\nException:{}".format(self.filepath,str(log_num), line, e))
 
                 for data in logdata:
                     try:
@@ -327,7 +327,7 @@ class ITOM_OBM():
                                 logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
 
                     except Exception as e:
-                        logSQLCreate.warning("line:{}\nSource:{}\nException:{}".format(str(log_num), line, e))
+                        logSQLCreate.warning("file:{}\nline:{}\nSource:{}\nException:{}".format(self.filepath,str(log_num), line, e))
 
                 for data in logdata:
                     try:
@@ -403,7 +403,7 @@ class ITOM_OBM():
                                 logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
 
                     except Exception as e:
-                        logSQLCreate.warning("line:{}\nSource:{}\nException:{}".format(str(log_num), line, e))
+                        logSQLCreate.warning("file:{}\nline:{}\nSource:{}\nException:{}".format(self.filepath,str(log_num), line, e))
 
                 for data in logdata:
                     try:
@@ -475,7 +475,7 @@ class ITOM_OBM():
                                 logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
 
                     except Exception as e:
-                        logSQLCreate.warning("line:{}\nSource:{}\nException:{}".format(str(log_num), line, e))
+                        logSQLCreate.warning("file:{}\nline:{}\nSource:{}\nException:{}".format(self.filepath,str(log_num), line, e))
 
                 for data in logdata:
                     try:

@@ -17,6 +17,10 @@ LogTools 是一个基于 PyQt5 的通用日志分析软件.
 4. 双击文件中的 LogTools.py 文件来运行软件
 5. 如果您不想在运行中看到 cmd 的 console 界面, 可以将 LogTools.py 重命名为 LogTools.pyw
 
+## **编译运行**
+如果不想使用源码方式来运行, 也可以选择直接运行编译后的 LogTools.exe 程序文件  
+[Windows x64 下载链接](https://github.com/XOB-CN/LogTools/releases)
+
 ## **项目状态**
 基本功能已经完成, 目前计划添加 MicroFocus ITOM 产品的日志
 

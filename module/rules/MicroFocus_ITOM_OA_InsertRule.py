@@ -71,7 +71,7 @@ class ITOM_OA():
                                 # 抹掉日志中剩下的 '/n'
                                 logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
                     except Exception as e:
-                        logSQLCreate.warning("line:{}\nSource:{}\nException:{}".format(str(log_num),line,e))
+                        logSQLCreate.warning("file:{}\nline:{}\nSource:{}\nException:{}".format(self.filepath,str(log_num),line,e))
 
                 for data in logdata:
                     try:
