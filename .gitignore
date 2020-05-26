@@ -129,3 +129,6 @@ dmypy.json
 
 # Sqlite database files
 *.db
+
+# temp file
+temp/
