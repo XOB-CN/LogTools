@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import re
+import re, uuid, pickle
 from module.rules.MicroFocus_ITOM_OBM_FileRule import BlackRule
 from module.tools.SQLTools import sql_write
 from module.tools.LogRecord import logSQLCreate
@@ -108,6 +108,11 @@ class ITOM_OBM():
                                  'db_type': self.db_type,
                                  'db_table': 'log_JVMStatus',
                                  'db_data': sqldata, })
+
+                datafilepath = r'./temp/{}'.format(str(uuid.uuid1()))
+                open('{}.lck'.format(datafilepath), 'w').close()
+                with open(datafilepath, 'wb') as f:
+                    pickle.dump(self.SQLData, f)
 
         except Exception as reason:
             logSQLCreate.error('logfile read error:{}'.format(reason))

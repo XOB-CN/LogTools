@@ -54,6 +54,6 @@ class LogCheck():
         except Exception as e:
             loglogTools.warning('FileRule: ' + str(e))
 
-        self.task_info['file_path'] = self.file_path
+        self.task_info['file_path'] = list(set(self.file_path))
 
         return self.task_info

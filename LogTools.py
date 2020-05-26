@@ -6,20 +6,15 @@ from module.gui.Main_md import LogMain
 from module.gui.DialogDB_md import DialogDB
 from module.gui.CellContent_md import CellContent
 from module.tools.LogCheck import LogCheck
-from module.tools.LogInsert import LogInsert
+from module.tools.LogProducer import LogProducer
 from module.tools.MenuTools import AddMenuTools
 from multiprocessing import freeze_support, Pool
-import time
-
-def demo(file):
-    print(file)
 
 if __name__ == '__main__':
     # 在 Windows 环境下可以正常运行多进程
     freeze_support()
-
-    # 进程池对象
-    pool = Pool()
+    # Pool 对象
+    p = Pool()
 
     # 主程序开始
     import sys
@@ -91,6 +86,8 @@ if __name__ == '__main__':
         真正的日志分析线程
         :param task_data:{'db_name': str, 'dir_path': str, 'file_path': list, 'product_type': str}
         """
+        sub_thread1 = LogProducer(parent=guiMain, task_data=task_data, pool=p)
+        sub_thread1.start()
         # sub_thread = LogInsert(parent=guiMain, task_data=task_data)
         # sub_thread.singal_had_write.connect(gui_update_process)
         # sub_thread.start()

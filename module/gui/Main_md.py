@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import os
+import os, shutil
 from PyQt5.Qt import *
 from PyQt5 import QtSql
 from module.gui.Main_ui import Ui_MainWindow
@@ -46,6 +46,13 @@ class LogMain(QMainWindow, Ui_MainWindow):
         # 判断数据目录是否存在, 如果不存在, 则创建该目录
         if os.path.exists('./data') == False:
             os.mkdir('./data')
+
+        # 重新建立临时目录
+        if os.path.exists('./temp') == False:
+            os.mkdir('./temp')
+        else:
+            shutil.rmtree('./temp', ignore_errors=True)
+            os.mkdir('./temp')
 
         # 加载 QTreeWidget 中的内容
         self.show_db_list()
