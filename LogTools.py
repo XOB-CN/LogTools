@@ -8,11 +8,18 @@ from module.gui.CellContent_md import CellContent
 from module.tools.LogCheck import LogCheck
 from module.tools.LogInsert import LogInsert
 from module.tools.MenuTools import AddMenuTools
-from multiprocessing import freeze_support
+from multiprocessing import freeze_support, Pool
+import time
+
+def demo(file):
+    print(file)
 
 if __name__ == '__main__':
     # 在 Windows 环境下可以正常运行多进程
     freeze_support()
+
+    # 进程池对象
+    pool = Pool()
 
     # 主程序开始
     import sys
@@ -38,7 +45,7 @@ if __name__ == '__main__':
         # 将初始界面获取的产品分类数据传递到 LogTools 主界面里
         guiMain.product_type = [company_name, category_name, product_name]
         # 设置软件标题
-        guiMain.setWindowTitle(category_name + ' ' + product_name + ' LogTools ' + 'Beta v0.3.1')
+        guiMain.setWindowTitle(category_name + ' ' + product_name + ' LogTools ' + 'Beta v0.4.0 (coding)')
         # 判断产品分类, 加载不同的菜单
         AddMenuTools(product_name, guiMain)
         # 显示 LogTools 主界面
@@ -65,42 +72,45 @@ if __name__ == '__main__':
     def task_per_process(task_info):
         """
         日志预处理, 获取待分析的文件信息
-        :param task_info: dict
+        :param task_info:{'db_name': str, 'dir_path': str, 'file_path': '', 'product_type': str}
         """
         obj_task = LogCheck(task_info)
+        # task_data:{'db_name': str, 'dir_path': str, 'file_path': list, 'product_type': str}
         task_data = obj_task.check()
         # 判断文件列表是否为空
         if task_data.get('file_path') == []:
             QMessageBox.warning(guiMain, 'No Files!', 'No files need to be analyzed!')
         else:
+            # log_insert 方法将会发射一个 singal_task_start 的信号, task_running 方法会连接这个信号
             guiMain.log_insert(task_data)
+
     dbgui.singal_log_task.connect(task_per_process)
 
-    def task_running(task_info):
+    def task_running(task_data):
         """
         真正的日志分析线程
-        :param task_info: dict
+        :param task_data:{'db_name': str, 'dir_path': str, 'file_path': list, 'product_type': str}
         """
-        sub_thread = LogInsert(parent=guiMain, task_data=task_info)
-        sub_thread.singal_had_write.connect(gui_update_process)
-        sub_thread.start()
-        guiMain.progressBar.show()
+        # sub_thread = LogInsert(parent=guiMain, task_data=task_data)
+        # sub_thread.singal_had_write.connect(gui_update_process)
+        # sub_thread.start()
+        # guiMain.progressBar.show()
     guiMain.singal_task_start.connect(task_running)
 
-    def gui_update_process(value, total):
-        """
-        界面状态更新
-        :param value: int
-        :param total: int
-        """
-        process_status = (value/total)*100
-        process_status = round(process_status, 2)
-        guiMain.progressBar.setValue(process_status)
-        guiMain.statusBar.showMessage("Writing to the database, please waiting...")
-        if process_status == 100:
-            guiMain.progressBar.hide()
-            guiMain.statusBar.showMessage('log has been written to the database.')
-            guiMain.show_db_list()
+    # def gui_update_process(value, total):
+    #     """
+    #     界面状态更新
+    #     :param value: int
+    #     :param total: int
+    #     """
+    #     process_status = (value/total)*100
+    #     process_status = round(process_status, 2)
+    #     guiMain.progressBar.setValue(process_status)
+    #     guiMain.statusBar.showMessage("Writing to the database, please waiting...")
+    #     if process_status == 100:
+    #         guiMain.progressBar.hide()
+    #         guiMain.statusBar.showMessage('log has been written to the database.')
+    #         guiMain.show_db_list()
 
     def showCellContent(content):
         """
