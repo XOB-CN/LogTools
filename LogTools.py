@@ -90,29 +90,29 @@ if __name__ == '__main__':
         # 日志的分析线程, 该线程会启动日志的分析进程
         sub_thread1 = LogProducer(parent=guiMain, task_data=task_data, pool=p)
         sub_thread1.start()
-
         # 日志的保存线程, 该线程会将生成的分析数据保存到数据库
         sub_thread2 = LogCustomer(parent=guiMain, num_files=len(task_data.get('file_path')))
-        # sub_thread = LogInsert(parent=guiMain, task_data=task_data)
-        # sub_thread.singal_had_write.connect(gui_update_process)
-        # sub_thread.start()
-        # guiMain.progressBar.show()
+        sub_thread2.singal_had_write.connect(gui_update_process)
+        sub_thread2.start()
+        # 必须要显示才行, 在执行 show 之前, 进度条处于 hide 状态
+        guiMain.progressBar.show()
+
     guiMain.singal_task_start.connect(task_running)
 
-    # def gui_update_process(value, total):
-    #     """
-    #     界面状态更新
-    #     :param value: int
-    #     :param total: int
-    #     """
-    #     process_status = (value/total)*100
-    #     process_status = round(process_status, 2)
-    #     guiMain.progressBar.setValue(process_status)
-    #     guiMain.statusBar.showMessage("Writing to the database, please waiting...")
-    #     if process_status == 100:
-    #         guiMain.progressBar.hide()
-    #         guiMain.statusBar.showMessage('log has been written to the database.')
-    #         guiMain.show_db_list()
+    def gui_update_process(value, total):
+        """
+        界面状态更新
+        :param value: int
+        :param total: int
+        """
+        process_status = (value/total)*100
+        process_status = int(round(process_status, 2))
+        guiMain.progressBar.setValue(process_status)
+        guiMain.statusBar.showMessage("Writing to the database, please waiting...")
+        if process_status == 100:
+            guiMain.progressBar.hide()
+            guiMain.statusBar.showMessage('log has been written to the database.')
+            guiMain.show_db_list()
 
     def showCellContent(content):
         """

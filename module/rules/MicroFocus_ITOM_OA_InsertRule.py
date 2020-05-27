@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import re, os
+import re, os, uuid, pickle
 from xml.etree import ElementTree as ET
 from module.rules.MicroFocus_ITOM_OA_FileRule import BlackRule
 from module.tools.SQLTools import sql_write
@@ -84,6 +84,13 @@ class ITOM_OA():
                                  'db_type':self.db_type,
                                  'db_table':'log_System',
                                  'db_data':sqldata,})
+
+                # 利用 uuid 来生成一个随机的临时文件, 并且生成一个对应的 .lck 文件, 在数据写入完成后, 再删除 .lck 文件
+                datafilepath = r'./temp/{}'.format(str(uuid.uuid1()))
+                open('{}.lck'.format(datafilepath), 'w').close()
+                with open(datafilepath, 'wb') as f:
+                    pickle.dump(self.SQLData, f)
+                os.remove('{}.lck'.format(datafilepath))
 
         except Exception as reason:
             logSQLCreate.error('logfile read error:{}'.format(reason))
@@ -170,6 +177,13 @@ class ITOM_OA():
                          'db_type':self.db_type,
                          'db_table':'cfg_Policy',
                          'db_data':sqldata,})
+
+        # 利用 uuid 来生成一个随机的临时文件, 并且生成一个对应的 .lck 文件, 在数据写入完成后, 再删除 .lck 文件
+        datafilepath = r'./temp/{}'.format(str(uuid.uuid1()))
+        open('{}.lck'.format(datafilepath), 'w').close()
+        with open(datafilepath, 'wb') as f:
+            pickle.dump(self.SQLData, f)
+        os.remove('{}.lck'.format(datafilepath))
 
 if __name__ == '__main__':
     pass

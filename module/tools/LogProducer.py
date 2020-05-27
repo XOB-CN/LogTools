@@ -3,9 +3,12 @@
 from PyQt5.Qt import *
 
 def mult_process_task(func, filepath, db_name, product_type):
-    sub_process = func(filepath, db_name, product_type)
+    func(filepath, db_name, product_type)
 
 class LogProducer(QThread):
+    """
+    将待分析的日志文件列表分配给子进程, 这些子进程会分析日志, 并且生成数据文件
+    """
     def __init__(self, parent=None ,task_data=None, pool=None):
         super().__init__(parent)
         self.task_data = task_data
@@ -23,7 +26,6 @@ class LogProducer(QThread):
         # 执行多进程, 开始生成分析数据
         for filepath in self.task_data.get('file_path'):
             try:
-                res = self.pool.apply_async(mult_process_task, args=(LogSQL, filepath, self.db_name, self.product_type))
-                # print(res.get())
+                self.pool.apply_async(mult_process_task, args=(LogSQL, filepath, self.db_name, self.product_type))
             except Exception as e:
                 print(e)
