@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.Qt import *
+from module.tools.LogRecord import loglogTools
 
 def mult_process_task(func, filepath, db_name, product_type):
     func(filepath, db_name, product_type)
@@ -28,4 +29,4 @@ class LogProducer(QThread):
             try:
                 self.pool.apply_async(mult_process_task, args=(LogSQL, filepath, self.db_name, self.product_type))
             except Exception as e:
-                print(e)
+                loglogTools.warning(e)

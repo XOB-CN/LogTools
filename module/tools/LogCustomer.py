@@ -3,6 +3,7 @@
 import os, time, pickle
 from PyQt5.Qt import *
 from module.tools.SQLTools import sql_write
+from module.tools.LogRecord import loglogTools
 
 class LogCustomer(QThread):
     """
@@ -30,7 +31,7 @@ class LogCustomer(QThread):
                     if file[-4:] == '.lck':
                         files.remove(file)
                         files.remove(file[0:-4])
-
+                # 如果将包含有 .lck 相关的文件去掉后还不为空, 那么这些文件就是 LogProducer 处理完成的数据
                 if len(files) != 0:
                     for file in files:
                         with open('./temp/{}'.format(file), 'rb') as f:
@@ -41,6 +42,6 @@ class LogCustomer(QThread):
                                 SQLData = pickle.load(f)
                                 sql_write.sqlite_to_database(SQLData)
                             except Exception as e:
-                                print(e)
+                                loglogTools.warning(e)
                         os.remove('./temp/{}'.format(file))
                         self.singal_had_write.emit(num, self.num_files)

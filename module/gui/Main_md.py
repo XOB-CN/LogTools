@@ -43,6 +43,9 @@ class LogMain(QMainWindow, Ui_MainWindow):
         self.progressBar.setValue(0)
         self.progressBar.hide()
 
+        # SQL comment
+        self.sql_comment = "\n-- Common WHERE filter parameters\n    -- <column> like '%keyword%' / '_keyword_' --> like no case sensitive\n    -- <column> glob '*keyword*' / '?keyword?' --> glob it's case sensitive"
+
         # 判断数据目录是否存在, 如果不存在, 则创建该目录
         if os.path.exists('./data') == False:
             os.mkdir('./data')
@@ -141,11 +144,13 @@ class LogMain(QMainWindow, Ui_MainWindow):
                 qrydb.open()
 
                 model = QSqlQueryModel()
-                model.setQuery(sql_str, db=qrydb)
+                # 这里截取第一个分号之前的内容, 因为该方法仅能执行单一的 SQL 语句, 不支持多条语句
+                model.setQuery(sql_str.split(';')[0] + ';', db=qrydb)
                 if model.lastError().isValid():
                     logSQLQuery.warning(model.lastError().text())
                     QMessageBox.warning(self, 'SQL Error', model.lastError().text())
                 else:
+                    #
                     logSQLQuery.info(sql_str)
 
                 # 生成 QtableView 对象:self.tab_view ########################
@@ -197,9 +202,9 @@ class LogMain(QMainWindow, Ui_MainWindow):
             sqlEdit.clear()
             # 如果表名为 tb_Policy, 则生成特殊的 SQL 语句
             if self.treeList.currentItem().text(0) == 'cfg_Policy':
-                sqlEdit.setText("select * from cfg_Policy\norder by ply_name;")
+                sqlEdit.setText("select * from cfg_Policy\norder by ply_name;\n{}".format(self.sql_comment))
             else:
-                sqlEdit.setText("select * from {}\nwhere logtime > '{}' and logtime < '{}'\norder by logtime desc;".format(self.treeList.currentItem().text(0), getime, letime))
+                sqlEdit.setText("select * from {}\nwhere logtime > '{}' and logtime < '{}'\norder by logtime desc;\n{}".format(self.treeList.currentItem().text(0), getime, letime, self.sql_comment))
             self.statusBar.showMessage("Table [{}] has been selected".format(self.treeList.currentItem().text(0)))
         except:
             # 选中数据库时

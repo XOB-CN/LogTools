@@ -10,6 +10,9 @@ class AddMenuTools():
         self.procuct_name = product_name
         self.guiMain = guiMain
 
+        # SQL comment
+        self.sql_comment = "\n-- Common WHERE filter parameters\n    -- <column> like '%keyword%' / '_keyword_' --> like no case sensitive\n    -- <column> glob '*keyword*' / '?keyword?' --> glob it's case sensitive"
+
         # MicroFocus ITOM OBM/OMi
         if self.procuct_name == 'OBM/OMi':
             self.set_mf_itom_obm_menu()
@@ -53,7 +56,7 @@ class AddMenuTools():
             sqledit = self._active_sqledit()
             if tblist != False:
                 # 判断 CI Resolver 具体包含哪张表
-                for key in ['tb_opr_ciresolver', 'tb_opr_backend']:
+                for key in ['log_opr_ciresolver', 'log_opr_backend']:
                     if key in tblist:
                         kylist.append(key)
                 if len(kylist) == 2:
@@ -61,12 +64,14 @@ class AddMenuTools():
                               "select * from {} union all\n" \
                               "select * from {}\n)\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
-                              "order by logtime desc;".format(kylist[0], kylist[1], self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'))
+                              "order by logtime desc;\n" \
+                              "{}".format(kylist[0], kylist[1], self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'), self.sql_comment)
                     sqledit.setText(sqltext)
                 elif len(kylist) == 1:
                     sqltext = "select * from {}\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
-                              "order by logtime desc;".format(kylist[0], self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'))
+                              "order by logtime desc;\n" \
+                              "{}".format(kylist[0], self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'), self.sql_comment)
                     sqledit.setText(sqltext)
                 else:
                     QMessageBox.information(self.guiMain, 'No Data!', 'No CI Resolver Information!')
@@ -79,7 +84,7 @@ class AddMenuTools():
             sqledit = self._active_sqledit()
             if tblist != False:
                 # 判断 Event Processing Interface 具体包含哪张表
-                for key in ['tb_opr_gateway', 'tb_opr_gateway_flowtrace', 'tb_opr_event_sync_adapter', 'tb_opr_backend', 'tb_opr_flowtrace_backend', 'tb_opr_scripting_host', 'tb_scripts',]:
+                for key in ['log_opr_gateway', 'log_opr_gateway_flowtrace', 'log_opr_event_sync_adapter', 'log_opr_backend', 'log_opr_flowtrace_backend', 'log_opr_scripting_host', 'log_scripts',]:
                     if key in tblist:
                         kylist.append(key)
                 if len(kylist) == 7:
@@ -92,15 +97,17 @@ class AddMenuTools():
                               "select * from {} union all\n" \
                               "select * from {}\n)\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
-                              "order by logtime desc;".format(kylist[0],
-                                                              kylist[1],
-                                                              kylist[2],
-                                                              kylist[3],
-                                                              kylist[4],
-                                                              kylist[5],
-                                                              kylist[6],
-                                                              self.guiMain.geTime.text().replace('/', '-'),
-                                                              self.guiMain.leTime.text().replace('/', '-'))
+                              "order by logtime desc;\n" \
+                              "{}".format(kylist[0],
+                                          kylist[1],
+                                          kylist[2],
+                                          kylist[3],
+                                          kylist[4],
+                                          kylist[5],
+                                          kylist[6],
+                                          self.guiMain.geTime.text().replace('/', '-'),
+                                          self.guiMain.leTime.text().replace('/', '-'),
+                                          self.sql_comment)
                     sqledit.setText(sqltext)
                 elif len(kylist) == 6:
                     sqltext = "select * from (\n"\
@@ -111,14 +118,16 @@ class AddMenuTools():
                               "select * from {} union all\n" \
                               "select * from {}\n)\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
-                              "order by logtime desc;".format(kylist[0],
-                                                              kylist[1],
-                                                              kylist[2],
-                                                              kylist[3],
-                                                              kylist[4],
-                                                              kylist[5],
-                                                              self.guiMain.geTime.text().replace('/', '-'),
-                                                              self.guiMain.leTime.text().replace('/', '-'))
+                              "order by logtime desc;\n" \
+                              "{}".format(kylist[0],
+                                          kylist[1],
+                                          kylist[2],
+                                          kylist[3],
+                                          kylist[4],
+                                          kylist[5],
+                                          self.guiMain.geTime.text().replace('/', '-'),
+                                          self.guiMain.leTime.text().replace('/', '-'),
+                                          self.sql_comment)
                     sqledit.setText(sqltext)
                 elif len(kylist) == 5:
                     sqltext = "select * from (\n"\
@@ -128,13 +137,15 @@ class AddMenuTools():
                               "select * from {} union all\n" \
                               "select * from {}\n)\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
-                              "order by logtime desc;".format(kylist[0],
-                                                              kylist[1],
-                                                              kylist[2],
-                                                              kylist[3],
-                                                              kylist[4],
-                                                              self.guiMain.geTime.text().replace('/', '-'),
-                                                              self.guiMain.leTime.text().replace('/', '-'))
+                              "order by logtime desc;\n" \
+                              "{}".format(kylist[0],
+                                          kylist[1],
+                                          kylist[2],
+                                          kylist[3],
+                                          kylist[4],
+                                          self.guiMain.geTime.text().replace('/', '-'),
+                                          self.guiMain.leTime.text().replace('/', '-'),
+                                          self.sql_comment)
                     sqledit.setText(sqltext)
                 elif len(kylist) == 4:
                     sqltext = "select * from (\n"\
@@ -143,12 +154,14 @@ class AddMenuTools():
                               "select * from {} union all\n" \
                               "select * from {}\n)\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
-                              "order by logtime desc;".format(kylist[0],
-                                                              kylist[1],
-                                                              kylist[2],
-                                                              kylist[3],
-                                                              self.guiMain.geTime.text().replace('/', '-'),
-                                                              self.guiMain.leTime.text().replace('/', '-'))
+                              "order by logtime desc;\n" \
+                              "{}".format(kylist[0],
+                                          kylist[1],
+                                          kylist[2],
+                                          kylist[3],
+                                          self.guiMain.geTime.text().replace('/', '-'),
+                                          self.guiMain.leTime.text().replace('/', '-'),
+                                          self.sql_comment)
                     sqledit.setText(sqltext)
                 elif len(kylist) == 3:
                     sqltext = "select * from (\n"\
@@ -156,28 +169,34 @@ class AddMenuTools():
                               "select * from {} union all\n" \
                               "select * from {}\n)\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
-                              "order by logtime desc;".format(kylist[0],
-                                                              kylist[1],
-                                                              kylist[2],
-                                                              self.guiMain.geTime.text().replace('/', '-'),
-                                                              self.guiMain.leTime.text().replace('/', '-'))
+                              "order by logtime desc;\n" \
+                              "{}".format(kylist[0],
+                                          kylist[1],
+                                          kylist[2],
+                                          self.guiMain.geTime.text().replace('/', '-'),
+                                          self.guiMain.leTime.text().replace('/', '-'),
+                                          self.sql_comment)
                     sqledit.setText(sqltext)
                 elif len(kylist) == 2:
                     sqltext = "select * from (\n"\
                               "select * from {} union all\n" \
                               "select * from {}\n)\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
-                              "order by logtime desc;".format(kylist[0],
-                                                              kylist[1],
-                                                              self.guiMain.geTime.text().replace('/', '-'),
-                                                              self.guiMain.leTime.text().replace('/', '-'))
+                              "order by logtime desc;\n" \
+                              "{}".format(kylist[0],
+                                          kylist[1],
+                                          self.guiMain.geTime.text().replace('/', '-'),
+                                          self.guiMain.leTime.text().replace('/', '-'),
+                                          self.sql_comment)
                     sqledit.setText(sqltext)
                 elif len(kylist) == 1:
                     sqltext = "select * from {}\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
-                              "order by logtime desc;".format(kylist[0],
-                                                              self.guiMain.geTime.text().replace('/', '-'),
-                                                              self.guiMain.leTime.text().replace('/', '-'))
+                              "order by logtime desc;\n" \
+                              "{}".format(kylist[0],
+                                          self.guiMain.geTime.text().replace('/', '-'),
+                                          self.guiMain.leTime.text().replace('/', '-'),
+                                          self.sql_comment)
                     sqledit.setText(sqltext)
                 else:
                     QMessageBox.information(self.guiMain, 'No Data!', 'No Event EPI(Event Processing Interface) Information!')
@@ -190,15 +209,18 @@ class AddMenuTools():
             sqledit = self._active_sqledit()
             if tblist != False:
                 # 判断 Performance Dashboard 具体包含哪张表
-                for key in ['tb_pmi', ]:
+                for key in ['log_pmi', ]:
                     if key in tblist:
                         kylist.append(key)
 
                 if len(kylist) == 1:
                     sqltext = "select * from {}\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
-                              "order by logtime desc;".format(kylist[0],
-                                                              self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'))
+                              "order by logtime desc;\n" \
+                              "{}".format(kylist[0],
+                                          self.guiMain.geTime.text().replace('/', '-'),
+                                          self.guiMain.leTime.text().replace('/', '-'),
+                                          self.sql_comment)
                     sqledit.setText(sqltext)
                 else:
                     QMessageBox.information(self.guiMain, 'No Data!', 'No Performance Dashboard Information!')
@@ -211,7 +233,7 @@ class AddMenuTools():
             sqledit = self._active_sqledit()
             if tblist != False:
                 # 判断 Monitoring Automation 具体包含哪张表
-                for key in ['tb_opr_webapp', 'tb_opr_configserver', 'tb_MI_MonitorAdministration']:
+                for key in ['log_opr_webapp', 'log_opr_configserver', 'log_MI_MonitorAdministration']:
                     if key in tblist:
                         kylist.append(key)
 
@@ -221,25 +243,34 @@ class AddMenuTools():
                               "select * from {} union all\n" \
                               "select * from {}\n)\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
-                              "order by logtime desc;".format(kylist[0],
-                                                              kylist[1],
-                                                              kylist[2],
-                                                              self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'))
+                              "order by logtime desc;\n" \
+                              "{}".format(kylist[0],
+                                          kylist[1],
+                                          kylist[2],
+                                          self.guiMain.geTime.text().replace('/', '-'),
+                                          self.guiMain.leTime.text().replace('/', '-'),
+                                          self.sql_comment)
                     sqledit.setText(sqltext)
                 elif len(kylist) == 2:
                     sqltext = "select * from (\n"\
                               "select * from {} union all\n" \
                               "select * from {}\n)\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
-                              "order by logtime desc;".format(kylist[0],
-                                                              kylist[1],
-                                                              self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'))
+                              "order by logtime desc;\n" \
+                              "{}".format(kylist[0],
+                                          kylist[1],
+                                          self.guiMain.geTime.text().replace('/', '-'),
+                                          self.guiMain.leTime.text().replace('/', '-'),
+                                          self.sql_comment)
                     sqledit.setText(sqltext)
                 elif len(kylist) == 1:
                     sqltext = "select * from {}\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
-                              "order by logtime desc;".format(kylist[0],
-                                                              self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'))
+                              "order by logtime desc;\n" \
+                              "{}".format(kylist[0],
+                                          self.guiMain.geTime.text().replace('/', '-'),
+                                          self.guiMain.leTime.text().replace('/', '-'),
+                                          self.sql_comment)
                     sqledit.setText(sqltext)
                 else:
                     QMessageBox.information(self.guiMain, 'No Data!', 'No Monitoring Automation Information!')
@@ -252,7 +283,7 @@ class AddMenuTools():
             sqledit = self._active_sqledit()
             if tblist != False:
                 # 判断 RTSM 具体包含哪张表
-                for key in ['tb_rtsm_identification', 'tb_rtsm_merged', 'tb_rtsm_ignored']:
+                for key in ['log_rtsm_identification', 'log_rtsm_merged', 'log_rtsm_ignored']:
                     if key in tblist:
                         kylist.append(key)
 
@@ -262,25 +293,34 @@ class AddMenuTools():
                               "select * from {} union all\n" \
                               "select * from {}\n)\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
-                              "order by logtime desc;".format(kylist[0],
-                                                              kylist[1],
-                                                              kylist[2],
-                                                              self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'))
+                              "order by logtime desc;\n" \
+                              "{}".format(kylist[0],
+                                          kylist[1],
+                                          kylist[2],
+                                          self.guiMain.geTime.text().replace('/', '-'),
+                                          self.guiMain.leTime.text().replace('/', '-'),
+                                          self.sql_comment)
                     sqledit.setText(sqltext)
                 elif len(kylist) == 2:
                     sqltext = "select * from (\n"\
                               "select * from {} union all\n" \
                               "select * from {}\n)\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
-                              "order by logtime desc;".format(kylist[0],
-                                                              kylist[1],
-                                                              self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'))
+                              "order by logtime desc;\n" \
+                              "{}".format(kylist[0],
+                                          kylist[1],
+                                          self.guiMain.geTime.text().replace('/', '-'),
+                                          self.guiMain.leTime.text().replace('/', '-'),
+                                          self.sql_comment)
                     sqledit.setText(sqltext)
                 elif len(kylist) == 1:
                     sqltext = "select * from {}\n" \
                               "where logtime > '{}' and logtime < '{}'\n" \
-                              "order by logtime desc;".format(kylist[0],
-                                                              self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'))
+                              "order by logtime desc;\n" \
+                              "{}".format(kylist[0],
+                                          self.guiMain.geTime.text().replace('/', '-'),
+                                          self.guiMain.leTime.text().replace('/', '-'),
+                                          self.sql_comment)
                     sqledit.setText(sqltext)
                 else:
                     QMessageBox.information(self.guiMain, 'No Data!', 'No RTSM Information!')
