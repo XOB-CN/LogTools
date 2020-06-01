@@ -23,6 +23,9 @@ class ITOM_OA():
         # 如果是 OA policy 的文件, 则调用 cfg_policy 方法来读取日志
         elif len(re.findall('\w{8}-\w{4}-\w{4}-\w{4}-\w{12}_header\.xml', self.filepath, re.IGNORECASE)) > 0:
             self.cfg_policy()
+        # 如果是 OA 的 OA 信息文件, 则调用 cfg_oainfo 方法来读取日志
+        elif len(re.findall('agent.log_\d{4}-\d{2}-\d{2}_\d{2}.\d{2}', self.filepath, re.IGNORECASE)) > 0:
+            self.cfg_oainfo()
 
     def log_system(self):
         """
@@ -185,7 +188,131 @@ class ITOM_OA():
             pickle.dump(self.SQLData, f)
         os.remove('{}.lck'.format(datafilepath))
 
+    def cfg_oainfo(self):
+        """
+        针对 MicroFocus ITOM OA 中的 agent.log_<日期> 的文件
+        """
+        # 初始化数据和相关控制参数
+        logdata = []
+        sqldata = []
+        log_num = 0
+        ###########################################################################
+        # 判断 ovconfget 命令的开始
+        sta_ovconf = False
+        # 判断 ovconfget 命令的结束
+        end_ovconf_mid = False  # 第一次匹配 ****** 时做一次记录
+        end_ovconf = False
+        # ovconfget 命令数据
+        data_ovconf = 'Null'
+        ###########################################################################
+        # 判断 ovdeploy -inv -inclbdl -includeupdates 命令的开始
+        sta_ovdeploy = False
+        # 判断 ovdeploy -inv -inclbdl -includeupdates 命令的结束
+        end_ovdeploy_mid = False  # 第一次匹配 ****** 时做一次记录
+        end_ovdeploy = False
+        # ovdeploy -inv -inclbdl -includeupdates 命令数据
+        data_deploy = 'Null'
+        ###########################################################################
+        # 与软件/系统相关的参数
+        os_name = 'Null'
+        os_type = 'Null'
+        os_version = 'Null'
+        os_hostname = 'Null'
+        agt_version = 'Null'
+        agt_core_id = 'Null'
+        os_machine = 'Null'
+
+        # 尝试开始读取文件
+        try:
+            with open(self.filepath, mode='r', encoding='utf-8', errors='replace') as f:
+                for line in f:
+                    try:
+                        log_num += 1
+                        if len(re.findall('Cmd executed.*ovconfget', line, re.IGNORECASE)) > 0 and sta_ovconf == False:
+                            sta_ovconf = True
+                            end_ovconf = False
+                            data_ovconf = ''
+
+                        elif len(re.findall('\*{40}', line)) > 0 and sta_ovconf == True and end_ovconf == False:
+                            if end_ovconf_mid == False:
+                                end_ovconf_mid = True
+                            else:
+                                end_ovconf = True
+
+                        elif len(re.findall('\*{40}', line)) == 0 and sta_ovconf == True and end_ovconf == False:
+                            data_ovconf = data_ovconf + line
+                            if len(re.findall('agtversion=', line)) > 0:
+                                # OA 的版本
+                                agt_version = line.strip().split('=')[-1].strip()
+                            elif len(re.findall('osname=', line)) > 0:
+                                # 系统发行版的名字
+                                os_name = line.strip().split('=')[-1].strip()
+                            elif len(re.findall('ostype=', line)) > 0:
+                                # 系统类型
+                                os_type = line.strip().split('=')[-1].strip()
+                            elif len(re.findall('osversion=', line)) > 0:
+                                # 系统内核版本
+                                os_version = line.strip().split('=')[-1].strip()
+                            elif len(re.findall('CORE_ID=', line)) > 0:
+                                # OA 的 core id
+                                agt_core_id = line.strip().split('=')[-1].strip()
+                            elif len(re.findall('OPC_NODENAME=', line)) > 0:
+                                # 主机名
+                                os_hostname = line.strip().split('=')[-1].strip()
+
+                        elif len(re.findall('ovdeploy -inv -inclbdl -includeupdates', line)) > 0 and sta_ovdeploy == False:
+                            sta_ovdeploy = True
+                            end_ovdeploy = False
+                            data_ovdeploy = ''
+
+                        elif len(re.findall('\*{40}', line)) > 0 and sta_ovdeploy == True and end_ovdeploy ==False:
+                            if end_ovdeploy_mid == False:
+                                end_ovdeploy_mid = True
+                            else:
+                                end_ovdeploy = True
+
+                        elif len(re.findall('\*{40}', line)) == 0 and sta_ovdeploy == True and end_ovdeploy == False:
+                            data_ovdeploy = data_ovdeploy + line
+
+                        elif len(re.findall('Machine: ', line)) > 0:
+                            os_machine = line.strip().split(':')[-1].strip()
+
+                    except Exception as e:
+                        logSQLCreate.warning(
+                            "file:{}\nline:{}\nSource:{}\nException:{}".format(self.filepath, str(log_num), line, e))
+
+                print(os_name, os_type, os_version, os_hostname, os_machine, agt_version,  agt_core_id)
+                # print('\n*********************************************************************************************\n')
+                # print(data_ovconf)
+                # print('\n*********************************************************************************************\n')
+                # print(data_ovdeploy)
+
+                # for data in logdata:
+                #     try:
+                #         sql_insert = 'INSERT INTO log_System (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(
+                #             data.get('logfile'), str(data.get('logline')), data.get('loglevel'), data.get('logtime'),
+                #             data.get('logcomp'), data.get('logdetail').replace('"', "'"))
+                #         sqldata.append(sql_insert)
+                #     except Exception as e:
+                #         logSQLCreate.warning("Can't generate SQL INSERT INTO statement! - {}".format(e))
+                #
+                # self.SQLData = ({'db_name': self.db_name,
+                #                  'db_type': self.db_type,
+                #                  'db_table': 'log_System',
+                #                  'db_data': sqldata, })
+                #
+                # # 利用 uuid 来生成一个随机的临时文件, 并且生成一个对应的 .lck 文件, 在数据写入完成后, 再删除 .lck 文件
+                # datafilepath = r'./temp/{}'.format(str(uuid.uuid1()))
+                # open('{}.lck'.format(datafilepath), 'w').close()
+                # with open(datafilepath, 'wb') as f:
+                #     pickle.dump(self.SQLData, f)
+                # os.remove('{}.lck'.format(datafilepath))
+
+        except Exception as reason:
+            logSQLCreate.error('logfile read error:{}'.format(reason))
+
+
 if __name__ == '__main__':
     pass
-    # filepath = r'D:\05.Code\policies\monitortmpl\2a1a3226-85f3-4de4-bd66-d3f742da42a8_header.xml'
+    # filepath = r'D:\05.Code\agent.log_2020-05-13_14.55'
     # test_obj = ITOM_OA(filepath, 'demodb', 'oa')
