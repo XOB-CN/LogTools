@@ -44,7 +44,9 @@ class LogMain(QMainWindow, Ui_MainWindow):
         self.progressBar.hide()
 
         # SQL comment
-        self.sql_comment = "\n-- Common WHERE filter parameters\n    -- <column> like '%keyword%' / '_keyword_' --> like no case sensitive\n    -- <column> glob '*keyword*' / '?keyword?' --> glob it's case sensitive"
+        self.sql_comment = "\n-- Common WHERE filter parameters\n    " \
+                           "-- <column> like '%keyword%' / '_keyword_' --> like no case sensitive\n    " \
+                           "-- <column> glob '*keyword*' / '?keyword?' --> glob it's case sensitive"
 
         # 判断数据目录是否存在, 如果不存在, 则创建该目录
         if os.path.exists('./data') == False:
@@ -200,8 +202,11 @@ class LogMain(QMainWindow, Ui_MainWindow):
             getime = self.geTime.text().replace('/', '-')
             letime = self.leTime.text().replace('/', '-')
             sqlEdit.clear()
-            # 如果表名为 tb_Policy, 则生成特殊的 SQL 语句
-            if self.treeList.currentItem().text(0) == 'cfg_Policy':
+            # 如果表名为 cfg_OAInfo, 则生成特殊的 SQL 语句
+            if self.treeList.currentItem().text(0) == 'cfg_OAInfo':
+                sqlEdit.setText("select * from cfg_OAInfo;\n{}".format(self.sql_comment))
+            # 如果表名为 cfg_Policy, 则生成特殊的 SQL 语句
+            elif self.treeList.currentItem().text(0) == 'cfg_Policy':
                 sqlEdit.setText("select * from cfg_Policy\norder by ply_name;\n{}".format(self.sql_comment))
             else:
                 sqlEdit.setText("select * from {}\nwhere logtime > '{}' and logtime < '{}'\norder by logtime desc;\n{}".format(self.treeList.currentItem().text(0), getime, letime, self.sql_comment))

@@ -70,6 +70,13 @@ class sql_write():
                         if query.lastError().isValid():
                             logSQLInsert.error('MicroFocus-ITOM-OA:\n{}'.format(query.lastError().text()))
 
+                    if db_table == 'cfg_OAInfo':
+                        query = QtSql.QSqlQuery()
+                        # 不自动增长的语句
+                        query.exec_("create table cfg_OAInfo (attribute TEXT, value TEXT);")
+                        if query.lastError().isValid():
+                            logSQLInsert.error('MicroFocus-ITOM-OA:\n{}'.format(query.lastError().text()))
+
                     if db_table == 'cfg_Policy':
                         query = QtSql.QSqlQuery()
                         # 不自动增长的语句
