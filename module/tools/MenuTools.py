@@ -11,7 +11,7 @@ class AddMenuTools():
         self.guiMain = guiMain
 
         # SQL comment
-        self.sql_comment = "\n-- Common WHERE filter parameters\n    -- <column> like '%keyword%' / '_keyword_' --> like no case sensitive\n    -- <column> glob '*keyword*' / '?keyword?' --> glob it's case sensitive"
+        self.sql_comment = "\n-- Common SQL where filter parameters\n    -- <column> like '%keyword%' / '_keyword_' --> like no case sensitive\n    -- <column> glob '*keyword*' / '?keyword?' --> glob it's case sensitive"
 
         # MicroFocus ITOM OBM/OMi
         if self.procuct_name == 'OBM/OMi':

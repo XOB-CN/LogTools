@@ -44,7 +44,7 @@ class LogMain(QMainWindow, Ui_MainWindow):
         self.progressBar.hide()
 
         # SQL comment
-        self.sql_comment = "\n-- Common WHERE filter parameters\n    " \
+        self.sql_comment = "\n-- Common SQL where filter parameters\n    " \
                            "-- <column> like '%keyword%' / '_keyword_' --> like no case sensitive\n    " \
                            "-- <column> glob '*keyword*' / '?keyword?' --> glob it's case sensitive"
 
