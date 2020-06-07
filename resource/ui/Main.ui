@@ -142,7 +142,7 @@
             </property>
             <property name="font">
              <font>
-              <family>Microsoft YaHei UI</family>
+              <family>Consolas</family>
              </font>
             </property>
            </widget>
@@ -185,7 +185,7 @@
      <x>0</x>
      <y>0</y>
      <width>982</width>
-     <height>23</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

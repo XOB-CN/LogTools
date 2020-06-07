@@ -1,7 +1,9 @@
 2020-06-** Beta v0.4.1
 # 添加：MicroFocus ITOM OA 日志工具目前可以分析 OA 的基本信息
 # 添加：MicroFocus ITOM OBM 日志工具目前可以分析 OBM 的基本信息(coding)
+# 添加：高亮 SQL 关键字 distinct
 # 修改：微调 SQL 语句注释的内容
+# 修复：修复新建查询文本框时, 字体不正确的问题
 
 2020-05-29 Beta v0.4.0
 # 修改：软件架构调整为多进程模式

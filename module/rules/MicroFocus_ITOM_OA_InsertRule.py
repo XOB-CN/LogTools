@@ -284,6 +284,7 @@ class ITOM_OA():
             # 整理获取的值
             logdata['os_name'] = os_name.strip()
             logdata['os_type'] = os_type.strip()
+            logdata['os_hostname'] = os_hostname.strip()
             logdata['os_version'] = os_version.strip()
             logdata['os_machine'] = os_machine.strip()
             logdata['agt_version'] = agt_version.strip()

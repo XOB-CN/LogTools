@@ -2,7 +2,7 @@
 
 import os, shutil
 from PyQt5.Qt import *
-from PyQt5 import QtSql
+from PyQt5 import QtSql, QtGui
 from module.gui.Main_ui import Ui_MainWindow
 from module.tools.SQLHighLight import SQLHighLighter
 from module.tools.LogRecord import logSQLQuery
@@ -117,6 +117,10 @@ class LogMain(QMainWindow, Ui_MainWindow):
         self.tabQuery.addTab(self.tab_page, tablabel)
         self.tabQuery.setObjectName(tablabel)
         self.tabQuery.setCurrentIndex(self.tabQuery.count() - 1)
+        # 设置字体
+        font = QtGui.QFont()
+        font.setFamily("Consolas")
+        self.tab_text.setFont(font)
 
     def slot_show_cell(self, cell):
         """
@@ -204,7 +208,7 @@ class LogMain(QMainWindow, Ui_MainWindow):
             sqlEdit.clear()
             # 如果表名为 cfg_OAInfo, 则生成特殊的 SQL 语句
             if self.treeList.currentItem().text(0) == 'cfg_OAInfo':
-                sqlEdit.setText("select * from cfg_OAInfo;\n{}".format(self.sql_comment))
+                sqlEdit.setText("select distinct * from cfg_OAInfo;\n{}".format(self.sql_comment))
             # 如果表名为 cfg_Policy, 则生成特殊的 SQL 语句
             elif self.treeList.currentItem().text(0) == 'cfg_Policy':
                 sqlEdit.setText("select * from cfg_Policy\norder by ply_name;\n{}".format(self.sql_comment))
