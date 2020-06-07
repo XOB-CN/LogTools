@@ -2,6 +2,9 @@
 
 # 文件级别的匹配规则
 FileRule = [
+    # OBM Infomation file
+    'opr-checker-xml\.txt',
+    # OBM logs
     'jvm_statistics\.log',
     'busjvm_statistics\.log',
     'bus\.log',

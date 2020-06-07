@@ -25,10 +25,12 @@ class ITOM_OBM():
             self.log_obm_logfiles_type2()
         elif len(re.findall('downtime\.log', self.filepath, re.IGNORECASE)) > 0:
             self.log_obm_logfiles_type3()
-        elif len (re.findall('pmi\.log', self.filepath, re.IGNORECASE)) > 0:
-            self.log_obm_pmi()
         elif len (re.findall('cmdb\.reconciliation\.identification\.log|cmdb\.reconciliation\.datain\.merged\.log|cmdb\.reconciliation\.datain\.ignored\.log', self.filepath, re.IGNORECASE)) > 0:
             self.log_obm_logfiles_type4()
+        elif len (re.findall('pmi\.log', self.filepath, re.IGNORECASE)) > 0:
+            self.log_obm_pmi()
+        elif len (re.findall('opr-checker-xml\.txt', self.filepath, re.IGNORECASE)) > 0:
+            self.cfg_obminfo()
 
     def log_jvm_statistics(self):
         # 初始化数据和相关控制参数
@@ -537,10 +539,69 @@ class ITOM_OBM():
             logSQLCreate.error('logfile read error:{}'.format(reason))
             # print(reason)
 
+    def cfg_obminfo(self):
+        """
+        针对 MicroFocus ITOM OBM 中的 opr-checker-xml.txt 的文件
+        """
+        # 初始化数据和相关控制参数
+        logdata = {}
+        sqldata = []
+        # 预设变量
+        os_hostname = 'Null'
+        os_memory = 'Null'
+        obm_version = 'Null'
+        # 读取指定文本, 并筛选出指定的内容
+        with open(self.filepath, 'r', encoding='utf-8', errors='replace') as f:
+            opr_checker = f.readlines()
+        # 循环匹配相关内容
+        try:
+            for line in opr_checker:
+                # 针对 os_hostname 的处理
+                if len(re.findall('<hostname>.*?</hostname>', line)) > 0:
+                    if os_hostname == 'Null':
+                        os_hostname = line.strip()[len('<hostname>'):-(len('</hostname>'))]
+                    elif len(line.strip()[len('<hostname>'):-(len('</hostname>'))]) > len(os_hostname):
+                        os_hostname = line.strip()[len('<hostname>'):-(len('</hostname>'))]
+                # 针对 os_memory 的处理
+                elif len(re.findall('<memsize>.*?</memsize>', line)) > 0:
+                    if os_memory == 'Null':
+                        os_memory = line.strip()[len('<memsize>'):-(len('</memsize>'))]
+                    elif len(line.strip()[len('<memsize>'):-(len('</memsize>'))]) > len(os_memory):
+                        os_memory = line.strip()[len('<memsize>'):-(len('</memsize>'))]
+                # 针对 obm_version 的处理
+                elif len(re.findall('<opr_baseversion>.*?</opr_baseversion>', line)) > 0:
+                    obm_version = line.strip()[len('<opr_baseversion>'):-(len('</opr_baseversion>'))]
+
+            # 整理数据
+            logdata['os_hostname'] = os_hostname
+            logdata['os_memory'] = os_memory
+            logdata['obm_version'] = obm_version
+
+            for k, v in logdata.items():
+                try:
+                    sql_insert = 'INSERT INTO cfg_OBMInfo (attribute, value) VALUES ("{}", "{}");'.format(k, v)
+                    sqldata.append(sql_insert)
+                except Exception as e:
+                    logSQLCreate.warning("Can't generate SQL INSERT INTO statement! - {}".format(e))
+
+            self.SQLData = ({'db_name': self.db_name,
+                             'db_type': self.db_type,
+                             'db_table': 'cfg_OBMInfo',
+                             'db_data': sqldata, })
+
+            # 利用 uuid 来生成一个随机的临时文件, 并且生成一个对应的 .lck 文件, 在数据写入完成后, 再删除 .lck 文件
+            datafilepath = r'./temp/{}'.format(str(uuid.uuid1()))
+            open('{}.lck'.format(datafilepath), 'w').close()
+            with open(datafilepath, 'wb') as f:
+                pickle.dump(self.SQLData, f)
+            os.remove('{}.lck'.format(datafilepath))
+
+        except Exception as reason:
+            logSQLCreate.error('logfile read error:{}'.format(reason))
+
 if __name__ == '__main__':
     pass
-    # filepath = 'D:\\cmdb.reconciliation.datain.ignored.log'
-    # dataqueue = 'test_queue'
+    # filepath = 'D:\\opr-checker-xml.txt'
     # db_name = 'test_db'
     # product_type = 'test_product'
     # test = ITOM_OBM(filepath, db_name, product_type)

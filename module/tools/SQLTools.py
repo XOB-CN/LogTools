@@ -86,7 +86,13 @@ class sql_write():
 
             elif db_type == 'MicroFocus-ITOM-OBM/OMi':
                 if db_table not in db.tables():
-                    if db_table == 'log_JVMStatus':
+                    if db_table == 'cfg_OBMInfo':
+                        query = QtSql.QSqlQuery()
+                        query.exec_("create table cfg_OBMInfo (attribute TEXT, value TEXT);")
+                        if query.lastError().isValid():
+                            logSQLInsert.error('MicroFocus-ITOM-OBM/OMi:\n{}'.format(query.lastError().text()))
+
+                    elif db_table == 'log_JVMStatus':
                         query = QtSql.QSqlQuery()
                         query.exec_("create table log_JVMStatus (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, heap_free_percent INT, non_heap_free_percent INT, heap_used INT, heap_committed INT, heap_max INT, heap_free INT, non_heap_used INT, non_heap_committed INT, non_heap_max INT, non_heap_free INT, othermsg TEXT);")
                         if query.lastError().isValid():

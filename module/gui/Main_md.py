@@ -212,6 +212,9 @@ class LogMain(QMainWindow, Ui_MainWindow):
             # 如果表名为 cfg_Policy, 则生成特殊的 SQL 语句
             elif self.treeList.currentItem().text(0) == 'cfg_Policy':
                 sqlEdit.setText("select * from cfg_Policy\norder by ply_name;\n{}".format(self.sql_comment))
+            # 如果表名为 cfg_OBMInfo, 则生成特殊的 SQL 语句
+            elif self.treeList.currentItem().text(0) == 'cfg_OBMInfo':
+                sqlEdit.setText("select distinct * from cfg_OBMInfo;\n{}".format(self.sql_comment))
             else:
                 sqlEdit.setText("select * from {}\nwhere logtime > '{}' and logtime < '{}'\norder by logtime desc;\n{}".format(self.treeList.currentItem().text(0), getime, letime, self.sql_comment))
             self.statusBar.showMessage("Table [{}] has been selected".format(self.treeList.currentItem().text(0)))
@@ -225,7 +228,8 @@ class LogMain(QMainWindow, Ui_MainWindow):
         槽函数：SQL Query Tab 关闭函数
         :param index: QtabWidget 的 index
         """
-        self.tabQuery.removeTab(index)
+        if self.tabQuery.count() > 1:
+            self.tabQuery.removeTab(index)
 
     def slot_tab_result_close(self, index):
         """
