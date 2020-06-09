@@ -60,7 +60,34 @@ class ITOM_OBM():
                         if isnoblk and isstart:
                             line = line.strip()
                             # 判断该行日志是否符合格式
-                            if len(line.split('; ')) == 4:
+                            if len(re.findall('INFO.*HEAP.*\[USAGE.*FREE.*TOTAL.*MAX.*\].*PERM.*\[USAGE.*FREE.*MAX.*\]', line)) > 0:
+                                log_level = line.split(' - ')[0].split(' ')[2].strip()
+                                log_time = (line.split(' - ')[0].split(' ')[0].strip() + ' ' + line.split(' - ')[0].split(' ')[1].strip()).replace(',', '.')
+                                log_time = sql_write.sqlite_to_datetime(log_time)
+                                log_line = str(log_num)
+                                heap_usage = line.split('; ')[0].split('USAGE:')[-1].split(',')[0].strip()
+                                heap_free = line.split('; ')[0].split('FREE:')[-1].split(',')[0].strip()
+                                heap_total = line.split('; ')[0].split('TOTAL:')[-1].split(',')[0].strip()
+                                heap_max = line.split('; ')[0].split('MAX:')[-1].split(',')[0].strip()[:-1]
+                                perm_usage = line.split('; ')[1].split('USAGE:')[-1].split(',')[0].strip()
+                                perm_free = line.split('; ')[1].split('FREE:')[-1].split(',')[0].strip()
+                                perm_max = line.split('; ')[1].split('MAX:')[-1].split(',')[0].strip()[:-1]
+                                othermsg = line.split('; ', 2)[-1]
+                                logdata.append({'logfile':self.filepath,
+                                                'loglevel':log_level,
+                                                'logtime':log_time,
+                                                'logline':log_line,
+                                                'heap_used':heap_usage,
+                                                'heap_committed':heap_total,
+                                                'heap_max':heap_max,
+                                                'heap_free':heap_free,
+                                                'non_heap_used':perm_usage,
+                                                'non_heap_committed':'Null',
+                                                'non_heap_max':perm_max,
+                                                'non_heap_free':perm_free,
+                                                'othermsg':othermsg,})
+
+                            elif len(line.split('; ')) == 4:
                                 log_level = line.split(' - ')[0].split(' ')[2].strip()
                                 log_time = (line.split(' - ')[0].split(' ')[0].strip() + ' ' + line.split(' - ')[0].split(' ')[1].strip()).replace(',','.')
                                 log_time = sql_write.sqlite_to_datetime(log_time)
@@ -563,11 +590,17 @@ class ITOM_OBM():
                     elif len(line.strip()[len('<hostname>'):-(len('</hostname>'))]) > len(os_hostname):
                         os_hostname = line.strip()[len('<hostname>'):-(len('</hostname>'))]
                 # 针对 os_memory 的处理
-                elif len(re.findall('<memsize>.*?</memsize>', line)) > 0:
+                elif len(re.findall('<memsize>.*?</memsize>|<physical_memory>.*</physical_memory>', line)) > 0:
                     if os_memory == 'Null':
-                        os_memory = line.strip()[len('<memsize>'):-(len('</memsize>'))]
+                        if re.findall('<memsize>.*?</memsize>', line):
+                            os_memory = line.strip()[len('<memsize>'):-(len('</memsize>'))]
+                        elif re.findall('<physical_memory>.*</physical_memory>', line):
+                            os_memory = line.strip()[len('<physical_memory>'):-(len('</physical_memory>'))]
                     elif len(line.strip()[len('<memsize>'):-(len('</memsize>'))]) > len(os_memory):
-                        os_memory = line.strip()[len('<memsize>'):-(len('</memsize>'))]
+                        if re.findall('<memsize>.*?</memsize>', line):
+                            os_memory = line.strip()[len('<memsize>'):-(len('</memsize>'))]
+                        elif re.findall('<physical_memory>.*</physical_memory>', line):
+                            os_memory = line.strip()[len('<physical_memory>'):-(len('</physical_memory>'))]
                 # 针对 obm_version 的处理
                 elif len(re.findall('<opr_baseversion>.*?</opr_baseversion>', line)) > 0:
                     obm_version = line.strip()[len('<opr_baseversion>'):-(len('</opr_baseversion>'))]

@@ -1,5 +1,7 @@
-2020-06-** Beta v0.4.2(coding)
+2020-06-09 Beta v0.4.2
 # 修复：当查询的数据多余 256 行时, 只会返回 256 行数据的问题
+# 修复：MicroFocus ITOM OBM 某些老版本的 jvm_statistics.log 无法正确识别的问题
+# 修复：强化 OBM 软件版本的识别能力
 
 2020-06-07 Beta v0.4.1
 # 添加：MicroFocus ITOM OA 日志工具目前可以分析 OA 的基本信息
