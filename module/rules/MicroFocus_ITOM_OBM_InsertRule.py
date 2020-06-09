@@ -60,7 +60,7 @@ class ITOM_OBM():
                         if isnoblk and isstart:
                             line = line.strip()
                             # 判断该行日志是否符合格式
-                            if len(re.findall('INFO.*HEAP.*\[USAGE.*FREE.*TOTAL.*MAX.*\].*PERM.*\[USAGE.*FREE.*MAX.*\]', line)) > 0:
+                            if len(re.findall('INFO.*HEAP.*\[USAGE.*FREE.*TOTAL.*MAX.*\].*PERM.*\[USAGE.*FREE.*MAX.*\]|INFO.*HEAP.*\[USAGE.*FREE.*TOTAL.*MAX.*\].*NON-HEAP.*\[USAGE.*FREE.*MAX.*\]', line)) > 0:
                                 log_level = line.split(' - ')[0].split(' ')[2].strip()
                                 log_time = (line.split(' - ')[0].split(' ')[0].strip() + ' ' + line.split(' - ')[0].split(' ')[1].strip()).replace(',', '.')
                                 log_time = sql_write.sqlite_to_datetime(log_time)
