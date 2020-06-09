@@ -152,11 +152,14 @@ class LogMain(QMainWindow, Ui_MainWindow):
                 model = QSqlQueryModel()
                 # 这里截取第一个分号之前的内容, 因为该方法仅能执行单一的 SQL 语句, 不支持多条语句
                 model.setQuery(sql_str.split(';')[0] + ';', db=qrydb)
+                # 判断返回的数据是否多余 256 行, 如果多余 256 行, 则允许获取更多的数据 (fetchmode 意思是判断是否有更多的数据)
+                # 参考链接 https://xbuba.com/questions/42286016
+                if model.canFetchMore():
+                    model.fetchMore()
                 if model.lastError().isValid():
                     logSQLQuery.warning(model.lastError().text())
                     QMessageBox.warning(self, 'SQL Error', model.lastError().text())
                 else:
-                    #
                     logSQLQuery.info(sql_str)
 
                 # 生成 QtableView 对象:self.tab_view ########################
