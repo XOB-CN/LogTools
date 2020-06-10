@@ -18,14 +18,17 @@ class ITOM_OA():
         self.db_type = product_type
 
         # 如果是 system.txt 文件, 则调用 log_system 方法读取日志
-        if len(re.findall('system\.txt', self.filepath, re.IGNORECASE)) > 0:
+        if re.findall('system\.txt', self.filepath, re.IGNORECASE):
             self.log_system()
         # 如果是 OA policy 的文件, 则调用 cfg_policy 方法来读取日志
-        elif len(re.findall('\w{8}-\w{4}-\w{4}-\w{4}-\w{12}_header\.xml', self.filepath, re.IGNORECASE)) > 0:
+        elif re.findall('\w{8}-\w{4}-\w{4}-\w{4}-\w{12}_header\.xml', self.filepath, re.IGNORECASE):
             self.cfg_policy()
         # 如果是 OA 的 OA 信息文件, 则调用 cfg_oainfo 方法来读取日志
-        elif len(re.findall('agent.log_\d{4}-\d{2}-\d{2}_\d{2}.\d{2}', self.filepath, re.IGNORECASE)) > 0:
+        elif re.findall('agent.log_\d{4}-\d{2}-\d{2}_\d{2}.\d{2}', self.filepath, re.IGNORECASE):
             self.cfg_oainfo()
+        # 其余文件则尝试匹配 OA 的 trace 日志
+        elif re.findall('opcmona_\d+\.txt', self.filepath, re.IGNORECASE):
+            self.log_traces()
 
     def log_system(self):
         """
@@ -87,6 +90,99 @@ class ITOM_OA():
                                  'db_type':self.db_type,
                                  'db_table':'log_System',
                                  'db_data':sqldata,})
+
+                # 利用 uuid 来生成一个随机的临时文件, 并且生成一个对应的 .lck 文件, 在数据写入完成后, 再删除 .lck 文件
+                datafilepath = r'./temp/{}'.format(str(uuid.uuid1()))
+                open('{}.lck'.format(datafilepath), 'w').close()
+                with open(datafilepath, 'wb') as f:
+                    pickle.dump(self.SQLData, f)
+                os.remove('{}.lck'.format(datafilepath))
+
+        except Exception as reason:
+            logSQLCreate.error('logfile read error:{}'.format(reason))
+
+    def log_traces(self):
+        """
+        针对 MicroFocus ITOM OA 中的 trace 文件 (需要先解码)
+        """
+        # 初始化数据和相关控制参数
+        logdata = []
+        sqldata = []
+        isnoblk = True
+        log_num = 0
+        isstart = False
+
+        # 尝试开始读取文件
+        try:
+            with open(self.filepath, mode='r', encoding='utf-8', errors='replace') as f:
+                for line in f:
+                    try:
+                        log_num += 1
+                        isnoblk = True
+                        for blkrule in BlackRule:
+                            if len(re.findall(blkrule, line, re.IGNORECASE)) > 0:
+                                isnoblk = False
+
+                        # 判断日志的开头是否是事件的开始, 如果不是则忽略
+                        if isstart == False:
+                            if re.findall('"Info",|"Warn",|"Error",', line):
+                                isstart = True
+
+                        # 如果改行既不在黑名单, 并且也已经确定 isstart 为 True, 则开始日志匹配流程
+                        if isnoblk and isstart:
+                            line = line.strip()
+                            # 判断该行日志是否符合格式
+                            if len(line.split(',', 11)) >= 11:
+                                line_data = line.replace(',,', ',Null,').split(',',11)
+                                log_level = line_data[0].strip()[1:-1]
+                                log_time = sql_write.sqlite_to_datetime(line_data[2].strip())
+                                log_Machine = line_data[3].strip()
+                                log_comp = line_data[4].strip()
+                                if re.findall(',,', line):
+                                    log_pid = line.split(',', 10)[-3].strip()
+                                else:
+                                    log_pid = line_data[-3].strip()
+                                if re.findall(',,', line):
+                                    log_tid = line.split(',', 10)[-2].strip()
+                                else:
+                                    log_tid = line_data[-2].strip()
+                                log_tic_count = line_data[1].strip()
+                                if re.findall(',,', line):
+                                    log_msg = line.split(',', 10)[-1].strip().replace('"', "'")
+                                else:
+                                    log_msg = line_data[-1].strip().replace('"', "'")
+                                logdata.append({'logfile': self.filepath,
+                                                'logline': log_num,
+                                                'loglevel': log_level,
+                                                'logtime': log_time,
+                                                'machine': log_Machine,
+                                                'logcomp': log_comp,
+                                                'pid': log_pid,
+                                                'tid': log_tid,
+                                                'tic_count': log_tic_count,
+                                                'logdetail': log_msg})
+                            else:
+                                logdata[-1]['logdetail'] = logdata[-1]['logdetail'] + '\n' + line
+                                # 抹掉日志中剩下的 '/n'
+                                logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
+                    except Exception as e:
+                        logSQLCreate.warning(
+                            "file:{}\nline:{}\nSource:{}\nException:{}".format(self.filepath, str(log_num), line, e))
+
+                for data in logdata:
+                    try:
+                        sql_insert = 'INSERT INTO log_Trace (logfile, logline, loglevel, logtime, logcomp, logdetail, machine, pid, tid, tic_count) ' \
+                                     'VALUES ("{}","{}","{}","{}","{}","{}","{}","{}","{}","{}");'.format(
+                            data.get('logfile'), str(data.get('logline')), data.get('loglevel'), data.get('logtime'),
+                            data.get('logcomp'), data.get('logdetail').replace('"',"'"), data.get('machine'), data.get('pid'), data.get('tid'), data.get('tic_count')).replace('""','"')
+                        sqldata.append(sql_insert)
+                    except Exception as e:
+                        logSQLCreate.warning("Can't generate SQL INSERT INTO statement! - {}".format(e))
+
+                self.SQLData = ({'db_name': self.db_name,
+                                 'db_type': self.db_type,
+                                 'db_table': 'log_Trace',
+                                 'db_data': sqldata, })
 
                 # 利用 uuid 来生成一个随机的临时文件, 并且生成一个对应的 .lck 文件, 在数据写入完成后, 再删除 .lck 文件
                 datafilepath = r'./temp/{}'.format(str(uuid.uuid1()))
@@ -316,5 +412,5 @@ class ITOM_OA():
 
 if __name__ == '__main__':
     pass
-    # filepath = r'D:\05.Code\agent.log_2020-05-13_14.55'
-    # test_obj = ITOM_OA(filepath, 'demodb', 'oa')
+    filepath = r'D:\05.Code\opcmona_00133.txt'
+    test_obj = ITOM_OA(filepath, 'demodb', 'oa')

@@ -18,6 +18,7 @@ class sql_write():
         datetime_format = [
             '%Y-%m-%d %H:%M:%S.%f',
             '%Y-%m-%d %H:%M:%S,%f',
+            '%Y/%m/%d %H:%M:%S.%f',
             "%a %b %d %H:%M:%S %Y",
             "%Y-%m-%d %H:%M:%S",
             "%Y/%m/%d %H:%M:%S",
@@ -32,6 +33,8 @@ class sql_write():
                 if time_format == '%Y-%m-%d %H:%M:%S.%f':
                     return datetime_str.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
                 elif time_format == '%Y-%m-%d %H:%M:%S,%f':
+                    return datetime_str.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+                elif time_format == '%Y/%m/%d %H:%M:%S.%f':
                     return datetime_str.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
                 else:
                     return datetime_str.strftime('%Y-%m-%d %H:%M:%S')
@@ -70,14 +73,21 @@ class sql_write():
                         if query.lastError().isValid():
                             logSQLInsert.error('MicroFocus-ITOM-OA:\n{}'.format(query.lastError().text()))
 
-                    if db_table == 'cfg_OAInfo':
+                    elif db_table == 'log_Trace':
+                        query = QtSql.QSqlQuery()
+                        # 不自动增长的语句
+                        query.exec_("create table log_Trace (logfile TEXT, logline TEXT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT, machine TEXT, pid TEXT, tid TEXT, tic_count TEXT);")
+                        if query.lastError().isValid():
+                            logSQLInsert.error('MicroFocus-ITOM-OA:\n{}'.format(query.lastError().text()))
+
+                    elif db_table == 'cfg_OAInfo':
                         query = QtSql.QSqlQuery()
                         # 不自动增长的语句
                         query.exec_("create table cfg_OAInfo (attribute TEXT, value TEXT);")
                         if query.lastError().isValid():
                             logSQLInsert.error('MicroFocus-ITOM-OA:\n{}'.format(query.lastError().text()))
 
-                    if db_table == 'cfg_Policy':
+                    elif db_table == 'cfg_Policy':
                         query = QtSql.QSqlQuery()
                         # 不自动增长的语句
                         query.exec_("create table cfg_Policy (ply_name TEXT, ply_version TEXT, ply_status TEXT, ply_type TEXT, ply_data TEXT, ply_param TEXT);")

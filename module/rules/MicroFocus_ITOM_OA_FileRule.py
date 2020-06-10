@@ -5,6 +5,9 @@ FileRule = [
     'system\.txt',
     '\w{8}-\w{4}-\w{4}-\w{4}-\w{12}_header\.xml',
     'agent.log_\d{4}-\d{2}-\d{2}_\d{2}.\d{2}',
+
+    # OA Trace 日志文件
+    'opcmona_\d+\.txt',
 ]
 
 # 文件级别的反匹规则
@@ -14,4 +17,5 @@ FileBlkRule = [
 
 BlackRule = [
     'rolled=0',
+    '"Sev","Tic Count","Time","Machine","Application","Component","Category","Attributes","PID","TID","Source","TraceMsg"',
 ]
