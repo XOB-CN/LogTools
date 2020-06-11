@@ -133,22 +133,22 @@ class ITOM_OA():
                             line = line.strip()
                             # 判断该行日志是否符合格式
                             if len(line.split(',', 11)) >= 11:
-                                line_data = line.replace(',,', ',Null,').split(',',11)
+                                line_data = line.split(',',11)
                                 log_level = line_data[0].strip()[1:-1]
                                 log_time = sql_write.sqlite_to_datetime(line_data[2].strip())
                                 log_Machine = line_data[3].strip()
                                 log_comp = line_data[4].strip()
                                 if re.findall(',,', line):
-                                    log_pid = line.split(',', 10)[-3].strip()
+                                    log_pid = line.replace('"', "'").split(',', 10)[-3].strip()
                                 else:
-                                    log_pid = line_data[-3].strip()
+                                    log_pid = line_data[-3].strip().replace('"', "'")
                                 if re.findall(',,', line):
-                                    log_tid = line.split(',', 10)[-2].strip()
+                                    log_tid = line.replace('"', "'").split(',', 10)[-2].strip()
                                 else:
-                                    log_tid = line_data[-2].strip()
-                                log_tic_count = line_data[1].strip()
+                                    log_tid = line_data[-2].strip().replace('"', "'")
+                                log_tic_count = line_data[1].strip().replace('"', "'")
                                 if re.findall(',,', line):
-                                    log_msg = line.split(',', 10)[-1].strip().replace('"', "'")
+                                    log_msg = line.replace('"', "'").split(',', 10)[-1].strip()
                                 else:
                                     log_msg = line_data[-1].strip().replace('"', "'")
                                 logdata.append({'logfile': self.filepath,
@@ -174,7 +174,7 @@ class ITOM_OA():
                         sql_insert = 'INSERT INTO log_Trace (logfile, logline, loglevel, logtime, logcomp, logdetail, machine, pid, tid, tic_count) ' \
                                      'VALUES ("{}","{}","{}","{}","{}","{}","{}","{}","{}","{}");'.format(
                             data.get('logfile'), str(data.get('logline')), data.get('loglevel'), data.get('logtime'),
-                            data.get('logcomp'), data.get('logdetail').replace('"',"'"), data.get('machine'), data.get('pid'), data.get('tid'), data.get('tic_count')).replace('""','"')
+                            data.get('logcomp'), data.get('logdetail'), data.get('machine'), data.get('pid'), data.get('tid'), data.get('tic_count'))
                         sqldata.append(sql_insert)
                     except Exception as e:
                         logSQLCreate.warning("Can't generate SQL INSERT INTO statement! - {}".format(e))
