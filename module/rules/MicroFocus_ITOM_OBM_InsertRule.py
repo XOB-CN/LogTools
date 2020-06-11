@@ -48,19 +48,19 @@ class ITOM_OBM():
                         log_num += 1
                         isnoblk = True
                         for blkrule in BlackRule:
-                            if len(re.findall(blkrule, line, re.IGNORECASE)) > 0:
+                            if re.findall(blkrule, line, re.IGNORECASE):
                                 isnoblk = False
 
                         # 判断日志的开头是否是事件的开始, 如果不是则忽略
                         if isstart == False:
-                            if len(re.findall('INFO|WARN|ERROR', line)) > 0:
+                            if re.findall('INFO|WARN|ERROR', line):
                                 isstart = True
 
                         # 如果改行既不在黑名单, 并且也已经确定 isstart 为 True, 则开始日志匹配流程
                         if isnoblk and isstart:
                             line = line.strip()
                             # 判断该行日志是否符合格式
-                            if len(re.findall('INFO.*HEAP.*\[USAGE.*FREE.*TOTAL.*MAX.*\].*PERM.*\[USAGE.*FREE.*MAX.*\]|INFO.*HEAP.*\[USAGE.*FREE.*TOTAL.*MAX.*\].*NON-HEAP.*\[USAGE.*FREE.*MAX.*\]', line)) > 0:
+                            if re.findall('INFO.*HEAP.*\[USAGE.*FREE.*TOTAL.*MAX.*\].*PERM.*\[USAGE.*FREE.*MAX.*\]|INFO.*HEAP.*\[USAGE.*FREE.*TOTAL.*MAX.*\].*NON-HEAP.*\[USAGE.*FREE.*MAX.*\]', line):
                                 log_level = line.split(' - ')[0].split(' ')[2].strip()
                                 log_time = (line.split(' - ')[0].split(' ')[0].strip() + ' ' + line.split(' - ')[0].split(' ')[1].strip()).replace(',', '.')
                                 log_time = sql_write.sqlite_to_datetime(log_time)
@@ -167,19 +167,19 @@ class ITOM_OBM():
                         log_num += 1
                         isnoblk = True
                         for blkrule in BlackRule:
-                            if len(re.findall(blkrule, line, re.IGNORECASE)) > 0:
+                            if re.findall(blkrule, line, re.IGNORECASE):
                                 isnoblk = False
 
                         # 判断日志的开头是否是事件的开始, 如果不是则忽略
                         if isstart == False:
-                            if len(re.findall('INFO |WARN |ERROR |DEBUG', line)) > 0:
+                            if re.findall('INFO |WARN |ERROR |DEBUG', line):
                                 isstart = True
 
                         # 如果改行既不在黑名单, 并且也已经确定 isstart 为 True, 则开始日志匹配流程
                         if isnoblk and isstart:
                             line = line.strip()
                             # 判断该行日志是否符合格式
-                            if len(re.findall('\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.*\[.*\]', line)) > 0:
+                            if re.findall('\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.*\[.*\]', line):
                                 log_level = line.split('] ')[1].split(': ')[0].strip()
                                 log_time = line.split('[',1)[0].strip()
                                 log_time = sql_write.sqlite_to_datetime(log_time)
@@ -265,19 +265,19 @@ class ITOM_OBM():
                         log_num += 1
                         isnoblk = True
                         for blkrule in BlackRule:
-                            if len(re.findall(blkrule, line, re.IGNORECASE)) > 0:
+                            if re.findall(blkrule, line, re.IGNORECASE):
                                 isnoblk = False
 
                         # 判断日志的开头是否是事件的开始, 如果不是则忽略
                         if isstart == False:
-                            if len(re.findall('INFO |WARN |ERROR |DEBUG', line)) > 0:
+                            if re.findall('INFO |WARN |ERROR |DEBUG', line):
                                 isstart = True
 
                         # 如果改行既不在黑名单, 并且也已经确定 isstart 为 True, 则开始日志匹配流程
                         if isnoblk and isstart:
                             line = line.strip()
                             # 判断该行日志是否符合格式
-                            if len(re.findall('\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.*\[.*\]', line)) > 0:
+                            if re.findall('\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.*\[.*\]', line):
                                 log_level = line.split('] ')[1].split(' ')[0].strip()
                                 log_time = line.split(' ',2)[0] + ' ' + line.split(' ',2)[1]
                                 log_time = sql_write.sqlite_to_datetime(log_time)
@@ -347,19 +347,19 @@ class ITOM_OBM():
                         log_num += 1
                         isnoblk = True
                         for blkrule in BlackRule:
-                            if len(re.findall(blkrule, line, re.IGNORECASE)) > 0:
+                            if re.findall(blkrule, line, re.IGNORECASE):
                                 isnoblk = False
 
                         # 判断日志的开头是否是事件的开始, 如果不是则忽略
                         if isstart == False:
-                            if len(re.findall('INFO |WARN |ERROR |DEBUG', line)) > 0:
+                            if re.findall('INFO |WARN |ERROR |DEBUG', line):
                                 isstart = True
 
                         # 如果改行既不在黑名单, 并且也已经确定 isstart 为 True, 则开始日志匹配流程
                         if isnoblk and isstart:
                             line = line.strip()
                             # 判断该行日志是否符合格式
-                            if len(re.findall('\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.*-', line)) > 0:
+                            if re.findall('\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.*-', line):
                                 log_level = line.split(' ',3)[2].strip()
                                 log_time = line.split(' ', 2)[0] + ' ' + line.split(' ', 2)[1]
                                 log_time = sql_write.sqlite_to_datetime(log_time)
@@ -428,14 +428,14 @@ class ITOM_OBM():
 
                         # 判断日志的开头是否是事件的开始, 如果不是则忽略
                         if isstart == False:
-                            if len(re.findall('INFO |WARN |ERROR |DEBUG', line)) > 0:
+                            if re.findall('INFO |WARN |ERROR |DEBUG', line):
                                 isstart = True
 
                         # 如果改行既不在黑名单, 并且也已经确定 isstart 为 True, 则开始日志匹配流程
                         if isnoblk and isstart:
                             line = line.strip()
                             # 判断该行日志是否符合格式
-                            if len(re.findall('\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.*\[.*\]', line)) > 0:
+                            if re.findall('\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.*\[.*\]', line):
                                 log_level = line.split(') ')[1].split(' - ')[0].strip()
                                 log_time = line.split(' ',2)[0] + ' ' + line.split(' ',2)[1]
                                 log_time = sql_write.sqlite_to_datetime(log_time)
@@ -509,19 +509,19 @@ class ITOM_OBM():
                         log_num += 1
                         isnoblk = True
                         for blkrule in BlackRule:
-                            if len(re.findall(blkrule, line, re.IGNORECASE)) > 0:
+                            if re.findall(blkrule, line, re.IGNORECASE):
                                 isnoblk = False
 
                         # 判断日志的开头是否是事件的开始, 如果不是则忽略
                         if isstart == False:
-                            if len(re.findall(' INFO | WARN | ERROR | DEBUG ', line)) > 0:
+                            if re.findall(' INFO | WARN | ERROR | DEBUG ', line):
                                 isstart = True
 
                         # 如果改行既不在黑名单, 并且也已经确定 isstart 为 True, 则开始日志匹配流程
                         if isnoblk and isstart:
                             line = line.strip()
                             # 判断该行日志是否符合格式
-                            if len(re.findall('\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.*\[.*\]', line)) > 0:
+                            if re.findall('\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.*\[.*\]', line):
                                 log_level = line.split(' ')[3].strip()
                                 log_time = line.split(' ',2)[0] + ' ' + line.split(' ',2)[1]
                                 log_time = sql_write.sqlite_to_datetime(log_time)
@@ -584,13 +584,13 @@ class ITOM_OBM():
         try:
             for line in opr_checker:
                 # 针对 os_hostname 的处理
-                if len(re.findall('<hostname>.*?</hostname>', line)) > 0:
+                if re.findall('<hostname>.*?</hostname>', line):
                     if os_hostname == 'Null':
                         os_hostname = line.strip()[len('<hostname>'):-(len('</hostname>'))]
                     elif len(line.strip()[len('<hostname>'):-(len('</hostname>'))]) > len(os_hostname):
                         os_hostname = line.strip()[len('<hostname>'):-(len('</hostname>'))]
                 # 针对 os_memory 的处理
-                elif len(re.findall('<memsize>.*?</memsize>|<physical_memory>.*</physical_memory>', line)) > 0:
+                elif re.findall('<memsize>.*?</memsize>|<physical_memory>.*</physical_memory>', line):
                     if os_memory == 'Null':
                         if re.findall('<memsize>.*?</memsize>', line):
                             os_memory = line.strip()[len('<memsize>'):-(len('</memsize>'))]
@@ -602,7 +602,7 @@ class ITOM_OBM():
                         elif re.findall('<physical_memory>.*</physical_memory>', line):
                             os_memory = line.strip()[len('<physical_memory>'):-(len('</physical_memory>'))]
                 # 针对 obm_version 的处理
-                elif len(re.findall('<opr_baseversion>.*?</opr_baseversion>', line)) > 0:
+                elif re.findall('<opr_baseversion>.*?</opr_baseversion>', line):
                     obm_version = line.strip()[len('<opr_baseversion>'):-(len('</opr_baseversion>'))]
 
             # 整理数据
