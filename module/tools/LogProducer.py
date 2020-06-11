@@ -3,8 +3,8 @@
 from PyQt5.Qt import *
 from module.tools.LogRecord import loglogTools
 
-def mult_process_task(func, filepath, db_name, product_type):
-    func(filepath, db_name, product_type)
+def mult_process_task(func, filepath, db_name, product_type, file_id):
+    func(filepath, db_name, product_type, file_id)
 
 class LogProducer(QThread):
     """
@@ -25,8 +25,10 @@ class LogProducer(QThread):
             from module.rules.MicroFocus_ITOM_OBM_InsertRule import ITOM_OBM as LogSQL
 
         # 执行多进程, 开始生成分析数据
+        n = 0
         for filepath in self.task_data.get('file_path'):
             try:
-                self.pool.apply_async(mult_process_task, args=(LogSQL, filepath, self.db_name, self.product_type))
+                n+=1
+                self.pool.apply_async(mult_process_task, args=(LogSQL, filepath, self.db_name, self.product_type, n))
             except Exception as e:
                 loglogTools.warning(e)

@@ -12,10 +12,11 @@ class ITOM_OA():
     """
     SQLData = {}
 
-    def __init__(self, filepath, db_name, product_type):
+    def __init__(self, filepath, db_name, product_type, fileid = None):
         self.filepath = filepath
         self.db_name = db_name
         self.db_type = product_type
+        self.file_id = str(fileid)
 
         # 如果是 system.txt 文件, 则调用 log_system 方法读取日志
         if re.findall('system\.txt', self.filepath, re.IGNORECASE):
@@ -91,8 +92,8 @@ class ITOM_OA():
                                  'db_table':'log_System',
                                  'db_data':sqldata,})
 
-                # 利用 uuid 来生成一个随机的临时文件, 并且生成一个对应的 .lck 文件, 在数据写入完成后, 再删除 .lck 文件
-                datafilepath = r'./temp/{}'.format(str(uuid.uuid1()))
+                # 生成一个对应的 .lck 文件, 在数据写入完成后, 再删除 .lck 文件
+                datafilepath = r'./temp/{}'.format(self.file_id)
                 open('{}.lck'.format(datafilepath), 'w').close()
                 with open(datafilepath, 'wb') as f:
                     pickle.dump(self.SQLData, f)
@@ -184,8 +185,8 @@ class ITOM_OA():
                                  'db_table': 'log_Trace',
                                  'db_data': sqldata, })
 
-                # 利用 uuid 来生成一个随机的临时文件, 并且生成一个对应的 .lck 文件, 在数据写入完成后, 再删除 .lck 文件
-                datafilepath = r'./temp/{}'.format(str(uuid.uuid1()))
+                # 生成一个对应的 .lck 文件, 在数据写入完成后, 再删除 .lck 文件
+                datafilepath = r'./temp/{}'.format(self.file_id)
                 open('{}.lck'.format(datafilepath), 'w').close()
                 with open(datafilepath, 'wb') as f:
                     pickle.dump(self.SQLData, f)
@@ -277,8 +278,8 @@ class ITOM_OA():
                          'db_table':'cfg_Policy',
                          'db_data':sqldata,})
 
-        # 利用 uuid 来生成一个随机的临时文件, 并且生成一个对应的 .lck 文件, 在数据写入完成后, 再删除 .lck 文件
-        datafilepath = r'./temp/{}'.format(str(uuid.uuid1()))
+        # 生成一个对应的 .lck 文件, 在数据写入完成后, 再删除 .lck 文件
+        datafilepath = r'./temp/{}'.format(self.file_id)
         open('{}.lck'.format(datafilepath), 'w').close()
         with open(datafilepath, 'wb') as f:
             pickle.dump(self.SQLData, f)
@@ -400,8 +401,8 @@ class ITOM_OA():
                              'db_table': 'cfg_OAInfo',
                              'db_data': sqldata, })
 
-            # 利用 uuid 来生成一个随机的临时文件, 并且生成一个对应的 .lck 文件, 在数据写入完成后, 再删除 .lck 文件
-            datafilepath = r'./temp/{}'.format(str(uuid.uuid1()))
+            # 生成一个对应的 .lck 文件, 在数据写入完成后, 再删除 .lck 文件
+            datafilepath = r'./temp/{}'.format(self.file_id)
             open('{}.lck'.format(datafilepath), 'w').close()
             with open(datafilepath, 'wb') as f:
                 pickle.dump(self.SQLData, f)
