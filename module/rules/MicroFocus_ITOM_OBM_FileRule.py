@@ -22,6 +22,7 @@ FileRule = [
     'cmdb\.reconciliation\.identification\.log',
     'cmdb\.reconciliation\.datain\.merged\.log',
     'cmdb\.reconciliation\.datain\.ignored\.log',
+    'MI_MonitorAdministration\.log',
 ]
 
 # 文件级别的反匹规则

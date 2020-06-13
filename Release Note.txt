@@ -1,5 +1,6 @@
 2020-06-** Beta v0.4.3(coding)
 # 添加：MicroFocus ITOM OA 日志工具目前可以分析 OA 的 trace 日志信息
+# 添加：MicroFocus ITOM OBM 日志工具目前可以分析 OBM 的 MI_MonitorAdministration.log 日志信息
 # 修改：优化软件内部逻辑
 
 2020-06-09 Beta v0.4.2

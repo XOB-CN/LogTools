@@ -18,19 +18,21 @@ class ITOM_OBM():
         self.file_id = str(fileid)
 
         # 如果是 jvm 的统计信息类型的日志, 则调用 log_jvm_statistivs 方法
-        if len(re.findall('jvm_statistics\.log|busjvm_statistics\.log', self.filepath, re.IGNORECASE)) > 0:
+        if re.findall('jvm_statistics\.log|busjvm_statistics\.log', self.filepath, re.IGNORECASE):
             self.log_jvm_statistics()
-        elif len(re.findall('opr-ciresolver\.log|opr-backend\.log|opr-gateway\.log|opr-svcdiscserver\.log|opr-scripting-host\.log|scripts\.log|bus\.log|opr-webapp\.log|opr-configserver\.log', self.filepath, re.IGNORECASE)) > 0:
+        elif re.findall('opr-ciresolver\.log|opr-backend\.log|opr-gateway\.log|opr-svcdiscserver\.log|opr-scripting-host\.log|scripts\.log|bus\.log|opr-webapp\.log|opr-configserver\.log', self.filepath, re.IGNORECASE):
             self.log_obm_logfiles_type1()
-        elif len(re.findall('opr-svcdiscserver-citrace\.log', self.filepath, re.IGNORECASE)) > 0:
+        elif re.findall('opr-svcdiscserver-citrace\.log', self.filepath, re.IGNORECASE):
             self.log_obm_logfiles_type2()
-        elif len(re.findall('downtime\.log', self.filepath, re.IGNORECASE)) > 0:
+        elif re.findall('downtime\.log', self.filepath, re.IGNORECASE):
             self.log_obm_logfiles_type3()
-        elif len (re.findall('cmdb\.reconciliation\.identification\.log|cmdb\.reconciliation\.datain\.merged\.log|cmdb\.reconciliation\.datain\.ignored\.log', self.filepath, re.IGNORECASE)) > 0:
+        elif re.findall('cmdb\.reconciliation\.identification\.log|cmdb\.reconciliation\.datain\.merged\.log|cmdb\.reconciliation\.datain\.ignored\.log', self.filepath, re.IGNORECASE):
             self.log_obm_logfiles_type4()
-        elif len (re.findall('pmi\.log', self.filepath, re.IGNORECASE)) > 0:
+        elif re.findall('pmi\.log', self.filepath, re.IGNORECASE):
             self.log_obm_pmi()
-        elif len (re.findall('opr-checker-xml\.txt', self.filepath, re.IGNORECASE)) > 0:
+        elif re.findall('MI_MonitorAdministration\.log', self.filepath):
+            self.log_obm_MI_MonitorAdministration()
+        elif re.findall('opr-checker-xml\.txt', self.filepath, re.IGNORECASE):
             self.cfg_obminfo()
 
     def log_jvm_statistics(self):
@@ -193,6 +195,88 @@ class ITOM_OBM():
                                     log_detail = line.split(' ERROR: ', 1)[-1].strip()
                                 elif re.findall(' DEBUG ', line):
                                     log_detail = line.split(' DEBUG ', 1)[-1].strip()
+                                logdata.append({'logfile': self.filepath,
+                                                'logline': log_num,
+                                                'loglevel': log_level,
+                                                'logtime': log_time,
+                                                'logcomp': log_comp,
+                                                'logdetail': log_detail})
+                            else:
+                                logdata[-1]['logdetail'] = logdata[-1]['logdetail'] + '\n' + line
+                                # 抹掉日志中剩下的 '/n'
+                                logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
+
+                    except Exception as e:
+                        logSQLCreate.warning("file:{}\nline:{}\nSource:{}\nException:{}".format(self.filepath,str(log_num), line, e))
+
+                for data in logdata:
+                    try:
+                        sql_insert = 'INSERT INTO {} (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(self.db_table,
+                            data.get('logfile'), str(data.get('logline')), data.get('loglevel'), data.get('logtime'),
+                            data.get('logcomp'), data.get('logdetail').replace('"',"'"))
+                        sqldata.append(sql_insert)
+                    except Exception as e:
+                        logSQLCreate.warning("Can't generate SQL INSERT INTO statement! " + str(e))
+
+                self.SQLData = ({'db_name': self.db_name,
+                                 'db_type': self.db_type,
+                                 'db_table': self.db_table,
+                                 'db_data': sqldata, })
+
+                # 生成一个对应的 .lck 文件, 在数据写入完成后, 再删除 .lck 文件
+                datafilepath = r'./temp/{}'.format(self.file_id)
+                open('{}.lck'.format(datafilepath), 'w').close()
+                with open(datafilepath, 'wb') as f:
+                    pickle.dump(self.SQLData, f)
+                os.remove('{}.lck'.format(datafilepath))
+
+        except Exception as reason:
+            logSQLCreate.error('logfile read error:{}'.format(reason))
+
+    def log_obm_MI_MonitorAdministration(self):
+        # 初始化数据和相关控制参数
+        logdata = []
+        sqldata = []
+        isnoblk = True
+        log_num = 0
+        isstart = False
+        # db_table 名字
+        if re.findall('MI_MonitorAdministration\.log', self.filepath):
+            self.db_table = 'log_MI_MonitorAdministration'
+
+        # 尝试开始读取文件
+        try:
+            with open(self.filepath, mode='r', encoding='utf-8', errors='replace') as f:
+                for line in f:
+                    try:
+                        log_num += 1
+                        isnoblk = True
+                        for blkrule in BlackRule:
+                            if re.findall(blkrule, line, re.IGNORECASE):
+                                isnoblk = False
+
+                        # 判断日志的开头是否是事件的开始, 如果不是则忽略
+                        if isstart == False:
+                            if re.findall('INFO |WARN |ERROR |DEBUG', line):
+                                isstart = True
+
+                        # 如果改行既不在黑名单, 并且也已经确定 isstart 为 True, 则开始日志匹配流程
+                        if isnoblk and isstart:
+                            line = line.strip()
+                            # 判断该行日志是否符合格式
+                            if re.findall('\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.*\[.*\]', line):
+                                log_level = line.split(' ', 5)[4].strip()
+                                log_time = line.split('[',1)[0].strip()
+                                log_time = sql_write.sqlite_to_datetime(log_time)
+                                log_comp = line.split(' ', 4)[2].strip() + line.split(' ', 4)[3].strip()
+                                if re.findall(' INFO -', line):
+                                    log_detail = line.split(' INFO -', 1)[-1].strip()
+                                elif re.findall(' WARN -', line):
+                                    log_detail = line.split(' WARN -', 1)[-1].strip()
+                                elif re.findall(' ERROR -', line):
+                                    log_detail = line.split(' ERROR -', 1)[-1].strip()
+                                elif re.findall(' DEBUG -', line):
+                                    log_detail = line.split(' DEBUG -', 1)[-1].strip()
                                 logdata.append({'logfile': self.filepath,
                                                 'logline': log_num,
                                                 'loglevel': log_level,
@@ -635,7 +719,7 @@ class ITOM_OBM():
 
 if __name__ == '__main__':
     pass
-    # filepath = 'D:\\opr-checker-xml.txt'
+    # filepath = 'D:\\MI_MonitorAdministration.log'
     # db_name = 'test_db'
     # product_type = 'test_product'
     # test = ITOM_OBM(filepath, db_name, product_type)

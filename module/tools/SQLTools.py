@@ -122,7 +122,8 @@ class sql_write():
                                       'log_scripts',
                                       'log_rtsm_identification',
                                       'log_rtsm_merged',
-                                      'log_rtsm_ignored',]:
+                                      'log_rtsm_ignored',
+                                      'log_MI_MonitorAdministration',]:
                         query = QtSql.QSqlQuery()
                         query.exec_("create table {} (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);".format(db_table))
                         if query.lastError().isValid():
