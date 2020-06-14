@@ -28,7 +28,7 @@ class ITOM_OA():
         elif re.findall('agent.log_\d{4}-\d{2}-\d{2}_\d{2}.\d{2}', self.filepath, re.IGNORECASE):
             self.cfg_oainfo()
         # 其余文件则尝试匹配 OA 的 trace 日志
-        elif re.findall('ovcd_\d+\.txt|oacore_\d+\.txt|ovbbccb_\d+\.txt|opcmona_\d+\.txt|opcmsga_\d+\.txt', self.filepath, re.IGNORECASE):
+        elif re.findall('trace_\d+\.txt|ovcd_\d+\.txt|oacore_\d+\.txt|ovbbccb_\d+\.txt|opcmona_\d+\.txt|opcmsga_\d+\.txt', self.filepath, re.IGNORECASE):
             self.log_traces()
 
     def log_system(self):

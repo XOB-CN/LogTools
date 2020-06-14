@@ -7,6 +7,7 @@ FileRule = [
     'agent.log_\d{4}-\d{2}-\d{2}_\d{2}.\d{2}',
 
     # OA Trace 日志文件
+    'trace_\d+\.txt',
     'ovcd_\d+\.txt',
     'oacore_\d+\.txt',
     'ovbbccb_\d+\.txt',
