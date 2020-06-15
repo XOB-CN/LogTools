@@ -11,11 +11,29 @@ from module.tools.LogCustomer import LogCustomer
 from module.tools.MenuTools import AddMenuTools
 from multiprocessing import freeze_support, Pool
 
+def set_pool_num():
+    """
+    获取计算机上的处理器核数和内存资源来确定进程池的数量
+    :return: int
+    """
+    import psutil
+    num_cpu = psutil.cpu_count(logical=False)
+    num_mem = psutil.virtual_memory().free / (1024*1024*1024)
+
+    if num_cpu * 2 <= num_mem:
+        return num_cpu - 1
+    else:
+        num_pool = int(num_mem /2)
+        if num_pool >= 2:
+            return num_pool
+        else:
+            return 1
+
 if __name__ == '__main__':
     # 在 Windows 环境下可以正常运行多进程
     freeze_support()
     # Pool 对象
-    p = Pool()
+    p = Pool(set_pool_num())
 
     # 主程序开始
     import sys
@@ -41,7 +59,7 @@ if __name__ == '__main__':
         # 将初始界面获取的产品分类数据传递到 LogTools 主界面里
         guiMain.product_type = [company_name, category_name, product_name]
         # 设置软件标题
-        guiMain.setWindowTitle(category_name + ' ' + product_name + ' LogTools ' + 'Beta v0.4.3(coding)')
+        guiMain.setWindowTitle(category_name + ' ' + product_name + ' LogTools ' + 'Beta v0.4.3')
         # 判断产品分类, 加载不同的菜单
         AddMenuTools(product_name, guiMain)
         # 显示 LogTools 主界面
