@@ -32,6 +32,9 @@ def set_pool_num():
 if __name__ == '__main__':
     # 在 Windows 环境下可以正常运行多进程
     freeze_support()
+    # test code: https://blog.csdn.net/hidxl/article/details/49800353
+    import cgitb
+    cgitb.enable(format='text')
     # Pool 对象
     p = Pool(set_pool_num())
 
