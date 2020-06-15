@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import os, time, pickle
+import os, re, time, pickle
 from PyQt5.Qt import *
 from module.tools.SQLTools import sql_write
 from module.tools.LogRecord import loglogTools
@@ -28,20 +28,23 @@ class LogCustomer(QThread):
             # 将包含有 .lck 的文件从待读取的文件列表中去掉
             if len(files) != 0:
                 for file in files:
-                    if file[-4:] == '.lck':
+                    ##########
+                    print(file)
+                    if re.findall('\.lck', file):
                         files.remove(file)
                         files.remove(file[0:-4])
                 # 如果将包含有 .lck 相关的文件去掉后还不为空, 那么这些文件就是 LogProducer 处理完成的数据
                 if len(files) != 0:
                     for file in files:
-                        with open('./temp/{}'.format(file), 'rb') as f:
-                            num += 1
-                            try:
-                                if num == self.num_files:
-                                    self.is_end = False
-                                SQLData = pickle.load(f)
-                                sql_write.sqlite_to_database(SQLData)
-                            except Exception as e:
-                                loglogTools.warning(e)
-                        os.remove('./temp/{}'.format(file))
-                        self.singal_had_write.emit(num, self.num_files)
+                        if re.findall('lck', file) == []:
+                            with open('./temp/{}'.format(file), 'rb') as f:
+                                num += 1
+                                try:
+                                    if num == self.num_files:
+                                        self.is_end = False
+                                    SQLData = pickle.load(f)
+                                    sql_write.sqlite_to_database(SQLData)
+                                except Exception as e:
+                                    loglogTools.warning(e)
+                            os.remove('./temp/{}'.format(file))
+                            self.singal_had_write.emit(num, self.num_files)
