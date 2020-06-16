@@ -34,8 +34,8 @@ if __name__ == '__main__':
     freeze_support()
     # 可以让异常抛出但是程序继续执行 (https://blog.csdn.net/hidxl/article/details/49800353)
     # 考虑将来这部分代码可以做出 debug 模式
-    import cgitb
-    cgitb.enable(format='text')
+    # import cgitb
+    # cgitb.enable(format='text')
     # Pool 对象
     p = Pool(set_pool_num())
 

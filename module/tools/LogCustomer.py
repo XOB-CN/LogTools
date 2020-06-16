@@ -44,12 +44,15 @@ class LogCustomer(QThread):
                                     SQLData = pickle.load(f)
                                     sql_write.sqlite_to_database(SQLData)
                                 except Exception as e:
-                                    loglogTools.warning(str(e)+'\n'+'filelist:'+str(files))
-                            os.remove('./temp/{}'.format(file))
-                            self.singal_had_write.emit(num, self.num_files)
+                                    loglogTools.warning(str(e)+'\n'+'setp_01_filelist:'+str(files))
+                            try:
+                                os.remove('./temp/{}'.format(file))
+                                self.singal_had_write.emit(num, self.num_files)
+                            except Exception as e:
+                                loglogTools.warning(str(e))
                         else:
                             try:
                                 files.remove(file)
                                 files.remove(file[0:-4])
                             except Exception as e:
-                                loglogTools.warning(str(e)+'\n'+'filelist:'+str(files))
+                                loglogTools.warning(str(e)+'\n'+'setp_02_filelist:'+str(files))
