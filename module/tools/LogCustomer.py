@@ -28,14 +28,13 @@ class LogCustomer(QThread):
             # 将包含有 .lck 的文件从待读取的文件列表中去掉
             if len(files) != 0:
                 for file in files:
-                    ##########
-                    print(file)
                     if re.findall('\.lck', file):
                         files.remove(file)
                         files.remove(file[0:-4])
                 # 如果将包含有 .lck 相关的文件去掉后还不为空, 那么这些文件就是 LogProducer 处理完成的数据
                 if len(files) != 0:
                     for file in files:
+                        # 再次移除一次, 有时候发现光写一次还是会有问题
                         if re.findall('lck', file) == []:
                             with open('./temp/{}'.format(file), 'rb') as f:
                                 num += 1
@@ -45,6 +44,12 @@ class LogCustomer(QThread):
                                     SQLData = pickle.load(f)
                                     sql_write.sqlite_to_database(SQLData)
                                 except Exception as e:
-                                    loglogTools.warning(e)
+                                    loglogTools.warning(str(e)+'\n'+'filelist:'+str(files))
                             os.remove('./temp/{}'.format(file))
                             self.singal_had_write.emit(num, self.num_files)
+                        else:
+                            try:
+                                files.remove(file)
+                                files.remove(file[0:-4])
+                            except Exception as e:
+                                loglogTools.warning(str(e)+'\n'+'filelist:'+str(files))

@@ -1,8 +1,9 @@
-2020-06-15 Beta v0.4.3
+2020-06-16 Beta v0.4.3
 # 添加：MicroFocus ITOM OA 日志工具目前可以分析 OA 的 trace 日志信息
 # 添加：MicroFocus ITOM OBM 日志工具目前可以分析 OBM 的 MI_MonitorAdministration.log 日志信息
 # 修改：优化软件内部逻辑
 # 修改：利用 psutil 第三方库初步实现了资源的计算与限制, 减少在分析大量日志时会导致程序崩溃的几率
+# 修改：增强程序稳定性
 
 2020-06-09 Beta v0.4.2
 # 修复：当查询的数据多余 256 行时, 只会返回 256 行数据的问题
