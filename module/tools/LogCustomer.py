@@ -34,7 +34,7 @@ class LogCustomer(QThread):
                 # 如果将包含有 .lck 相关的文件去掉后还不为空, 那么这些文件就是 LogProducer 处理完成的数据
                 if len(files) != 0:
                     for file in files:
-                        # 再次移除一次, 有时候发现光写一次还是会有问题
+                        # 如果该文件不是 .lck 结尾的, 则尝试进行读取内容
                         if re.findall('lck', file) == []:
                             with open('./temp/{}'.format(file), 'rb') as f:
                                 num += 1
@@ -45,11 +45,13 @@ class LogCustomer(QThread):
                                     sql_write.sqlite_to_database(SQLData)
                                 except Exception as e:
                                     loglogTools.warning(str(e)+'\n'+'setp_01_filelist:'+str(files))
+                            # 读取完成后, 尝试移除这个数据文件
                             try:
                                 os.remove('./temp/{}'.format(file))
                                 self.singal_had_write.emit(num, self.num_files)
                             except Exception as e:
                                 loglogTools.warning(str(e))
+                        # 如果发现这个文件仍然是 .lck 文件, 则尝试从文件列表中去掉这个文件, 并且去掉对应的数据文件
                         else:
                             try:
                                 files.remove(file)
