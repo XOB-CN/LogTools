@@ -29,8 +29,12 @@ class LogCustomer(QThread):
             if len(files) != 0:
                 for file in files:
                     if re.findall('\.lck', file):
-                        files.remove(file)
-                        files.remove(file[0:-4])
+                        try:
+                            files.remove(file)
+                            # 试着去掉, 在某个极端条件下, 有可能数据文件还没有生成
+                            files.remove(file[0:-4])
+                        except:
+                            pass
                 # 如果将包含有 .lck 相关的文件去掉后还不为空, 那么这些文件就是 LogProducer 处理完成的数据
                 if len(files) != 0:
                     for file in files:
