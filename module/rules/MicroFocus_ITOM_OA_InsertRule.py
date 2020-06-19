@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import re, os, uuid, pickle
+import re, os, pickle
 from xml.etree import ElementTree as ET
 from module.rules.MicroFocus_ITOM_OA_FileRule import BlackRule
 from module.tools.SQLTools import sql_write

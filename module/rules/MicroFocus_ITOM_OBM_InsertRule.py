@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import re, uuid, pickle, os
+import re, pickle, os
 from module.rules.MicroFocus_ITOM_OBM_FileRule import BlackRule
 from module.tools.SQLTools import sql_write
 from module.tools.LogRecord import logSQLCreate
