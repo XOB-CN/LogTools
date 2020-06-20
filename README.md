@@ -28,4 +28,4 @@ Basic functions have been finish. now planning to add logs for MicroFocus ITOM p
 * MicroFocus
   * ITOM
     * OA
-    * OBM/OMi (coding)
+    * OBM/OMi
