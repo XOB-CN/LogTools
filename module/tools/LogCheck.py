@@ -11,6 +11,8 @@ class LogCheck():
         self.task_info = task_info
         # 需要分析的日志文件列表
         self.file_path = []
+        # 调试功能, 仅用于内部调试
+        self.debug = False
 
         # 匹配产品规则
         if self.task_info.get('product_type') == 'MicroFocus-ITOM-OA':
@@ -44,13 +46,20 @@ class LogCheck():
                     for file in files:
                         url_file = os.path.join(root, file)
                         url_file = os.path.abspath(url_file)
+                        if self.debug:
+                            print('识别的文件:', url_file)
                         # 对这个文件进行匹配, 如果该文件符合匹配规则, 则加入待到文件列表中
                         for rule in self.file_rule:
                             if len(re.findall(rule, url_file, flags=re.IGNORECASE)) > 0:
                                 self.file_path.append(url_file)
-                        for blkrule in self.fileblk_rule:
-                            if len(re.findall(blkrule, url_file, flags=re.IGNORECASE)) > 0:
-                                self.file_path.pop(self.file_path.index(url_file))
+                                if self.debug:
+                                    print('匹配的文件:', url_file)
+                                # 如果该文件路径符合黑名单规则, 则在文件列表中去掉这个文件
+                                for blkrule in self.fileblk_rule:
+                                    if len(re.findall(blkrule, url_file, flags=re.IGNORECASE)) > 0:
+                                        self.file_path.pop(self.file_path.index(url_file))
+                                        if self.debug:
+                                            print('去除的文件:', url_file)
         except Exception as e:
             loglogTools.warning('FileRule: ' + str(e))
 

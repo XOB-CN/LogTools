@@ -1,3 +1,7 @@
+2020-07-** Beta v0.4.4(coding)
+# 修复：优化 OA 的文件识别规则
+# 修复：修复文件级黑名单规则没有按照预期工作的问题
+
 2020-06-16 Beta v0.4.3
 # 添加：MicroFocus ITOM OA 日志工具目前可以分析 OA 的 trace 日志信息
 # 添加：MicroFocus ITOM OBM 日志工具目前可以分析 OBM 的 MI_MonitorAdministration.log 日志信息

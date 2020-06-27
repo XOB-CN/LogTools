@@ -18,6 +18,8 @@ FileRule = [
 # 文件级别的反匹规则
 FileBlkRule = [
     r'\\public\\System.txt',
+    # 出现于 OpsB 的 OA 中
+    r'\\PaxHeaders',
 ]
 
 BlackRule = [
