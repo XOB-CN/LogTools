@@ -12,7 +12,7 @@ LogTools 是一个基于 PyQt5 的通用日志分析软件.
    [Microsoft Visual C++ Build Tools](https://www.microsoft.com/en-us/download/details.aspx?id=48159)
 3. 安装 PyQt5, 可以使用 pip 命令来安装
     ```commandline
-    pip install pyqt5 
+    pip install pyqt5 psutil
     ```
 4. 双击文件中的 LogTools.py 文件来运行软件
 5. 如果您不想在运行中看到 cmd 的 console 界面, 可以将 LogTools.py 重命名为 LogTools.pyw

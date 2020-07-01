@@ -12,7 +12,7 @@ It can use SQL query to filter out and get what you want log content.
    [Microsoft Visual C++ Build Tools](https://www.microsoft.com/en-us/download/details.aspx?id=48159)
 3. install PyQt5
     ```commandline
-    pip install pyqt5 
+    pip install pyqt5 psutil
     ```
 4. Double-click the LogTools.py file
 5. if you don't want see cmd console, you can rename LogTools.py to LogTools.pyw
