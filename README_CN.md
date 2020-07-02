@@ -29,3 +29,4 @@ LogTools 是一个基于 PyQt5 的通用日志分析软件.
   * ITOM
     * OA
     * OBM/OMi
+    * SiteScope

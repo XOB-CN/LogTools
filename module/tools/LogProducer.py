@@ -23,6 +23,8 @@ class LogProducer(QThread):
             from module.rules.MicroFocus_ITOM_OA_InsertRule import ITOM_OA as LogSQL
         elif self.product_type == 'MicroFocus-ITOM-OBM/OMi':
             from module.rules.MicroFocus_ITOM_OBM_InsertRule import ITOM_OBM as LogSQL
+        elif self.product_type == 'MicroFocus-ITOM-SiteScope':
+            from module.rules.MicroFocus_ITOM_SiteScope_InsertRule import ITOM_SiteScope as LogSQL
 
         # 执行多进程, 开始生成分析数据
         n = 0

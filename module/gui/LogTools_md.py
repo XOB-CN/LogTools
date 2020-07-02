@@ -10,7 +10,7 @@ class LogApp(QWidget, Ui_Form):
 
     # 支持的软件产品
     cbx_data = {
-        'MicroFocus':{'ITOM':['OA','OBM/OMi']},
+        'MicroFocus':{'ITOM':['OA','OBM/OMi','SiteScope']},
     }
     # 自定义信号
     singal_btn_start = pyqtSignal(str, str, str)
@@ -69,6 +69,6 @@ class LogApp(QWidget, Ui_Form):
 
     def slot_btn_start(self):
         """
-        槽函数：点击 start 按钮后, 将会发射 [公司, 分类, 产品] 的信号
+        槽函数：点击 start 按钮后, 将会发射 [公司, 分类, 产品] 的信号, 该信号由 LogTools.py 文件中的 gui.singal_btn_start.connect(enable_LogMain) 负责接收
         """
         self.singal_btn_start.emit(self.cbx_company.currentText(), self.cbx_category.currentText(), self.cbx_product.currentText())

@@ -129,6 +129,15 @@ class sql_write():
                         if query.lastError().isValid():
                             logSQLInsert.error('MicroFocus-ITOM-OBM/OMi:\n{}'.format(query.lastError().text()))
 
+            elif db_type == 'MicroFocus-ITOM-SiteScope':
+                if db_table not in db.tables():
+                    if db_table == 'log_error':
+                        query = QtSql.QSqlQuery()
+                        # 不自动增长的语句
+                        query.exec_("create table log_error (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
+                        if query.lastError().isValid():
+                            logSQLInsert.error('MicroFocus-ITOM-SiteScope:\n{}'.format(query.lastError().text()))
+
         except Exception as e:
             logSQLInsert.error('Step1:{}'.format(e))
 

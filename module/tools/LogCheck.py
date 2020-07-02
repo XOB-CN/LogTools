@@ -25,6 +25,11 @@ class LogCheck():
             self.file_rule = FileRule.FileRule
             self.fileblk_rule = FileRule.FileBlkRule
 
+        elif self.task_info.get('product_type') == 'MicroFocus-ITOM-SiteScope':
+            from module.rules import MicroFocus_ITOM_SiteScope_FileRule as FileRule
+            self.file_rule = FileRule.FileRule
+            self.fileblk_rule = FileRule.FileBlkRule
+
     def check(self):
         """
         获取需要分析的文件列表, 以及日志类型
