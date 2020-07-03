@@ -1,5 +1,6 @@
 2020-07-** Beta v0.5.0(coding)
 # 添加：开始支持 MicroFocus ITOM SiteScope 的相关日志
+# 添加：开始支持 MicroFocus ITOM MP for Microsoft SQL Server 的相关日志
 
 2020-07-01 Beta v0.4.4
 # 修复：优化 OA 的文件识别规则

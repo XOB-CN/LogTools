@@ -129,6 +129,15 @@ class sql_write():
                         if query.lastError().isValid():
                             logSQLInsert.error('MicroFocus-ITOM-OBM/OMi:\n{}'.format(query.lastError().text()))
 
+            elif db_type == 'MicroFocus-ITOM-MP for Microsoft SQL Server':
+                if db_table not in db.tables():
+                    if db_table == 'log_trace':
+                        query = QtSql.QSqlQuery()
+                        # 不自动增长的语句
+                        query.exec_("create table log_trace (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);")
+                        if query.lastError().isValid():
+                            logSQLInsert.error('MicroFocus-ITOM-MP_MSSQL:\n{}'.format(query.lastError().text()))
+
             elif db_type == 'MicroFocus-ITOM-SiteScope':
                 if db_table not in db.tables():
                     if db_table == 'log_error':

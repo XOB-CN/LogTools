@@ -29,4 +29,5 @@ Basic functions have been finish. now planning to add logs for MicroFocus ITOM p
   * ITOM
     * OA
     * OBM/OMi
+    * MP for Microsoft SQL Server
     * SiteScope
