@@ -25,6 +25,8 @@ class LogProducer(QThread):
             from module.rules.MicroFocus_ITOM_OBM_InsertRule import ITOM_OBM as LogSQL
         elif self.product_type == 'MicroFocus-ITOM-MP for Microsoft SQL Server':
             from module.rules.MicroFocus_ITOM_MP_MSSQLServer_InsertRule import ITOM_MP_SQLServer as LogSQL
+        elif self.product_type == 'MicroFocus-ITOM-MP for Oracle Database':
+            from module.rules.MicroFocus_ITOM_MP_OracleDatabase_InsertRule import ITOM_MP_OracleDB as LogSQL
         elif self.product_type == 'MicroFocus-ITOM-SiteScope':
             from module.rules.MicroFocus_ITOM_SiteScope_InsertRule import ITOM_SiteScope as LogSQL
 
