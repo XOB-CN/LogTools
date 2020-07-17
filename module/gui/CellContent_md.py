@@ -20,3 +20,11 @@ class CellContent(QWidget, Ui_Form):
         """
         self.cellText.setText(content)
         self.show()
+
+    def searchText(self):
+        """
+        搜索指定文本, 并且高亮
+        :return:
+        """
+        print(self.btn_regexp.isChecked())
+        content = self.cellText.toPlainText()
