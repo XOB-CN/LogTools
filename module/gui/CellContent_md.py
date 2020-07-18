@@ -24,7 +24,24 @@ class CellContent(QWidget, Ui_Form):
     def searchText(self):
         """
         搜索指定文本, 并且高亮
+        代码参考链接：http://jiuaitu.com/python/407.html
         :return:
         """
-        print(self.btn_regexp.isChecked())
-        content = self.cellText.toPlainText()
+        search_key = self.line_search.text()
+
+        # 如果不启用正则表达式
+        if self.btn_regexp.isChecked() == False:
+            # 如果没有勾选反向查找
+            if self.btn_reverse.isChecked() == False:
+                self.cellText.find(search_key)
+            else:
+                self.cellText.find(search_key, QTextDocument.FindBackward)
+
+        # 如果启用正则表达式
+        else:
+            regexp_key = QRegExp(search_key)
+            # 如果没有勾选反向查找
+            if self.btn_reverse.isChecked() == False:
+                self.cellText.find(regexp_key)
+            else:
+                self.cellText.find(regexp_key, QTextDocument.FindBackward)

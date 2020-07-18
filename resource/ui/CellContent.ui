@@ -26,9 +26,16 @@
       <widget class="QLineEdit" name="line_search"/>
      </item>
      <item>
-      <widget class="QRadioButton" name="btn_regexp">
+      <widget class="QCheckBox" name="btn_regexp">
        <property name="text">
         <string>Enable RegExp</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="btn_reverse">
+       <property name="text">
+        <string>Reverse Find</string>
        </property>
       </widget>
      </item>
