@@ -3,6 +3,8 @@
 # 添加：开始支持 MicroFocus ITOM MP for Microsoft SQL Server 的相关日志
 # 添加：开始支持 MicroFocus ITOM MP for Oracle Database 的相关日志
 # 添加：Cell Content 目前支持搜索功能
+# 修复：进一步完善 MicroFocus ITOM OBM 产品中, 对 jvm_statistics.log 日志文件的识别
+# 修复：修复 SQLCreate.log 会少计某些内容的问题
 
 2020-07-01 Beta v0.4.4
 # 修复：优化 OA 的文件识别规则
