@@ -30,4 +30,5 @@ Basic functions have been finish. now planning to add logs for MicroFocus ITOM p
     * OA
     * OBM/OMi
     * MP for Microsoft SQL Server
+    * MP for Oracle Database
     * SiteScope

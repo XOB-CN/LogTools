@@ -30,4 +30,5 @@ LogTools 是一个基于 PyQt5 的通用日志分析软件.
     * OA
     * OBM/OMi
     * MP for Microsoft SQL Server
+    * MP for Oracle Database
     * SiteScope
