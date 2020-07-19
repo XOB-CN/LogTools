@@ -34,8 +34,12 @@ class CellContent(QWidget, Ui_Form):
             # 如果没有勾选反向查找
             if self.btn_reverse.isChecked() == False:
                 self.cellText.find(search_key)
+                # 重新设置焦点
+                self.cellText.setFocus()
             else:
                 self.cellText.find(search_key, QTextDocument.FindBackward)
+                # 重新设置焦点
+                self.cellText.setFocus()
 
         # 如果启用正则表达式
         else:
@@ -43,5 +47,9 @@ class CellContent(QWidget, Ui_Form):
             # 如果没有勾选反向查找
             if self.btn_reverse.isChecked() == False:
                 self.cellText.find(regexp_key)
+                # 重新设置焦点
+                self.cellText.setFocus()
             else:
                 self.cellText.find(regexp_key, QTextDocument.FindBackward)
+                # 重新设置焦点
+                self.cellText.setFocus()
