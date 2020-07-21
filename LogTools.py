@@ -16,9 +16,9 @@ if __name__ == '__main__':
     # 在 Windows 环境下可以正常运行多进程
     freeze_support()
     # 可以让异常抛出但是程序继续执行 (https://blog.csdn.net/hidxl/article/details/49800353)
-    # 考虑将来这部分代码可以做出 debug 模式
-    # import cgitb
-    # cgitb.enable(format='text')
+    if ConfigTools.get_debug('LogTools'):
+        import cgitb
+        cgitb.enable(format='text')
     # Pool 对象
     p = Pool(ConfigTools.get_num_processes())
 
@@ -46,7 +46,7 @@ if __name__ == '__main__':
         # 将初始界面获取的产品分类数据传递到 LogTools 主界面里
         guiMain.product_type = [company_name, category_name, product_name]
         # 设置软件标题
-        guiMain.setWindowTitle(category_name + ' ' + product_name + ' LogTools ' + 'Beta v0.5.1(coding)')
+        guiMain.setWindowTitle(category_name + ' ' + product_name + ' LogTools ' + 'Beta v0.5.1')
         # 判断产品分类, 加载不同的菜单
         AddMenuTools(product_name, guiMain)
         # 显示 LogTools 主界面

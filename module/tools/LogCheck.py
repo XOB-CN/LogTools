@@ -2,6 +2,7 @@
 
 import os, re
 from module.tools.LogRecord import loglogTools
+from module.tools.SettingsTools import ConfigTools
 
 class LogCheck():
     """
@@ -11,8 +12,11 @@ class LogCheck():
         self.task_info = task_info
         # 需要分析的日志文件列表
         self.file_path = []
-        # 调试功能, 仅用于内部调试
-        self.debug = False
+        # 是否开启调试功能
+        if ConfigTools.get_debug('LogCheck'):
+            self.debug = True
+        else:
+            self.debug = False
 
         # 匹配产品规则
         if self.task_info.get('product_type') == 'MicroFocus-ITOM-OA':
