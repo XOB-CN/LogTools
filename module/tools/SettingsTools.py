@@ -32,3 +32,23 @@ class ConfigTools():
                 return int(value)
             except:
                 return 1
+
+    @staticmethod
+    def get_loglevel(attribute, defaultLogLevel='WARN'):
+        """
+        获取配置文件中 [Logs] 部分的设定值
+        :attribute: 待获取的属性值的名字
+        :defaultLogLevel: 如果获取的值不在预期的值时, 返回的默认值
+        :return: str
+        """
+        value = cfg.get('Logs', attribute)
+        if value in ['INFO', 'Info', 'info']:
+            return 'INFO'
+        elif value in ['WARN', 'WARNING', 'Warn', 'Warning']:
+            return 'WARN'
+        elif value in ['ERROR', 'Error', 'error']:
+            return 'ERROR'
+        elif value in ['DEBUG', 'Debug', 'debug']:
+            return 'DEBUG'
+        else:
+            return defaultLogLevel
