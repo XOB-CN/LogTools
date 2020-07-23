@@ -17,6 +17,7 @@ class sql_write():
         """
         datetime_format = [
             '%Y-%m-%d %H:%M:%S.%f',
+            '%Y-%m-%dT%H:%M:%S.%f',
             '%Y-%m-%d %H:%M:%S,%f',
             '%Y/%m/%d %H:%M:%S.%f',
             "%a %b %d %H:%M:%S %Y",
@@ -32,6 +33,8 @@ class sql_write():
                 datetime_str = datetime.strptime(date, time_format)
                 if time_format == '%Y-%m-%d %H:%M:%S.%f':
                     return datetime_str.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+                if time_format == '%Y-%m-%dT%H:%M:%S.%f':
+                    return datetime_str.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3]
                 elif time_format == '%Y-%m-%d %H:%M:%S,%f':
                     return datetime_str.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
                 elif time_format == '%Y/%m/%d %H:%M:%S.%f':
