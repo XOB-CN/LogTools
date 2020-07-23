@@ -46,7 +46,7 @@ class ITOM_MP_SQLServer():
 
                         # 判断日志的开头是否是事件的开始, 如果不是则忽略
                         if isstart == False:
-                            if len(re.findall('\d{4}-\d+-\d+ \d+:\d+:\d+.\d{3}', line)) > 0:
+                            if len(re.findall('\d{4}-\d+-\d+ \d+:\d+:\d+.\d{3}|\d{4}-\d+-\d+T\d+:\d+:\d+.\d{3}', line)) > 0:
                                 isstart = True
 
                         # 如果改行既不在黑名单, 并且也已经确定 isstart 为 True, 则开始日志匹配流程
@@ -68,6 +68,23 @@ class ITOM_MP_SQLServer():
                                                 'logtime':log_time,
                                                 'logcomp':log_comp,
                                                 'logdetail':log_detail})
+
+                            elif len(re.findall('\d{4}-\d+-\d+T\d+:\d+:\d+.\d{3}', line)) > 0:
+                                if re.findall('fail|error|deny|refused|exception', line, re.IGNORECASE):
+                                    log_level = 'ERROR'
+                                else:
+                                    log_level = 'INFO'
+                                log_time = sql_write.sqlite_to_datetime(line.split(' ', 2)[0])
+                                log_comp = line.split(' ', 1)[-1].split(': ', 1)[0].strip()
+                                log_detail = line.split(' ', 1)[-1].split(':', 1)[1].strip()
+
+                                logdata.append({'logfile':self.filepath,
+                                                'logline':log_num,
+                                                'loglevel':log_level,
+                                                'logtime':log_time,
+                                                'logcomp':log_comp,
+                                                'logdetail':log_detail})
+
                             else:
                                 logdata[-1]['logdetail'] = logdata[-1]['logdetail'] + '\n' + line
                                 # 抹掉日志中剩下的 '/n'
