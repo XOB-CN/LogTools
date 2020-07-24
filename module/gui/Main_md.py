@@ -44,9 +44,10 @@ class LogMain(QMainWindow, Ui_MainWindow):
         self.progressBar.hide()
 
         # SQL comment
-        self.sql_comment = "\n-- Common SQL where filter parameters\n    " \
-                           "-- <column> like '%keyword%' / '_keyword_' --> like no case sensitive\n    " \
-                           "-- <column> glob '*keyword*' / '?keyword?' --> glob it's case sensitive"
+        self.sql_comment = "\n-- Common SQL filter parameters\n    " \
+                           "-- where <column> like '%keyword%' / '_keyword_' --> like no case sensitive\n    " \
+                           "-- where <column> glob '*keyword*' / '?keyword?' --> glob it's case sensitive\n    " \
+                           "-- select aggregate_function <column> …… group by <column> --> aggregate_function like sum(), total(), count()"
 
         # 判断数据目录是否存在, 如果不存在, 则创建该目录
         if os.path.exists('./data') == False:
