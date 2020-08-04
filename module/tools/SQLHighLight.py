@@ -18,7 +18,17 @@ class SQLHighLighter(QSyntaxHighlighter):
         sql_comment_format.setForeground(Qt.darkGreen)
         sql_comment_format.setFontWeight(QFont.Bold)
         # 需要高亮的关键字
-        sql_keywords = ['select ', 'from ', 'where ', 'order by ', 'group by ', ' and ', ' or ', ' like ', ' join ', ' union', ' union all', 'distinct ', ]
+        sql_keywords = [
+            # 基本 SQL 语句
+            'select ', 'from ',
+            # SQL 子句
+            'where ', 'order by ', 'group by ',
+            # SQL 操作符/运算符
+            ' and ', ' or ', ' like ', ' join ', ' union', ' union all', 'distinct ',
+            # SQL 常用函数
+            # 参考链接：https://www.runoob.com/sqlite/sqlite-functions.html
+            'sum', 'total', 'count', 'max', 'min', 'avg', 'abs', 'random', 'upper', 'lower', 'length',
+        ]
         # 根据前两个来生成高亮规则
         self.highlightRules = [(QRegExp(pattern), sql_keyword_format) for pattern in sql_keywords]
         # 追加 comment 规则
