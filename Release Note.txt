@@ -1,4 +1,4 @@
-2020-08-** Beta v0.5.2(coding)
+2020-08-05 Beta v0.5.2
 # 修复：修复了一种情况下, 无法读取 MicroFocus ITOM MP for Oracle Database 的 trace 日志
 # 修复：修复了一种情况下, 无法读取 MicroFocus ITOM MP for Microsoft SQL Server 的 trace 日志
 # 添加：增加 SQL Highlight 关键字的数量
