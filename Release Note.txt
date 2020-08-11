@@ -1,3 +1,6 @@
+2020-08-** Beta v0.6.0
+# 添加：添加 ITOM 帮助文件
+
 2020-08-05 Beta v0.5.2
 # 修复：修复了一种情况下, 无法读取 MicroFocus ITOM MP for Oracle Database 的 trace 日志
 # 修复：修复了一种情况下, 无法读取 MicroFocus ITOM MP for Microsoft SQL Server 的 trace 日志

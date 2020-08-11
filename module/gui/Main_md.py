@@ -97,6 +97,18 @@ class LogMain(QMainWindow, Ui_MainWindow):
             # 此处为删除数据库时调用, 如果删除的是最后一个数据库, 则列表返回为空
             self.treeList.clear()
 
+    def slot_help(self):
+        """
+        槽函数：打开帮助文档
+        :return:
+        """
+        print('按钮已激活！')
+        try:
+            # 参考链接：https://stackoverflow.com/questions/3814892/how-to-open-an-specific-section-of-a-chm-file-in-python
+            os.popen("hh.exe ./help/MicroFocus.chm::/3b9b0f0c_152d03fb_0.html")
+        except Exception as e:
+            print(e)
+
     def slot_new_query(self):
         """
         槽函数：创建新的 Table 标签

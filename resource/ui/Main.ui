@@ -60,6 +60,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="btnHelp">
+        <property name="text">
+         <string>Help</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -253,8 +260,8 @@
    <slot>slot_new_query()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>641</x>
-     <y>73</y>
+     <x>718</x>
+     <y>76</y>
     </hint>
     <hint type="destinationlabel">
      <x>999</x>
@@ -301,8 +308,8 @@
    <slot>slot_run_sql_query()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>717</x>
-     <y>66</y>
+     <x>799</x>
+     <y>76</y>
     </hint>
     <hint type="destinationlabel">
      <x>996</x>
@@ -374,6 +381,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btnHelp</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slot_help()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>836</x>
+     <y>70</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>953</x>
+     <y>59</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>slot_new_query()</slot>
@@ -385,5 +408,6 @@
   <slot>slot_sql_highlight()</slot>
   <slot>slot_action_delete()</slot>
   <slot>slot_set_remove_db_file()</slot>
+  <slot>slot_help()</slot>
  </slots>
 </ui>
