@@ -100,14 +100,26 @@ class LogMain(QMainWindow, Ui_MainWindow):
     def slot_help(self):
         """
         槽函数：打开帮助文档
-        :return:
         """
-        print('按钮已激活！')
-        try:
-            # 参考链接：https://stackoverflow.com/questions/3814892/how-to-open-an-specific-section-of-a-chm-file-in-python
-            os.popen("hh.exe ./help/MicroFocus.chm::/3b9b0f0c_152d03fb_0.html")
-        except Exception as e:
-            print(e)
+        def open_help_doc(exec='hh.exe', url='./help/MicroFocus.chm'):
+            try:
+                full_url = exec + ' ' + url
+                # 参考链接：https://stackoverflow.com/questions/3814892/how-to-open-an-specific-section-of-a-chm-file-in-python
+                os.popen(full_url)
+            except Exception as e:
+                print(e)
+
+        product_type = self.product_type[0] + '-' + self.product_type[1] + '-' + self.product_type[2]
+
+        if product_type == 'MicroFocus-ITOM-OA':
+            open_help_doc(url='./help/MicroFocus.chm::/19220e68_152d03fb_0.html')
+        elif product_type == 'MicroFocus-ITOM-OBM/OMi':
+            open_help_doc(url='./help/MicroFocus.chm::/11a80dfd_152d03fb_0.html')
+        elif product_type == 'MicroFocus-ITOM-MP for Oracle Database':
+            open_help_doc(url='./help/MicroFocus.chm::/11db0dfd_152d03fb_0.html')
+        else:
+            print(product_type)
+            open_help_doc()
 
     def slot_new_query(self):
         """
