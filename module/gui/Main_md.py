@@ -115,6 +115,8 @@ class LogMain(QMainWindow, Ui_MainWindow):
             open_help_doc(url='./help/MicroFocus.chm::/19220e68_152d03fb_0.html')
         elif product_type == 'MicroFocus-ITOM-OBM/OMi':
             open_help_doc(url='./help/MicroFocus.chm::/11a80dfd_152d03fb_0.html')
+        elif product_type == 'MicroFocus-ITOM-MP for Microsoft SQL Server':
+            open_help_doc(url='./help/MicroFocus.chm::/13480e11_152d03fb_0.html')
         elif product_type == 'MicroFocus-ITOM-MP for Oracle Database':
             open_help_doc(url='./help/MicroFocus.chm::/11db0dfd_152d03fb_0.html')
         else:
