@@ -2,6 +2,8 @@
 # 添加：添加 ITOM 帮助文件
 # 添加：MicroFocus ITOM OBM 日志工具目前可以分析 wde.all.log
 # 调整：调整软件日志格式, 方便开发和调试
+# 调整：Cell Content 的正则表达式搜索模式调整为大小写不敏感
+# 调整：调整了 MicroFocus ITOM OBM 中 Non_heap 剩余内存的计算方法
 # 修复：软件日志无法正常记录的问题
 
 2020-08-05 Beta v0.5.2

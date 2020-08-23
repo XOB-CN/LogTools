@@ -156,7 +156,7 @@ class ITOM_OBM():
                                      '(logfile, logline, loglevel, logtime, heap_free_percent, non_heap_free_percent, heap_used, heap_committed, heap_max, heap_free, non_heap_used, non_heap_committed, non_heap_max, non_heap_free, othermsg) VALUES ' \
                                      '("{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}");'.format(data.get('logfile'), str(data.get('logline')), data.get('loglevel'), data.get('logtime'),
                                                                                                                   str(round((float(data.get('heap_free'))/float(data.get('heap_max')))*100, 2)),
-                                                                                                                  str(round((float(data.get('non_heap_free'))/float(data.get('non_heap_max')))*100, 2)),
+                                                                                                                  str(round((1.0 - float(data.get('non_heap_used'))/float(data.get('non_heap_max')))*100, 2)),
                                                                                                                   data.get('heap_used'), data.get('heap_committed'), data.get('heap_max'), data.get('heap_free'),
                                                                                                                   data.get('non_heap_used'), data.get('non_heap_committed'), data.get('non_heap_max'), data.get('non_heap_free'),
                                                                                                                   data.get('othermsg'))

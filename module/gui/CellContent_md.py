@@ -44,6 +44,8 @@ class CellContent(QWidget, Ui_Form):
         # 如果启用正则表达式
         else:
             regexp_key = QRegExp(search_key)
+            # 将正则匹配规则调整为大小写不敏感, 默认为敏感 (Qt.CaseSensitive)
+            regexp_key.setCaseSensitivity(Qt.CaseInsensitive)
             # 如果没有勾选反向查找
             if self.btn_reverse.isChecked() == False:
                 self.cellText.find(regexp_key)
