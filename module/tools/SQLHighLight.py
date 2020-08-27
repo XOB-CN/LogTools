@@ -24,7 +24,7 @@ class SQLHighLighter(QSyntaxHighlighter):
             # SQL 子句
             'where ', 'order by ', 'group by ',
             # SQL 操作符/运算符
-            ' and ', ' or ', ' like ', ' join ', ' union', ' union all', 'distinct ',
+            ' and ', ' or ', ' like ', ' not like ', ' glob ', ' not glob ', ' join ', ' union', ' union all', 'distinct ',
             # SQL 常用函数
             # 参考链接：https://www.runoob.com/sqlite/sqlite-functions.html
             'sum', 'total', 'count', 'max', 'min', 'avg', 'abs', 'random', 'upper', 'lower', 'length',
