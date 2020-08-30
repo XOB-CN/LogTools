@@ -1,7 +1,8 @@
-2020-08-** Beta v0.6.0
+2020-08-30 Beta v0.6.0
 # 添加：添加 ITOM 帮助文件
 # 添加：MicroFocus ITOM OBM 日志工具目前可以分析 wde.all.log
 # 添加：增加 3 个 SQL Highlight 关键字：not like, not glob, glob
+# 添加：MicroFocus ITOM OBM 日志工具的 Tools 增加了 All Event Processing 选项
 # 修改：微调 SQL 语句注释的内容
 # 修改：调整软件日志格式, 方便开发和调试
 # 修改：Cell Content 的正则表达式搜索模式调整为大小写不敏感

@@ -11,7 +11,10 @@ class AddMenuTools():
         self.guiMain = guiMain
 
         # SQL comment
-        self.sql_comment = "\n-- Common SQL where filter parameters\n    -- <column> like '%keyword%' / '_keyword_' --> like no case sensitive\n    -- <column> glob '*keyword*' / '?keyword?' --> glob it's case sensitive"
+        self.sql_comment = "\n-- Common SQL filter parameters\n    " \
+                           "-- where <column> [not] like '%keyword%' / '_keyword_' --> like no case sensitive\n    " \
+                           "-- where <column> [not] glob '*keyword*' / '?keyword?' --> glob it's case sensitive\n    " \
+                           "-- select aggregate_function <column> …… group by <column> --> aggregate_function like sum(), total(), count()"
 
         # MicroFocus ITOM OBM/OMi
         if self.procuct_name == 'OBM/OMi':
@@ -45,6 +48,7 @@ class AddMenuTools():
     def set_mf_itom_obm_menu(self):
         menu = self.guiMain.menubar.addMenu('Tools')
         menu_ci_resolver = menu.addAction('CI Resolver')
+        menu_all_event = menu.addAction('All Event Processing')
         menu_epi = menu.addAction('Event Processing Interface')
         menu_pd = menu.addAction('Performance Dashboard')
         menu_ma = menu.addAction('Monitoring Automation')
@@ -77,6 +81,52 @@ class AddMenuTools():
                     QMessageBox.information(self.guiMain, 'No Data!', 'No CI Resolver Information!')
         # 连接 select_ci_resolver 槽函数
         menu_ci_resolver.triggered.connect(select_ci_resolver)
+
+        def select_all_event():
+            kylist = []
+            tblist = self._active_db_tables()
+            sqledit = self._active_sqledit()
+            sqltext_mid = ''
+            if tblist != False:
+                # 判断 All Event Processing 具体包含哪张表
+                for key in ['log_opr_webapp',
+                            'log_opr_gateway',
+                            'log_opr_gateway_flowtrace',
+                            'log_opr_event_sync_adapter',
+                            'log_bus',
+                            'log_opr_backend',
+                            'log_opr_flowtrace_backend',
+                            'log_opr_scripting_host',
+                            'log_scripts',
+                            'log_wde_all',]:
+                    if key in tblist:
+                        kylist.append(key)
+
+                # 如果超过2个, 则按照此格式生成SQL查询语句
+                if len(kylist) >= 2:
+                    for tb_name in kylist:
+                        if sqltext_mid == '':
+                            sqltext_mid = "select * from {} union all\n".format(tb_name)
+                        else:
+                            sqltext_mid = sqltext_mid + "select * from {} union all\n".format(tb_name)
+
+                        sqltext = "select * from (\n" + sqltext_mid[:-11] + '\n)\n' + "where logtime > '{}' and logtime < '{}'\n" \
+                              "order by logtime desc;\n" \
+                              "{}".format(self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'), self.sql_comment)
+
+                        sqledit.setText(sqltext)
+
+                elif len(kylist) == 1:
+                    sqltext = "select * from {}\n" \
+                              "where logtime > '{}' and logtime < '{}'\n" \
+                              "order by logtime desc;\n" \
+                              "{}".format(kylist[0], self.guiMain.geTime.text().replace('/', '-'),
+                                          self.guiMain.leTime.text().replace('/', '-'), self.sql_comment)
+                    sqledit.setText(sqltext)
+                else:
+                    QMessageBox.information(self.guiMain, 'No Data!', 'No All Event Processing Data!')
+        # 连接 select_all_event 槽函数
+        menu_all_event.triggered.connect(select_all_event)
 
         def select_epi():
             kylist = []
