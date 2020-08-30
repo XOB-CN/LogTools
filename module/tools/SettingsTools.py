@@ -2,7 +2,8 @@
 
 from configparser import ConfigParser
 cfg = ConfigParser()
-cfg.read('Settings.cfg')
+# 添加 encoding = utf-8 的目的是防止解析错误
+cfg.read('Settings.cfg', encoding='utf-8')
 
 class ConfigTools():
     """
@@ -32,6 +33,17 @@ class ConfigTools():
                 return int(value)
             except:
                 return 1
+
+    @staticmethod
+    def get_sql_comment():
+        """
+        获取配置文件中 [User Settings] 部分中的 SQL_Comment 设定值
+        :return: str
+        """
+        try:
+            return cfg.get('User Settings', 'SQL_Comment')
+        except Exception as e:
+            return str(e)
 
     @staticmethod
     def get_loglevel(attribute, defaultLogLevel='WARN'):

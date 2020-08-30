@@ -7,6 +7,7 @@ from module.gui.Main_ui import Ui_MainWindow
 from module.tools.SQLHighLight import SQLHighLighter
 from module.tools.LogRecord import logSQLQuery
 from module.tools.LogRecord import loglogTools
+from module.tools.SettingsTools import ConfigTools
 
 class LogMain(QMainWindow, Ui_MainWindow):
     """
@@ -43,11 +44,8 @@ class LogMain(QMainWindow, Ui_MainWindow):
         self.progressBar.setValue(0)
         self.progressBar.hide()
 
-        # SQL comment
-        self.sql_comment = "\n-- Common SQL filter parameters\n    " \
-                           "-- where <column> [not] like '%keyword%' / '_keyword_' --> like no case sensitive\n    " \
-                           "-- where <column> [not] glob '*keyword*' / '?keyword?' --> glob it's case sensitive\n    " \
-                           "-- select aggregate_function <column> …… group by <column> --> aggregate_function like sum(), total(), count()"
+        # 读取 SQL 注释信息
+        self.sql_comment = ConfigTools.get_sql_comment()
 
         # 判断数据目录是否存在, 如果不存在, 则创建该目录
         if os.path.exists('./data') == False:
