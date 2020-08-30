@@ -1,3 +1,6 @@
+2020-**-** Beta v0.6.1(coding)
+# 
+
 2020-08-30 Beta v0.6.0
 # 添加：添加 ITOM 帮助文件
 # 添加：MicroFocus ITOM OBM 日志工具目前可以分析 wde.all.log
