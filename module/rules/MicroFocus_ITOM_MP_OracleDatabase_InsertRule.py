@@ -3,7 +3,7 @@
 import re, os, pickle
 from xml.etree import ElementTree as ET
 from module.rules.MicroFocus_ITOM_OA_FileRule import BlackRule
-from module.tools.SQLTools import sql_write
+from module.tools.SQLTools import sql_write, sql_string
 from module.tools.LogRecord import logSQLCreate
 
 class ITOM_MP_OracleDB():
@@ -96,7 +96,8 @@ class ITOM_MP_OracleDB():
                     if data.get('logdetail') == '':
                         data['logdetail'] = 'Null'
                     try:
-                        sql_insert = 'INSERT INTO log_trace (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(data.get('logfile'), str(data.get('logline')),data.get('loglevel'),data.get('logtime'),data.get('logcomp'),data.get('logdetail').replace('"',"'"))
+                        data['logdetail'] = sql_string.sqlite_to_string(data.get('logdetail'))
+                        sql_insert = 'INSERT INTO log_trace (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(data.get('logfile'), str(data.get('logline')),data.get('loglevel'),data.get('logtime'),data.get('logcomp'),data.get('logdetail'))
                         sqldata.append(sql_insert)
                     except Exception as e:
                         logSQLCreate.warning("Can't generate SQL INSERT INTO statement! - {}".format(e))

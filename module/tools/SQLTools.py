@@ -176,6 +176,20 @@ class sql_write():
         except Exception as e:
             logSQLInsert.error('Step2:{}'.format(e))
 
+class sql_string():
+    """
+    处理字符串的特殊字符, 使之符合标准
+    """
+    @staticmethod
+    def sqlite_to_string(string):
+        """
+        将原始字符串转换为符合 sqlite 的字符串
+        :param string: 原始的字符串
+        :return: 转换后的字符串
+        """
+        # SQLite 数据库的特殊字符转换：大致规则为单引号和双引号要变成两个, 其他特殊字符为前面加上'/'
+        return str(string).replace("'","''").replace('"','""')
+
 # 测试代码
 if __name__ == '__main__':
     pass

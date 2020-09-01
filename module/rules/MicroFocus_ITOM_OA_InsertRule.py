@@ -3,7 +3,7 @@
 import re, os, pickle
 from xml.etree import ElementTree as ET
 from module.rules.MicroFocus_ITOM_OA_FileRule import BlackRule
-from module.tools.SQLTools import sql_write
+from module.tools.SQLTools import sql_write, sql_string
 from module.tools.LogRecord import logSQLCreate
 
 class ITOM_OA():
@@ -82,7 +82,8 @@ class ITOM_OA():
 
                 for data in logdata:
                     try:
-                        sql_insert = 'INSERT INTO log_System (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(data.get('logfile'), str(data.get('logline')),data.get('loglevel'),data.get('logtime'),data.get('logcomp'),data.get('logdetail').replace('"',"'"))
+                        data['logdetail'] = sql_string.sqlite_to_string(data.get('logdetail'))
+                        sql_insert = 'INSERT INTO log_System (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(data.get('logfile'), str(data.get('logline')),data.get('loglevel'),data.get('logtime'),data.get('logcomp'),data.get('logdetail'))
                         sqldata.append(sql_insert)
                     except Exception as e:
                         logSQLCreate.warning("Can't generate SQL INSERT INTO statement! - {}".format(e))
@@ -172,6 +173,7 @@ class ITOM_OA():
 
                 for data in logdata:
                     try:
+                        data['logdetail'] = sql_string.sqlite_to_string(data.get('logdetail'))
                         sql_insert = 'INSERT INTO log_Trace (logfile, logline, loglevel, logtime, logcomp, logdetail, machine, pid, tid, tic_count) ' \
                                      'VALUES ("{}","{}","{}","{}","{}","{}","{}","{}","{}","{}");'.format(
                             data.get('logfile'), str(data.get('logline')), data.get('loglevel'), data.get('logtime'),
@@ -241,8 +243,7 @@ class ITOM_OA():
                     for line in content:
                         ply_data = ply_data + line
 
-                    # SQLite 数据库的特殊字符转换：大致规则为单引号和双引号要变成两个, 其他特殊字符为前面加上'/'
-                    ply_data = ply_data.replace("'","''").replace('"','""')
+                    ply_data = sql_string.sqlite_to_string(ply_data)
 
                 ply_param_filename = ply_files[1].text
                 ply_param_path = os.path.join(os.path.dirname(self.filepath), ply_param_filename)
@@ -251,7 +252,7 @@ class ITOM_OA():
                     ply_param = ''
                     for line in content:
                         ply_param = ply_param + line
-                    ply_param = ply_param.replace("'","''").replace('"','""')
+                    ply_param = sql_string.sqlite_to_string(ply_param)
             except:
                 ply_data = 'Null'
                 ply_param = 'Null'
@@ -264,7 +265,7 @@ class ITOM_OA():
                     ply_data = ''
                     for line in content:
                         ply_data = ply_data + line
-                ply_data = ply_data.replace("'", "''").replace('"', '""')
+                ply_data = sql_string.sqlite_to_string(ply_data)
             except:
                 ply_data = 'Null'
 
