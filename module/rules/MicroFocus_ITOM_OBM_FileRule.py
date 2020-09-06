@@ -4,6 +4,7 @@
 FileRule = [
     # OBM Infomation file
     'opr-checker-xml\.txt',
+    'opr-checker\.txt',
     # OBM logs
     'jvm_statistics\.log',
     'busjvm_statistics\.log',

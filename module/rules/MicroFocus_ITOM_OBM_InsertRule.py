@@ -33,7 +33,9 @@ class ITOM_OBM():
         elif re.findall('MI_MonitorAdministration\.log', self.filepath):
             self.log_obm_MI_MonitorAdministration()
         elif re.findall('opr-checker-xml\.txt', self.filepath, re.IGNORECASE):
-            self.cfg_obminfo()
+            self.cfg_obminfo_xml()
+        elif re.findall('opr-checker\.txt', self.filepath, re.IGNORECASE):
+            self.cfg_obminfo_txt()
 
     def log_jvm_statistics(self):
         # 初始化数据和相关控制参数
@@ -687,7 +689,7 @@ class ITOM_OBM():
             logSQLCreate.error('[log_obm_logfiles_type4] logfile read error:{}'.format(reason))
             # print(reason)
 
-    def cfg_obminfo(self):
+    def cfg_obminfo_xml(self):
         """
         针对 MicroFocus ITOM OBM 中的 opr-checker-xml.txt 的文件
         """
@@ -736,7 +738,7 @@ class ITOM_OBM():
                     sql_insert = 'INSERT INTO cfg_OBMInfo (attribute, value) VALUES ("{}", "{}");'.format(k, v)
                     sqldata.append(sql_insert)
                 except Exception as e:
-                    logSQLCreate.warning("[cfg_obminfo] Can't generate SQL INSERT INTO statement! - {}".format(e))
+                    logSQLCreate.warning("[cfg_obminfo_xml] Can't generate SQL INSERT INTO statement! - {}".format(e))
 
             self.SQLData = ({'db_name': self.db_name,
                              'db_type': self.db_type,
@@ -751,7 +753,80 @@ class ITOM_OBM():
             os.remove('{}.lck'.format(datafilepath))
 
         except Exception as reason:
-            logSQLCreate.error('[cfg_obminfo] logfile read error:{}'.format(reason))
+            logSQLCreate.error('[cfg_obminfo_xml] logfile read error:{}'.format(reason))
+
+    def cfg_obminfo_txt(self):
+        """
+        针对 MicroFocus ITOM OBM 中的 opr-checker.txt 的文件
+        """
+        # 初始化数据和相关控制参数
+        logdata = {}
+        sqldata = []
+        # 判断获取数据的开始和结束以及数据本身
+        vm_params = 'Null'
+        str_vm_params = False
+        end_vm_params = False
+        jms_bus = 'Null'
+        str_jms_bus = False
+        end_jms_bus = False
+        # 读取指定文本, 并筛选出指定的内容
+        with open(self.filepath, 'r', encoding='utf-8', errors='replace') as f:
+            opr_checker = f.readlines()
+        # 循环匹配相关内容
+        try:
+            for line in opr_checker:
+                # 开始匹配 vm_params
+                #### [vm_params] ##################################################
+                if 'vm_params' in line and str_vm_params == False:
+                    str_vm_params = True
+                    vm_params = line
+                # 已经匹配 vm_params
+                elif str_vm_params == True and end_vm_params == False:
+                    # 结束匹配 vm_params
+                    if '_________________________________________________' in line:
+                        str_vm_params = False
+                        end_vm_params = True
+                        # 将完整的数据保持到 logdata 中
+                        logdata['vm_params'] = vm_params
+                    else:
+                        vm_params = vm_params + line
+                #### [jms_bus] #####################################################
+                if 'JMS_Bus' in line and str_jms_bus == False:
+                    str_jms_bus = True
+                    jms_bus = line
+                # 已经匹配 jms_bus
+                elif str_jms_bus == True and end_jms_bus == False:
+                    # 结束匹配 jms_bus
+                    if '_________________________________________________' in line:
+                        str_jms_bus = False
+                        end_jms_bus = True
+                        # 将完整的数据保持到 logdata 中
+                        logdata['jms_bus'] = jms_bus
+                    else:
+                        jms_bus = jms_bus + line
+                ###################################################################
+
+            for k, v in logdata.items():
+                try:
+                    sql_insert = 'INSERT INTO cfg_OBMInfo (attribute, value) VALUES ("{}", "{}");'.format(k, sql_string.sqlite_to_string(v))
+                    sqldata.append(sql_insert)
+                except Exception as e:
+                    logSQLCreate.warning("[cfg_obminfo_txt] Can't generate SQL INSERT INTO statement! - {}".format(e))
+
+            self.SQLData = ({'db_name': self.db_name,
+                             'db_type': self.db_type,
+                             'db_table': 'cfg_OBMInfo',
+                             'db_data': sqldata, })
+
+            # 生成一个对应的 .lck 文件, 在数据写入完成后, 再删除 .lck 文件
+            datafilepath = r'./temp/{}'.format(self.file_id)
+            open('{}.lck'.format(datafilepath), 'w').close()
+            with open(datafilepath, 'wb') as f:
+                pickle.dump(self.SQLData, f)
+            os.remove('{}.lck'.format(datafilepath))
+
+        except Exception as reason:
+            logSQLCreate.error('[cfg_obminfo_txt] logfile read error:{}'.format(reason))
 
 if __name__ == '__main__':
     pass
