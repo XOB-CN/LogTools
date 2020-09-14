@@ -24,7 +24,7 @@ class ITOM_OBM():
             self.log_obm_logfiles_type1()
         elif re.findall('opr-svcdiscserver-citrace\.log', self.filepath, re.IGNORECASE):
             self.log_obm_logfiles_type2()
-        elif re.findall('downtime\.log|wde\.all\.log', self.filepath, re.IGNORECASE):
+        elif re.findall('downtime\.log|wde\.all\.log|notification-service\.log', self.filepath, re.IGNORECASE):
             self.log_obm_logfiles_type3()
         elif re.findall('cmdb\.reconciliation\.identification\.log|cmdb\.reconciliation\.datain\.merged\.log|cmdb\.reconciliation\.datain\.ignored\.log', self.filepath, re.IGNORECASE):
             self.log_obm_logfiles_type4()
@@ -535,6 +535,8 @@ class ITOM_OBM():
             self.db_table = 'log_downtime'
         elif re.findall('wde\.all\.log', self.filepath):
             self.db_table = 'log_wde_all'
+        elif re.findall('notification-service\.log', self.filepath):
+            self.db_table = 'log_notification_service'
 
         # 尝试开始读取文件
         try:

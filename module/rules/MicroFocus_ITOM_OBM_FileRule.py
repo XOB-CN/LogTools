@@ -25,6 +25,7 @@ FileRule = [
     'cmdb\.reconciliation\.datain\.ignored\.log',
     'MI_MonitorAdministration\.log',
     'wde\.all\.log',
+    'notification-service\.log',
 ]
 
 # 文件级别的反匹规则, 支持正则表达式
