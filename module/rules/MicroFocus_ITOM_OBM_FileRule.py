@@ -26,6 +26,8 @@ FileRule = [
     'MI_MonitorAdministration\.log',
     'wde\.all\.log',
     'notification-service\.log',
+    'nanny_all\.log',
+    'server_deployer\.log',
 ]
 
 # 文件级别的反匹规则, 支持正则表达式
