@@ -114,6 +114,7 @@ class sql_write():
                     elif db_table in ['log_bus',
                                       'log_downtime',
                                       'log_opr_backend',
+                                      'log_opr_backend_boot',
                                       'log_opr_ciresolver',
                                       'log_opr_configserver',
                                       'log_opr_gateway',

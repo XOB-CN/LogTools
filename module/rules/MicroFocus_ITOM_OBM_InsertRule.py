@@ -28,6 +28,8 @@ class ITOM_OBM():
             self.log_obm_logfiles_type3()
         elif re.findall('cmdb\.reconciliation\.identification\.log|cmdb\.reconciliation\.datain\.merged\.log|cmdb\.reconciliation\.datain\.ignored\.log', self.filepath, re.IGNORECASE):
             self.log_obm_logfiles_type4()
+        elif re.findall('opr-backend_boot\.log', self.filepath, re.IGNORECASE):
+            self.log_obm_logfiles_type5()
         elif re.findall('pmi\.log', self.filepath, re.IGNORECASE):
             self.log_obm_pmi()
         elif re.findall('MI_MonitorAdministration\.log', self.filepath):
@@ -694,6 +696,101 @@ class ITOM_OBM():
         except Exception as reason:
             logSQLCreate.error('[log_obm_logfiles_type4] logfile read error:{}'.format(reason))
             # print(reason)
+
+    def log_obm_logfiles_type5(self):
+        # 初始化数据和相关控制参数
+        logdata = []
+        sqldata = []
+        isnoblk = True
+        log_num = 0
+        isstart = True
+        str_muline = False
+        end_muline = False
+        # db_table 名字
+        if re.findall('opr-backend_boot\.log', self.filepath):
+            self.db_table = 'log_opr_backend_boot'
+
+        # 尝试开始读取文件
+        try:
+            with open(self.filepath, mode='r', encoding='utf-8', errors='replace') as f:
+                for line in f:
+                    try:
+                        log_num += 1
+                        isnoblk = True
+                        for blkrule in BlackRule:
+                            if re.findall(blkrule, line, re.IGNORECASE):
+                                isnoblk = False
+                        # 特殊判断, 如果该行内容仅为 "2019-04-16 14:55:32,973 - " 这样的, 也不匹配
+                        if len(line.strip()) == 25:
+                            isnoblk = False
+
+                        # 如果改行既不在黑名单, 并且也已经确定 isstart 为 True, 则开始日志匹配流程
+                        if isnoblk and isstart:
+                            line = line.strip()
+                            # 如果不是多行匹配, 则进入单行匹配
+                            if str_muline == False:
+                                if re.findall("-  ===================================| at ", line):
+                                    str_muline = True
+                                if re.findall("error|fail|can't|Exception|notfound|Caused by", line, re.IGNORECASE):
+                                    log_level = "ERROR"
+                                elif re.findall("warn", line, re.IGNORECASE):
+                                    log_level = "WARN"
+                                else:
+                                    log_level = "INFO"
+                                log_time = line[:23]
+                                log_time = sql_write.sqlite_to_datetime(log_time)
+                                log_comp = "Null"
+                                log_detail = line
+
+                                logdata.append({'logfile': self.filepath,
+                                                'logline': log_num,
+                                                'loglevel': log_level,
+                                                'logtime': log_time,
+                                                'logcomp': log_comp,
+                                                'logdetail': log_detail})
+
+                            elif str_muline == True:
+                                logdata[-1]['logdetail'] = logdata[-1]['logdetail'] + '\n' + line
+                                # 抹掉日志中剩下的 '/n'
+                                logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
+
+                                if "-  ===================================" not in line or ' at ' not in line:
+                                    str_muline = False
+
+                    except Exception as e:
+                        logSQLCreate.warning(
+                            "[log_obm_logfiles_type4] file:{}\nline:{}\nSource:{}\nException:{}".format(self.filepath,
+                                                                                                        str(log_num),
+                                                                                                        line, e))
+
+                for data in logdata:
+                    try:
+                        data['logdetail'] = sql_string.sqlite_to_string(data.get('logdetail'))
+                        sql_insert = 'INSERT INTO {} (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(
+                            self.db_table,
+                            data.get('logfile'), str(data.get('logline')), data.get('loglevel'), data.get('logtime'),
+                            data.get('logcomp'), data.get('logdetail'))
+                        sqldata.append(sql_insert)
+                    except Exception as e:
+                        logSQLCreate.warning(
+                            "[log_obm_logfiles_type4] Can't generate SQL INSERT INTO statement!" + str(e))
+
+                self.SQLData = ({'db_name': self.db_name,
+                                 'db_type': self.db_type,
+                                 'db_table': self.db_table,
+                                 'db_data': sqldata, })
+
+                # 生成一个对应的 .lck 文件, 在数据写入完成后, 再删除 .lck 文件
+                datafilepath = r'./temp/{}'.format(self.file_id)
+                open('{}.lck'.format(datafilepath), 'w').close()
+                with open(datafilepath, 'wb') as f:
+                    pickle.dump(self.SQLData, f)
+                os.remove('{}.lck'.format(datafilepath))
+
+        except Exception as reason:
+            logSQLCreate.error('[log_obm_logfiles_type4] logfile read error:{}'.format(reason))
+            # print(reason)
+
 
     def cfg_obminfo_xml(self):
         """

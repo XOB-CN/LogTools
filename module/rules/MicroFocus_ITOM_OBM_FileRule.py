@@ -13,6 +13,7 @@ FileRule = [
     'opr-ciresolver\.log',
     'opr-configserver\.log',
     'opr-backend\.log',
+    'opr-backend_boot\.log',
     'opr-svcdiscserver\.log',
     'opr-svcdiscserver-citrace\.log',
     'opr-scripting-host\.log',
