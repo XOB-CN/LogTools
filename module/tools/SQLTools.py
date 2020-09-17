@@ -114,7 +114,6 @@ class sql_write():
                     elif db_table in ['log_bus',
                                       'log_downtime',
                                       'log_opr_backend',
-                                      'log_opr_backend_boot',
                                       'log_opr_ciresolver',
                                       'log_opr_configserver',
                                       'log_opr_gateway',
@@ -129,6 +128,17 @@ class sql_write():
                                       'log_rtsm_ignored',
                                       'log_MI_MonitorAdministration',
                                       'log_wde_all',
+                                      # boot logs
+                                      'log_odb_boot',
+                                      'log_wde_boot',
+                                      'log_businessImpact_service_boot',
+                                      'log_marble_supervisor_boot',
+                                      'log_opr_scripting_host_boot',
+                                      'log_opr_backend_boot',
+                                      'log_bus_boot',
+                                      'log_jboss7_boot',
+                                      'log_schedulergw_boot',
+                                      # Other logs
                                       'log_notification_service',
                                       'log_nanny_all',
                                       'log_server_deployer',]:

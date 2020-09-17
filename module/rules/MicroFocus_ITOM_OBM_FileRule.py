@@ -13,7 +13,6 @@ FileRule = [
     'opr-ciresolver\.log',
     'opr-configserver\.log',
     'opr-backend\.log',
-    'opr-backend_boot\.log',
     'opr-svcdiscserver\.log',
     'opr-svcdiscserver-citrace\.log',
     'opr-scripting-host\.log',
@@ -29,6 +28,17 @@ FileRule = [
     'notification-service\.log',
     'nanny_all\.log',
     'server_deployer\.log',
+    # boot logs
+    'jboss7_boot\.log',
+    'opr-backend_boot\.log',
+    'opr-scripting-host_boot\.log',
+    'marble_supervisor_boot\.log',
+    'businessImpact_service_boot\.log',
+    'wde_boot\.log',
+    'schedulergw_boot\.log',
+    'odb_boot\.log',
+    'bus_boot\.log',
+
 ]
 
 # 文件级别的反匹规则, 支持正则表达式

@@ -28,7 +28,7 @@ class ITOM_OBM():
             self.log_obm_logfiles_type3()
         elif re.findall('cmdb\.reconciliation\.identification\.log|cmdb\.reconciliation\.datain\.merged\.log|cmdb\.reconciliation\.datain\.ignored\.log', self.filepath, re.IGNORECASE):
             self.log_obm_logfiles_type4()
-        elif re.findall('opr-backend_boot\.log', self.filepath, re.IGNORECASE):
+        elif re.findall('jboss7_boot\.log|opr-backend_boot\.log|opr-scripting-host_boot\.log|marble_supervisor_boot\.log|businessImpact_service_boot\.log|wde_boot\.log|schedulergw_boot\.log|odb_boot\.log|bus_boot\.log', self.filepath, re.IGNORECASE):
             self.log_obm_logfiles_type5()
         elif re.findall('pmi\.log', self.filepath, re.IGNORECASE):
             self.log_obm_pmi()
@@ -704,11 +704,27 @@ class ITOM_OBM():
         isnoblk = True
         log_num = 0
         isstart = True
-        str_muline = False
-        end_muline = False
+        # str_muline = False
+        # end_muline = False
         # db_table 名字
-        if re.findall('opr-backend_boot\.log', self.filepath):
+        if re.findall('jboss7_boot\.log', self.filepath):
+            self.db_table = 'log_jboss7_boot'
+        elif re.findall('opr-backend_boot\.log', self.filepath):
             self.db_table = 'log_opr_backend_boot'
+        elif re.findall('opr-scripting-host_boot\.log', self.filepath):
+            self.db_table = 'log_opr_scripting_host_boot'
+        elif re.findall('marble_supervisor_boot\.log', self.filepath):
+            self.db_table = 'log_marble_supervisor_boot'
+        elif re.findall('businessImpact_service_boot\.log', self.filepath):
+            self.db_table = 'log_businessImpact_service_boot'
+        elif re.findall('wde_boot\.log', self.filepath):
+            self.db_table = 'log_wde_boot'
+        elif re.findall('schedulergw_boot\.log', self.filepath):
+            self.db_table = 'log_schedulergw_boot'
+        elif re.findall('odb_boot\.log', self.filepath):
+            self.db_table = 'log_odb_boot'
+        elif re.findall('bus_boot\.log', self.filepath):
+            self.db_table = 'log_bus_boot'
 
         # 尝试开始读取文件
         try:
@@ -727,35 +743,45 @@ class ITOM_OBM():
                         # 如果改行既不在黑名单, 并且也已经确定 isstart 为 True, 则开始日志匹配流程
                         if isnoblk and isstart:
                             line = line.strip()
+                            # 提前设置此项, 如果后续没有修改, 则此值是默认值
+                            log_comp = "Null"
                             # 如果不是多行匹配, 则进入单行匹配
-                            if str_muline == False:
-                                if re.findall("-  ===================================| at ", line):
-                                    str_muline = True
-                                if re.findall("error|fail|can't|Exception|notfound|Caused by", line, re.IGNORECASE):
-                                    log_level = "ERROR"
-                                elif re.findall("warn", line, re.IGNORECASE):
-                                    log_level = "WARN"
-                                else:
-                                    log_level = "INFO"
-                                log_time = line[:23]
-                                log_time = sql_write.sqlite_to_datetime(log_time)
-                                log_comp = "Null"
-                                log_detail = line
+                            # if str_muline == False:
+                            #     if re.findall("-\s+===================================| at ", line):
+                            #         str_muline = True
+                            if re.findall("-XX:\+", line, re.IGNORECASE):
+                                log_level = "INFO"
+                                log_comp = "Config"
+                            elif re.findall("error|fail|can't|Exception|notfound|Caused by", line, re.IGNORECASE):
+                                log_level = "ERROR"
+                                # str_muline = True
+                            elif re.findall("warn", line, re.IGNORECASE):
+                                log_level = "WARN"
+                            else:
+                                log_level = "INFO"
+                            log_time = line[:23]
+                            log_time = sql_write.sqlite_to_datetime(log_time)
+                            log_detail = line
 
-                                logdata.append({'logfile': self.filepath,
-                                                'logline': log_num,
-                                                'loglevel': log_level,
-                                                'logtime': log_time,
-                                                'logcomp': log_comp,
-                                                'logdetail': log_detail})
+                            logdata.append({'logfile': self.filepath,
+                                            'logline': log_num,
+                                            'loglevel': log_level,
+                                            'logtime': log_time,
+                                            'logcomp': log_comp,
+                                            'logdetail': log_detail})
 
-                            elif str_muline == True:
-                                logdata[-1]['logdetail'] = logdata[-1]['logdetail'] + '\n' + line
-                                # 抹掉日志中剩下的 '/n'
-                                logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
-
-                                if "-  ===================================" not in line or ' at ' not in line:
-                                    str_muline = False
+                            # elif str_muline == True:
+                            #     logdata[-1]['logdetail'] = logdata[-1]['logdetail'] + '\n' + line
+                            #     # 抹掉日志中剩下的 '/n'
+                            #     logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
+                            #
+                            #     # 判断后续内容是否是还是多行
+                            #     if "-\s+===================================" in line:
+                            #         str_muline = False
+                            #     elif re.findall(' at |Exception', line, re.IGNORECASE):
+                            #         str_muline = True
+                            #     else:
+                            #         str_muline = True
 
                     except Exception as e:
                         logSQLCreate.warning(
