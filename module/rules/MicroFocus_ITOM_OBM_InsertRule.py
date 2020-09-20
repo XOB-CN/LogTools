@@ -704,7 +704,7 @@ class ITOM_OBM():
         isnoblk = True
         log_num = 0
         isstart = True
-        # str_muline = False
+        str_muline = False
         # end_muline = False
         # db_table 名字
         if re.findall('jboss7_boot\.log', self.filepath):
@@ -744,48 +744,48 @@ class ITOM_OBM():
                         if isnoblk and isstart:
                             line = line.strip()
                             # 提前设置此项, 如果后续没有修改, 则此值是默认值
-                            log_comp = "Null"
+                            log_comp = "Logs"
                             # 如果不是多行匹配, 则进入单行匹配
                             # if str_muline == False:
                             #     if re.findall("-\s+===================================| at ", line):
                             #         str_muline = True
-                            if re.findall("-XX:\+", line, re.IGNORECASE):
+
+                            # 如果是"- at " 开头的
+                            if re.findall("-\s+at ", line, re.IGNORECASE):
+                                str_muline = True
+                                logdata[-1]['logdetail'] = logdata[-1]['logdetail'] + '\n' + line
+                                # 抹掉日志中剩下的 '/n'
+                                logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
+
+                            # 如果不是 "- at " 这部分内容, 则按照单行模式处理
+                            elif re.findall("-XX:\+|Bootstrap Environment|Date:|ServerType:|Physical Memory:|Java:|Jvm Opts:|FIPS_Mode:|ClassPath:|MainClass:|Args:|HPBSM\\\\supervisor\\\\wrapper>.*\s+.*|HPBSM\\\\bin>.*", line, re.IGNORECASE):
                                 log_level = "INFO"
                                 log_comp = "Config"
+                                str_muline = False
                             elif re.findall("error|fail|can't|Exception|notfound|Caused by", line, re.IGNORECASE):
                                 log_level = "ERROR"
-                                # str_muline = True
+                                str_muline = False
                             elif re.findall("warn", line, re.IGNORECASE):
                                 log_level = "WARN"
+                                str_muline = False
                             else:
                                 log_level = "INFO"
+                                str_muline = False
                             log_time = line[:23]
                             log_time = sql_write.sqlite_to_datetime(log_time)
                             log_detail = line
 
-                            logdata.append({'logfile': self.filepath,
-                                            'logline': log_num,
-                                            'loglevel': log_level,
-                                            'logtime': log_time,
-                                            'logcomp': log_comp,
-                                            'logdetail': log_detail})
-
-                            # elif str_muline == True:
-                            #     logdata[-1]['logdetail'] = logdata[-1]['logdetail'] + '\n' + line
-                            #     # 抹掉日志中剩下的 '/n'
-                            #     logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
-                            #
-                            #     # 判断后续内容是否是还是多行
-                            #     if "-\s+===================================" in line:
-                            #         str_muline = False
-                            #     elif re.findall(' at |Exception', line, re.IGNORECASE):
-                            #         str_muline = True
-                            #     else:
-                            #         str_muline = True
+                            if str_muline == False:
+                                logdata.append({'logfile': self.filepath,
+                                                'logline': log_num,
+                                                'loglevel': log_level,
+                                                'logtime': log_time,
+                                                'logcomp': log_comp,
+                                                'logdetail': log_detail})
 
                     except Exception as e:
                         logSQLCreate.warning(
-                            "[log_obm_logfiles_type4] file:{}\nline:{}\nSource:{}\nException:{}".format(self.filepath,
+                            "[log_obm_logfiles_type5] file:{}\nline:{}\nSource:{}\nException:{}".format(self.filepath,
                                                                                                         str(log_num),
                                                                                                         line, e))
 

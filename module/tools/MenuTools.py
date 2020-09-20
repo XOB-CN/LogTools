@@ -45,12 +45,58 @@ class AddMenuTools():
 
     def set_mf_itom_obm_menu(self):
         menu = self.guiMain.menubar.addMenu('Tools')
+        menu_obm_boot = menu.addAction('OBM Boot')
         menu_ci_resolver = menu.addAction('CI Resolver')
         menu_all_event = menu.addAction('All Event Processing')
         menu_epi = menu.addAction('Event Processing Interface')
         menu_pd = menu.addAction('Performance Dashboard')
         menu_ma = menu.addAction('Monitoring Automation')
         menu_rtsm = menu.addAction('RTSM')
+
+        def select_obm_boot():
+            kylist = []
+            tblist = self._active_db_tables()
+            sqledit = self._active_sqledit()
+            sqltext_mid = ''
+            if tblist != False:
+                # 判断 OBM boot 具体包含哪张表
+                for key in ['log_odb_boot',
+                            'log_wde_boot',
+                            'log_businessImpact_service_boot',
+                            'log_marble_supervisor_boot',
+                            'log_opr_scripting_host_boot',
+                            'log_opr_backend_boot',
+                            'log_bus_boot',
+                            'log_jboss7_boot',
+                            'log_schedulergw_boot',]:
+                    if key in tblist:
+                        kylist.append(key)
+
+                # 如果超过2个, 则按照此格式生成SQL查询语句
+                if len(kylist) >= 2:
+                    for tb_name in kylist:
+                        if sqltext_mid == '':
+                            sqltext_mid = "select * from {} union all\n".format(tb_name)
+                        else:
+                            sqltext_mid = sqltext_mid + "select * from {} union all\n".format(tb_name)
+
+                        sqltext = "select * from (\n" + sqltext_mid[:-11] + '\n)\n' + "where logtime > '{}' and logtime < '{}'\n" \
+                              "order by logtime desc;\n" \
+                              "{}".format(self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'), self.sql_comment)
+
+                        sqledit.setText(sqltext)
+
+                elif len(kylist) == 1:
+                    sqltext = "select * from {}\n" \
+                              "where logtime > '{}' and logtime < '{}'\n" \
+                              "order by logtime desc;\n" \
+                              "{}".format(kylist[0], self.guiMain.geTime.text().replace('/', '-'),
+                                          self.guiMain.leTime.text().replace('/', '-'), self.sql_comment)
+                    sqledit.setText(sqltext)
+                else:
+                    QMessageBox.information(self.guiMain, 'No Data!', 'No OBM boot logs')
+        # 链接 select_obm_boot 槽函数
+        menu_obm_boot.triggered.connect(select_obm_boot)
 
         def select_ci_resolver():
             kylist = []
