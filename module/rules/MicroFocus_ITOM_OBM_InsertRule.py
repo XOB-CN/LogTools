@@ -758,7 +758,7 @@ class ITOM_OBM():
                                 logdata[-1]['logdetail'] = logdata[-1]['logdetail'].strip()
 
                             # 如果不是 "- at " 这部分内容, 则按照单行模式处理
-                            elif re.findall("-XX:\+|Bootstrap Environment|Date:|ServerType:|Physical Memory:|Java:|Jvm Opts:|FIPS_Mode:|ClassPath:|MainClass:|Args:|HPBSM\\\\supervisor\\\\wrapper>.*\s+.*|HPBSM\\\\bin>.*", line, re.IGNORECASE):
+                            elif re.findall("-XX:\+|Bootstrap Environment|Date:|ServerType:|Physical Memory:|Java:|Jvm Opts:|FIPS_Mode:|ClassPath:|MainClass:|Args:|HPBSM\\\\supervisor\\\\wrapper>.*\s+.*|HPBSM\\\\bin>.*|-\s+.*msec|Creating DB object:", line, re.IGNORECASE):
                                 log_level = "INFO"
                                 log_comp = "Config"
                                 str_muline = False
