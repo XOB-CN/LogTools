@@ -18,6 +18,9 @@ class AddMenuTools():
         if self.procuct_name == 'OBM/OMi':
             self.set_mf_itom_obm_menu()
 
+        # Help Menu (Last one)
+        self.set_help_menu()
+
     # 返回当前激活的 sqledit 对象
     def _active_sqledit(self):
         sqlEdit = self.guiMain.tabQuery.currentWidget().findChild(QTextEdit)
@@ -320,3 +323,12 @@ class AddMenuTools():
                     QMessageBox.information(self.guiMain, 'No Data!', 'No RTSM Information!')
         # 连接 select_rtsm 槽函数
         menu_rtsm.triggered.connect(select_rtsm)
+
+    def set_help_menu(self):
+        menu = self.guiMain.menubar.addMenu('Help')
+        menu.addAction('About Qt')
+
+        def menu_help_about_qt():
+            QMessageBox.aboutQt(self.guiMain)
+        # 连接 About Qt 槽函数
+        menu.triggered.connect(menu_help_about_qt)

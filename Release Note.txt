@@ -2,6 +2,7 @@
 # 添加：MicroFocus ITOM OBM 日志工具目前可以分析 opr-checker.txt 文件
 # 添加：MicroFocus ITOM OBM 日志工具目前可以分析 notification-service.log / nanny_all.log / server_deployer.log
 # 添加：MicroFocus ITOM OBM 日志工具目前可以分析 **_boot.log 日志(仅限单行)
+# 添加：添加了 About Qt 信息
 # 修改：调整了 MicroFocus ITOM OBM 日志工具的菜单栏算法
 # 修改：SQL 注释内容目前可以在配置文件中自行修改
 # 修改：优化日志分析逻辑
