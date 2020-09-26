@@ -1,4 +1,4 @@
-2020-**-** Beta v0.6.1(coding)
+2020-09-26 Beta v0.6.1
 # 添加：MicroFocus ITOM OBM 日志工具目前可以分析 opr-checker.txt 文件
 # 添加：MicroFocus ITOM OBM 日志工具目前可以分析 notification-service.log / nanny_all.log / server_deployer.log
 # 添加：MicroFocus ITOM OBM 日志工具目前可以分析 **_boot.log 日志(仅限单行)
