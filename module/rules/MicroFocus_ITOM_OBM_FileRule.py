@@ -5,6 +5,11 @@ FileRule = [
     # OBM Infomation file
     'opr-checker-xml\.txt',
     'opr-checker\.txt',
+    # rtsm logs
+    'error\.log',
+    'cmdb\.reconciliation\.identification\.log',
+    'cmdb\.reconciliation\.datain\.merged\.log',
+    'cmdb\.reconciliation\.datain\.ignored\.log',
     # OBM logs
     'jvm_statistics\.log',
     'busjvm_statistics\.log',
@@ -20,9 +25,6 @@ FileRule = [
     'downtime\.log',
     'pmi\.log',
     'scripts\.log',
-    'cmdb\.reconciliation\.identification\.log',
-    'cmdb\.reconciliation\.datain\.merged\.log',
-    'cmdb\.reconciliation\.datain\.ignored\.log',
     'MI_MonitorAdministration\.log',
     'wde\.all\.log',
     'notification-service\.log',
@@ -38,7 +40,6 @@ FileRule = [
     'schedulergw_boot\.log',
     'odb_boot\.log',
     'bus_boot\.log',
-
 ]
 
 # 文件级别的反匹规则, 支持正则表达式

@@ -10,7 +10,7 @@ class LogApp(QWidget, Ui_Form):
 
     # 支持的软件产品
     cbx_data = {
-        'MicroFocus':{'ITOM':['OA','OBM/OMi','MP for Microsoft SQL Server','MP for Oracle Database','SiteScope']},
+        'MicroFocus':{'ITOM':['OA','OBM/OMi','UCMDB','MP for Microsoft SQL Server','MP for Oracle Database','SiteScope']},
     }
     # 自定义信号
     singal_btn_start = pyqtSignal(str, str, str)

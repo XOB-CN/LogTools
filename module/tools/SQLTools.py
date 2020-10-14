@@ -123,11 +123,13 @@ class sql_write():
                                       'log_opr_webapp',
                                       'log_pmi',
                                       'log_scripts',
+                                      'log_MI_MonitorAdministration',
+                                      'log_wde_all',
+                                      # rtsm logs
+                                      'log_error',
                                       'log_rtsm_identification',
                                       'log_rtsm_merged',
                                       'log_rtsm_ignored',
-                                      'log_MI_MonitorAdministration',
-                                      'log_wde_all',
                                       # boot logs
                                       'log_odb_boot',
                                       'log_wde_boot',
@@ -146,6 +148,17 @@ class sql_write():
                         query.exec_("create table {} (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);".format(db_table))
                         if query.lastError().isValid():
                             logSQLInsert.error('MicroFocus-ITOM-OBM/OMi:\n{}'.format(query.lastError().text()))
+
+            elif db_type == 'MicroFocus-ITOM-UCMDB':
+                if db_table not in db.tables():
+                    if db_table in ['log_ucmdb_identification',
+                                    'log_ucmdb_merged',
+                                    'log_ucmdb_ignored',
+                                    'log_error',]:
+                        query = QtSql.QSqlQuery()
+                        query.exec_("create table {} (logfile TEXT, logline INT, loglevel TEXT, logtime TEXT, logcomp TEXT, logdetail TEXT);".format(db_table))
+                        if query.lastError().isValid():
+                            logSQLInsert.error('MicroFocus-ITOM-UCMDB:\n{}'.format(query.lastError().text()))
 
             elif db_type == 'MicroFocus-ITOM-MP for Microsoft SQL Server':
                 if db_table not in db.tables():

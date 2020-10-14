@@ -23,6 +23,8 @@ class LogProducer(QThread):
             from module.rules.MicroFocus_ITOM_OA_InsertRule import ITOM_OA as LogSQL
         elif self.product_type == 'MicroFocus-ITOM-OBM/OMi':
             from module.rules.MicroFocus_ITOM_OBM_InsertRule import ITOM_OBM as LogSQL
+        elif self.product_type == 'MicroFocus-ITOM-UCMDB':
+            from module.rules.MicroFocus_ITOM_UCMDB_InsertRule import ITOM_UCMDB as LogSQL
         elif self.product_type == 'MicroFocus-ITOM-MP for Microsoft SQL Server':
             from module.rules.MicroFocus_ITOM_MP_MSSQLServer_InsertRule import ITOM_MP_SQLServer as LogSQL
         elif self.product_type == 'MicroFocus-ITOM-MP for Oracle Database':
@@ -37,4 +39,4 @@ class LogProducer(QThread):
                 n+=1
                 self.pool.apply_async(mult_process_task, args=(LogSQL, filepath, self.db_name, self.product_type, n))
             except Exception as e:
-                loglogTools.warning(e)
+                loglogTools.warning('LogProducer.run function exception: ' + e)

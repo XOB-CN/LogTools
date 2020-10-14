@@ -18,6 +18,9 @@ class AddMenuTools():
         if self.procuct_name == 'OBM/OMi':
             self.set_mf_itom_obm_menu()
 
+        if self.procuct_name == 'UCMDB':
+            self.set_mf_itom_ucmdb_menu()
+
         # Help Menu (Last one)
         self.set_help_menu()
 
@@ -105,12 +108,29 @@ class AddMenuTools():
             kylist = []
             tblist = self._active_db_tables()
             sqledit = self._active_sqledit()
+            sqltext_mid = ''
             if tblist != False:
                 # 判断 CI Resolver 具体包含哪张表
-                for key in ['log_opr_ciresolver', 'log_opr_backend']:
+                for key in ['log_opr_ciresolver', 'log_opr_backend', 'log_error']:
                     if key in tblist:
                         kylist.append(key)
-                if len(kylist) == 2:
+
+                if len(kylist) >= 2:
+                    for tb_name in kylist:
+                        if sqltext_mid == '':
+                            sqltext_mid = "select * from {} union all\n".format(tb_name)
+                        else:
+                            sqltext_mid = sqltext_mid + "select * from {} union all\n".format(tb_name)
+
+                        sqltext = "select * from (\n" + sqltext_mid[
+                                                        :-11] + '\n)\n' + "where logtime > '{}' and logtime < '{}'\n" \
+                                                                          "order by logtime desc;\n" \
+                                                                          "{}".format(
+                            self.guiMain.geTime.text().replace('/', '-'),
+                            self.guiMain.leTime.text().replace('/', '-'), self.sql_comment)
+
+                        sqledit.setText(sqltext)
+                elif len(kylist) == 2:
                     sqltext = "select * from (\n" \
                               "select * from {} union all\n" \
                               "select * from {}\n)\n" \
@@ -145,7 +165,8 @@ class AddMenuTools():
                             'log_opr_flowtrace_backend',
                             'log_opr_scripting_host',
                             'log_scripts',
-                            'log_wde_all',]:
+                            'log_wde_all',
+                            'log_error',]:
                     if key in tblist:
                         kylist.append(key)
 
@@ -188,7 +209,8 @@ class AddMenuTools():
                             'log_opr_backend',
                             'log_opr_flowtrace_backend',
                             'log_opr_scripting_host',
-                            'log_scripts',]:
+                            'log_scripts',
+                            'log_error',]:
                     if key in tblist:
                         kylist.append(key)
                 if len(kylist) >= 2:
@@ -251,7 +273,7 @@ class AddMenuTools():
             sqltext_mid = ''
             if tblist != False:
                 # 判断 Monitoring Automation 具体包含哪张表
-                for key in ['log_opr_webapp', 'log_opr_configserver', 'log_MI_MonitorAdministration']:
+                for key in ['log_opr_webapp', 'log_opr_configserver', 'log_MI_MonitorAdministration', 'log_error',]:
                     if key in tblist:
                         kylist.append(key)
 
@@ -291,7 +313,7 @@ class AddMenuTools():
             sqltext_mid = ''
             if tblist != False:
                 # 判断 RTSM 具体包含哪张表
-                for key in ['log_rtsm_identification', 'log_rtsm_merged', 'log_rtsm_ignored']:
+                for key in ['log_rtsm_identification', 'log_rtsm_merged', 'log_rtsm_ignored', 'log_error',]:
                     if key in tblist:
                         kylist.append(key)
 
@@ -323,6 +345,50 @@ class AddMenuTools():
                     QMessageBox.information(self.guiMain, 'No Data!', 'No RTSM Information!')
         # 连接 select_rtsm 槽函数
         menu_rtsm.triggered.connect(select_rtsm)
+
+    def set_mf_itom_ucmdb_menu(self):
+        menu = self.guiMain.menubar.addMenu('Tools')
+        menu_ucmdb = menu.addAction('UCMDB Common1')
+
+        def select_common1():
+            kylist = []
+            tblist = self._active_db_tables()
+            sqledit = self._active_sqledit()
+            sqltext_mid = ''
+            if tblist != False:
+                # 判断 UCMDB 具体包含哪张表
+                for key in ['log_ucmdb_identification', 'log_ucmdb_merged', 'log_ucmdb_ignored', 'log_error',]:
+                    if key in tblist:
+                        kylist.append(key)
+
+                if len(kylist) >= 2:
+                    for tb_name in kylist:
+                        if sqltext_mid == '':
+                            sqltext_mid = "select * from {} union all\n".format(tb_name)
+                        else:
+                            sqltext_mid = sqltext_mid + "select * from {} union all\n".format(tb_name)
+
+                        sqltext = "select * from (\n" + sqltext_mid[
+                                                        :-11] + '\n)\n' + "where logtime > '{}' and logtime < '{}'\n" \
+                                                                          "order by logtime desc;\n" \
+                                                                          "{}".format(
+                            self.guiMain.geTime.text().replace('/', '-'), self.guiMain.leTime.text().replace('/', '-'),
+                            self.sql_comment)
+
+                        sqledit.setText(sqltext)
+                elif len(kylist) == 1:
+                    sqltext = "select * from {}\n" \
+                              "where logtime > '{}' and logtime < '{}'\n" \
+                              "order by logtime desc;\n" \
+                              "{}".format(kylist[0],
+                                          self.guiMain.geTime.text().replace('/', '-'),
+                                          self.guiMain.leTime.text().replace('/', '-'),
+                                          self.sql_comment)
+                    sqledit.setText(sqltext)
+                else:
+                    QMessageBox.information(self.guiMain, 'No Data!', 'No UCMDB Information!')
+        # 连接 select_common1 槽函数
+        menu_ucmdb.triggered.connect(select_common1)
 
     def set_help_menu(self):
         menu = self.guiMain.menubar.addMenu('Help')

@@ -29,6 +29,11 @@ class LogCheck():
             self.file_rule = FileRule.FileRule
             self.fileblk_rule = FileRule.FileBlkRule
 
+        elif self.task_info.get('product_type') == 'MicroFocus-ITOM-UCMDB':
+            from module.rules import MicroFocus_ITOM_UCMDB_FileRule as FileRule
+            self.file_rule = FileRule.FileRule
+            self.fileblk_rule = FileRule.FileBlkRule
+
         elif self.task_info.get('product_type') == 'MicroFocus-ITOM-MP for Microsoft SQL Server':
             from module.rules import MicroFocus_ITOM_MP_MSSQLServer_FileRule as FileRule
             self.file_rule = FileRule.FileRule
