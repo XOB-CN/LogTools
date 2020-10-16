@@ -357,7 +357,10 @@ class AddMenuTools():
             sqltext_mid = ''
             if tblist != False:
                 # 判断 UCMDB 具体包含哪张表
-                for key in ['log_ucmdb_identification', 'log_ucmdb_merged', 'log_ucmdb_ignored', 'log_error',]:
+                for key in ['log_cmdb_reconciliation_identification',
+                            'log_cmdb_reconciliation_datain_merged',
+                            'log_cmdb_reconciliation_datain_ignored',
+                            'log_error',]:
                     if key in tblist:
                         kylist.append(key)
 

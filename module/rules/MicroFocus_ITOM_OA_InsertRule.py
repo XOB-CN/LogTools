@@ -387,8 +387,8 @@ class ITOM_OA():
             logdata['os_machine'] = os_machine.strip()
             logdata['agt_version'] = agt_version.strip()
             logdata['agt_core_id'] = agt_core_id.strip()
-            logdata['agt_ovconf'] = agt_ovconf.strip()
-            logdata['agt_ovdeploy'] = agt_ovdeploy.strip()
+            logdata['agt_ovconf'] = sql_string.sqlite_to_string(agt_ovconf.strip())
+            logdata['agt_ovdeploy'] = sql_string.sqlite_to_string(agt_ovdeploy.strip())
 
             for k, v in logdata.items():
                 try:

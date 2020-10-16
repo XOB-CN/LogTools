@@ -20,7 +20,7 @@ class ITOM_UCMDB():
         # 如果是 error.log 文件, 则调用此方法
         if re.findall('error\.log', self.filepath, re.IGNORECASE):
             self.log_error()
-        elif re.findall('cmdb\.reconciliation\.identification\.log|cmdb\.reconciliation\.datain\.merged\.log|cmdb\.reconciliation\.datain\.ignored\.log', self.filepath, re.IGNORECASE):
+        elif re.findall('cmdb', self.filepath, re.IGNORECASE):
             self.log_ucmdb_logfiles_type1()
 
     def log_error(self):
@@ -79,6 +79,7 @@ class ITOM_UCMDB():
 
                 for data in logdata:
                     try:
+                        data['logcomp'] = sql_string.sqlite_to_string(data.get('logcomp'))
                         data['logdetail'] = sql_string.sqlite_to_string(data.get('logdetail'))
                         sql_insert = 'INSERT INTO {} (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(
                             self.db_table,
@@ -113,12 +114,82 @@ class ITOM_UCMDB():
         log_num = 0
         isstart = False
         # db_table 名字
-        if re.findall('cmdb\.reconciliation\.identification\.log', self.filepath):
-            self.db_table = 'log_ucmdb_identification'
-        elif re.findall('cmdb\.reconciliation\.datain\.merged\.log', self.filepath):
-            self.db_table = 'log_ucmdb_merged'
-        elif re.findall('cmdb\.reconciliation\.datain\.ignored\.log', self.filepath):
-            self.db_table = 'log_ucmdb_ignored'
+        if re.findall('cmdb\.reconciliation\.identification', self.filepath):
+            self.db_table = 'log_cmdb_reconciliation_identification'
+        elif re.findall('cmdb\.reconciliation\.datain\.merged', self.filepath):
+            self.db_table = 'log_cmdb_reconciliation_datain_merged'
+        elif re.findall('cmdb\.reconciliation\.datain\.ignored', self.filepath):
+            self.db_table = 'log_cmdb_reconciliation_datain_ignored'
+        elif re.findall('cmdb\.api\.audit\.detailed\.unformatted', self.filepath):
+            self.db_table = 'log_cmdb_api_audit_detailed_unformatted'
+        elif re.findall('cmdb\.api\.audit\.detailed', self.filepath):
+            self.db_table = 'log_cmdb_api_audit_detailed'
+        elif re.findall('cmdb\.authentication\.audit', self.filepath):
+            self.db_table = 'log_cmdb_authentication_audit'
+        elif re.findall('cmdb\.browser\.resources', self.filepath):
+            self.db_table = 'log_cmdb_browser_resources'
+        elif re.findall('cmdb\.classmodel\.audit\.detailed', self.filepath):
+            self.db_table = 'log_cmdb_classmodel_audit_detailed'
+        elif re.findall('cmdb\.classmodel\.audit\.short', self.filepath):
+            self.db_table = 'log_cmdb_classmodel_audit_short'
+        elif re.findall('cmdb\.dal\.server', self.filepath):
+            self.db_table = 'log_cmdb_dal_server'
+        elif re.findall('cmdb\.dal', self.filepath):
+            self.db_table = 'log_cmdb_dal'
+        elif re.findall('cmdb\.dal\.slow', self.filepath):
+            self.db_table = 'log_cmdb_dal_slow'
+        elif re.findall('cmdb\.enrichment', self.filepath):
+            self.db_table = 'log_cmdb_enrichment'
+        elif re.findall('cmdb\.ha\.detailed', self.filepath):
+            self.db_table = 'log_cmdb_ha_detailed'
+        elif re.findall('cmdb\.ha', self.filepath):
+            self.db_table = 'log_cmdb_ha'
+        elif re.findall('cmdb\.model\.aging', self.filepath):
+            self.db_table = 'log_cmdb_model_aging'
+        elif re.findall('cmdb\.model\.audit\.short', self.filepath):
+            self.db_table = 'log_cmdb_model_audit_short'
+        elif re.findall('cmdb\.model\.notification', self.filepath):
+            self.db_table = 'log_cmdb_model_notification'
+        elif re.findall('cmdb\.model\.topology', self.filepath):
+            self.db_table = 'log_cmdb_model_topology'
+        elif re.findall('cmdb\.monitor', self.filepath):
+            self.db_table = 'log_cmdb_monitor'
+        elif re.findall('cmdb\.notification', self.filepath):
+            self.db_table = 'log_cmdb_notification'
+        elif re.findall('cmdb\.operation', self.filepath):
+            self.db_table = 'log_cmdb_operation'
+        elif re.findall('cmdb\.pattern\.statistics', self.filepath):
+            self.db_table = 'log_cmdb_pattern_statistics'
+        elif re.findall('cmdb\.quota', self.filepath):
+            self.db_table = 'log_cmdb_quota'
+        elif re.findall('cmdb\.reconciliation\.analyzer', self.filepath):
+            self.db_table = 'log_cmdb_reconciliation_analyzer'
+        elif re.findall('cmdb\.reconciliation\.audit', self.filepath):
+            self.db_table = 'log_cmdb_reconciliation_audit'
+        elif re.findall('cmdb\.reconciliation\.config', self.filepath):
+            self.db_table = 'log_cmdb_reconciliation_config'
+        elif re.findall('cmdb\.reconciliation\.error', self.filepath):
+            self.db_table = 'log_cmdb_reconciliation_error'
+        elif re.findall('cmdb\.reconciliation\.queries', self.filepath):
+            self.db_table = 'log_cmdb_reconciliation_queries'
+        elif re.findall('cmdb\.reconciliation', self.filepath):
+            self.db_table = 'log_cmdb_reconciliation'
+        elif re.findall('cmdb\.samlAuthentication', self.filepath):
+            self.db_table = 'log_cmdb_samlAuthentication'
+        elif re.findall('cmdb\.tql\.calculation\.audit', self.filepath):
+            self.db_table = 'log_cmdb_tql_calculation_audit'
+        elif re.findall('cmdb\.tql\.resultcache', self.filepath):
+            self.db_table = 'log_cmdb_tql_resultcache'
+        elif re.findall('cmdb\.tql\.tracker', self.filepath):
+            self.db_table = 'log_cmdb_tql_tracker'
+        elif re.findall('fcmdb\.adapters\.HistoryDataSource', self.filepath):
+            self.db_table = 'log_fcmdb_adapters_HistoryDataSource'
+        elif re.findall('fcmdb\.config\.audit', self.filepath):
+            self.db_table = 'log_fcmdb_config_audit'
+        elif re.findall('fcmdb\.ftql\.audit', self.filepath):
+            self.db_table = 'log_fcmdb_ftql_audit'
+        elif re.findall('fcmdb', self.filepath):
+            self.db_table = 'log_fcmdb'
 
         # 尝试开始读取文件
         try:
@@ -165,6 +236,7 @@ class ITOM_UCMDB():
 
                 for data in logdata:
                     try:
+                        data['logcomp'] = sql_string.sqlite_to_string(data.get('logcomp'))
                         data['logdetail'] = sql_string.sqlite_to_string(data.get('logdetail'))
                         sql_insert = 'INSERT INTO {} (logfile, logline, loglevel, logtime, logcomp, logdetail) VALUES ("{}","{}","{}","{}","{}","{}");'.format(
                             self.db_table,
