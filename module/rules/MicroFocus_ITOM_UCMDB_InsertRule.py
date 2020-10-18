@@ -59,7 +59,11 @@ class ITOM_UCMDB():
                                 log_time = line.split(' ', 2)[0] + ' ' + line.split(' ', 2)[1]
                                 log_time = sql_write.sqlite_to_datetime(log_time)
                                 log_comp = line.split('[', 1)[1].split(']', 1)[0].strip()
-                                log_detail = line.split('(:) -')[-1].strip()
+                                if '(:) -' in line:
+                                    log_detail = line.split('(:) -')[-1].strip()
+                                # 针对 !!! 的情况
+                                else:
+                                    log_detail = line.split('- !!!')[-1].strip()
                                 logdata.append({'logfile': self.filepath,
                                                 'logline': log_num,
                                                 'loglevel': log_level,
