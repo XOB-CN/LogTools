@@ -59,7 +59,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.treeList.sizePolicy().hasHeightForWidth())
         self.treeList.setSizePolicy(sizePolicy)
         self.treeList.setMinimumSize(QtCore.QSize(150, 0))
-        self.treeList.setMaximumSize(QtCore.QSize(250, 16777215))
+        self.treeList.setMaximumSize(QtCore.QSize(350, 16777215))
         self.treeList.setObjectName("treeList")
         self.tabQuery = QtWidgets.QTabWidget(self.splitter)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
