@@ -164,6 +164,7 @@ class AddMenuTools():
                             'log_opr_backend',
                             'log_opr_flowtrace_backend',
                             'log_opr_scripting_host',
+                            'log_opr_heartbeat',
                             'log_scripts',
                             'log_wde_all',
                             'log_error',]:

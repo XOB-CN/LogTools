@@ -20,7 +20,7 @@ class ITOM_OBM():
         # 如果是 jvm 的统计信息类型的日志, 则调用 log_jvm_statistivs 方法
         if re.findall('jvm_statistics\.log|busjvm_statistics\.log', self.filepath, re.IGNORECASE):
             self.log_jvm_statistics()
-        elif re.findall('opr-ciresolver\.log|opr-backend\.log|opr-gateway\.log|opr-svcdiscserver\.log|opr-scripting-host\.log|scripts\.log|bus\.log|opr-webapp\.log|opr-configserver\.log', self.filepath, re.IGNORECASE):
+        elif re.findall('opr-ciresolver\.log|opr-backend\.log|opr-gateway\.log|opr-svcdiscserver\.log|opr-scripting-host\.log|scripts\.log|bus\.log|opr-webapp\.log|opr-configserver\.log|opr-heartbeat\.log', self.filepath, re.IGNORECASE):
             self.log_obm_logfiles_type1()
         elif re.findall('opr-svcdiscserver-citrace\.log', self.filepath, re.IGNORECASE):
             self.log_obm_logfiles_type2()
@@ -379,6 +379,8 @@ class ITOM_OBM():
             self.db_table = 'log_opr_webapp'
         elif re.findall('opr-configserver\.log', self.filepath):
             self.db_table = 'log_opr_configserver'
+        elif re.findall('opr-heartbeat\.log', self.filepath):
+            self.db_table = 'log_opr_heartbeat'
 
         # 尝试开始读取文件
         try:

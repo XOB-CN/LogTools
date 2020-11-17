@@ -121,6 +121,7 @@ class sql_write():
                                       'log_opr_svcdiscserver',
                                       'log_opr_svcdiscserver_citrace',
                                       'log_opr_webapp',
+                                      'log_opr_heartbeat',
                                       'log_pmi',
                                       'log_scripts',
                                       'log_MI_MonitorAdministration',

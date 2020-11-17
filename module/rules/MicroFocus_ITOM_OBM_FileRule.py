@@ -22,6 +22,7 @@ FileRule = [
     'opr-svcdiscserver-citrace\.log',
     'opr-scripting-host\.log',
     'opr-webapp\.log',
+    'opr-heartbeat\.log',
     'downtime\.log',
     'pmi\.log',
     'scripts\.log',
