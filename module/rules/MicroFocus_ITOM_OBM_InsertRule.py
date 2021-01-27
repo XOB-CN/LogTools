@@ -772,7 +772,7 @@ class ITOM_OBM():
                                 log_level = "INFO"
                                 log_comp = "Config"
                                 str_muline = False
-                            elif re.findall("error|fail|can't|Exception|notfound|Caused by", line, re.IGNORECASE):
+                            elif re.findall("error|fail|can't|Exception|notfound|Caused by|Dumping", line, re.IGNORECASE):
                                 log_level = "ERROR"
                                 str_muline = False
                             elif re.findall("warn", line, re.IGNORECASE):
